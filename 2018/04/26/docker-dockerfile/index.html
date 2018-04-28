@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="原理 docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像 当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerignore文件标识的文件除外), 第二步启动FROM image指定的镜像的容器， 并执行下面一条命令">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-26T03:49:29.680Z">
+<meta property="og:updated_time" content="2018-04-27T09:33:10.097Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dockerfile">
 <meta name="twitter:description" content="原理 docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像 当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerignore文件标识的文件除外), 第二步启动FROM image指定的镜像的容器， 并执行下面一条命令">
@@ -411,7 +411,6 @@
 <li>docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像</li>
 <li>当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerignore文件标识的文件除外), 第二步启动FROM image指定的镜像的容器， 并执行下面一条命令，关闭当前容器并提交一层镜像， 以后各层都是如此，以上一层的镜像运行一个容器并执行命令后提交镜像<br>所以我们可以看到命令越多则层数越多， 建议尽量使用最少的层， 并且将相关的动作描述清晰使其容易维护</li>
 </ol>
-<a id="more"></a>
 <p><em>注意</em> 妥善使用下面点： 基础镜像选择， 使用两种环境变量， 组合命令</p>
 <h5 id="设置基础镜像"><a href="#设置基础镜像" class="headerlink" title="设置基础镜像"></a>设置基础镜像</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu</span><br></pre></td></tr></table></figure>
 <h5 id="设置LABEL"><a href="#设置LABEL" class="headerlink" title="设置LABEL"></a>设置LABEL</h5><p>LABEL用来标示当前镜像， 作为一种元数据存在与镜像当中， 作为一种描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LABEL com.ilivoo.game=&quot;fengxiang&quot; \</span><br><span class="line">      version=&quot;1.0&quot; \</span><br><span class="line">      description=&quot;this is my first game!&quot;</span><br></pre></td></tr></table></figure></p>
