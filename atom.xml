@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-28T06:57:29.012Z</updated>
+  <updated>2018-04-28T08:44:42.361Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,54 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Shadowsocks代理</title>
+    <link href="http://yoursite.com/2018/04/28/linux-shadowsocket/"/>
+    <id>http://yoursite.com/2018/04/28/linux-shadowsocket/</id>
+    <published>2018-04-28T08:20:39.000Z</published>
+    <updated>2018-04-28T08:44:42.361Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;proxychain&quot;&gt;&lt;a href=&quot;#proxychain&quot; class=&quot;headerlink&quot; title=&quot;proxychain&quot;&gt;&lt;/a&gt;proxychain&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;安装proxychain， 也可以直接使用apt安装&lt;/p
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>linux安装配置</title>
+    <link href="http://yoursite.com/2018/04/28/linux-ubuntu-setup/"/>
+    <id>http://yoursite.com/2018/04/28/linux-ubuntu-setup/</id>
+    <published>2018-04-28T07:19:37.000Z</published>
+    <updated>2018-04-28T08:13:43.322Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;联想r720安装ubuntu&quot;&gt;&lt;a href=&quot;#联想r720安装ubuntu&quot; class=&quot;headerlink&quot; title=&quot;联想r720安装ubuntu&quot;&gt;&lt;/a&gt;联想r720安装ubuntu&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;安装的时候一定要使用网络安装， 
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>MapReduce</title>
