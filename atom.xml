@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-28T09:54:15.140Z</updated>
+  <updated>2018-04-29T10:35:43.066Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>hdfs架构</title>
+    <link href="http://yoursite.com/2018/04/29/hadoop-hdfs-architecture/"/>
+    <id>http://yoursite.com/2018/04/29/hadoop-hdfs-architecture/</id>
+    <published>2018-04-29T09:54:14.000Z</published>
+    <updated>2018-04-29T10:35:43.066Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h5 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h5&gt;&lt;ol&gt;
+&lt;li&gt;hdfs是被设计运行在廉价的机器上的分布式文件系统， 它和现有的文件系统有这很多相似之处， 然而也存在这最为重要的区别， hdf
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="hdfs" scheme="http://yoursite.com/categories/hadoop/hdfs/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
+    
+  </entry>
+  
+  <entry>
     <title>git使用</title>
     <link href="http://yoursite.com/2018/04/28/tools-git/"/>
     <id>http://yoursite.com/2018/04/28/tools-git/</id>
     <published>2018-04-28T09:28:57.000Z</published>
-    <updated>2018-04-28T09:54:15.140Z</updated>
+    <updated>2018-05-01T02:13:53.863Z</updated>
     
     <summary type="html">
     
