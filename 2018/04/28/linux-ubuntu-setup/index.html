@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的 安装软件使用依赖管理工具,  安装软件更加简单 12sudo apt-get install gdebisudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb  安装ubuntu-restricted-ex">
+<meta name="description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get update #更">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux安装配置">
 <meta property="og:url" content="http://yoursite.com/2018/04/28/linux-ubuntu-setup/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的 安装软件使用依赖管理工具,  安装软件更加简单 12sudo apt-get install gdebisudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb  安装ubuntu-restricted-ex">
+<meta property="og:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get update #更">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-28T08:13:43.322Z">
+<meta property="og:updated_time" content="2018-05-07T06:55:07.901Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux安装配置">
-<meta name="twitter:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的 安装软件使用依赖管理工具,  安装软件更加简单 12sudo apt-get install gdebisudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb  安装ubuntu-restricted-ex">
+<meta name="twitter:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get update #更">
 
 
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,415
+                  2,873
                 </span>
               
 
@@ -409,11 +409,40 @@
       
         <h4 id="联想r720安装ubuntu"><a href="#联想r720安装ubuntu" class="headerlink" title="联想r720安装ubuntu"></a>联想r720安装ubuntu</h4><ol>
 <li>安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动</li>
-<li>安装完成后更改显卡驱动为最新的</li>
+<li><p>安装完成后更改显卡驱动为最新的</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源</span><br><span class="line">sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源</span><br><span class="line">sudo apt-get update #更新apt-get</span><br></pre></td></tr></table></figure>
+<p> 然后进入：系统设置-&gt;软件和更新-&gt;附件驱动，选择更新的显卡驱动。</p>
+</li>
+<li><p>安装bumblebee自动管理集显和独显</p>
+<ol>
+<li>设置nvidia-settings-&gt;PRIME Profiles-&gt;Intel(Power Save Mode)</li>
+<li><p>安装bumblebee 和 bbswitch电源管理</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:bumblebee/testing</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install bumblebee-nvidia bumblebee primus</span><br><span class="line">sudo apt-get install acpidump iasl dmidecode</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置/etc/bumblebee/bumblebee.conf</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Driver=nvidia</span><br><span class="line">KernelDriver=nvidia-396</span><br><span class="line">LibraryPath=/usr/lib/nvidia-396:/usr/lib32/nvidia-396</span><br><span class="line">XorgModulePath=/usr/lib/nvidia-396/xorg,/usr/lib/xorg/modules</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检测安装</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optirun --status</span><br></pre></td></tr></table></figure>
+<p> 显示<code>Bumblebee status: Ready (3.2.1). X inactive. Discrete video card is off.</code>就没什么问题</p>
+</li>
+<li><p>打开nvidia设置</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optirun -b none nvidia-settings -c :8</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试GPU性能</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install phoronix-test-suite</span><br><span class="line">phoronix-test-suite benchmark pts/gputest</span><br><span class="line">optirun phoronix-test-suite benchmark pts/gputest</span><br></pre></td></tr></table></figure>
+<p> 测试发现使用GPU和不使用的区别就表示完全通过测试</p>
+</li>
+<li>设置desktop文件<br>帮助网站<a href="https://wiki.ubuntu.com/Bumblebee#Installation" target="_blank" rel="noopener">bumlebee</a>、<a href="https://blog.csdn.net/geange/article/details/79284727" target="_blank" rel="noopener">csdn</a>、<a href="https://wiki.archlinux.org/index.php/Bumblebee_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87" target="_blank" rel="noopener">arch</a>)、<a href="https://github.com/Bumblebee-Project/Bumblebee/wiki/FAQ" target="_blank" rel="noopener">FAQ</a></li>
+</ol>
+</li>
 <li><p>安装软件使用依赖管理工具,  安装软件更加简单</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdebi</span><br><span class="line">sudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb</span><br></pre></td></tr></table></figure>
+<p>也可以使用dpkg安装软件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 使用dpkg安装.deb格式文件，这里会提示缺少依赖文件</span><br><span class="line">sudo dpkg -i name.deb</span><br><span class="line"></span><br><span class="line"># 这里使用 apt-get install -f 安装上面一条指令的的依赖文件</span><br><span class="line">sudo apt-get install -f</span><br><span class="line"></span><br><span class="line"># 依赖文件已经安装好了，重新安装一遍</span><br><span class="line">sudo dpkg -i name.deb</span><br><span class="line"></span><br><span class="line"># 如果卸载 -P=--purge, -r=--removee</span><br><span class="line">sudo dpkg -P/-r  name</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>安装ubuntu-restricted-extras 获取字体</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ubuntu-restricted-extras ubuntu-restricted-addons</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h4 id="oh-my-zsh"><a href="#oh-my-zsh" class="headerlink" title="oh-my-zsh"></a>oh-my-zsh</h4><ol>
@@ -432,7 +461,7 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/amix/vimrc</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>插件快捷键讲解</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ack.vim         内容搜索      &lt;leader&gt; + g</span><br><span class="line">ctrlp.vim       文件搜索      &lt;leader&gt; + j</span><br><span class="line">bufexplorer.zip 缓存查看      &lt;leader&gt; + o</span><br><span class="line">mru.vim         最近文件      &lt;leader&gt; + f</span><br><span class="line">NERD Tree       文件目录      &lt;leader&gt; + nn</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h4 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h4><ol>
@@ -459,8 +488,7 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&quot;/- 将当前面板上下分屏</span><br><span class="line">%/_ 将当前面板左右分屏</span><br><span class="line">x 关闭当前分屏</span><br><span class="line">! 将当前面板置于新窗口,即新建一个窗口,其中仅包含当前面板</span><br><span class="line">z 最大化当前所在面板</span><br><span class="line">ctrl+方向键 以1个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">alt+方向键 以5个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">H/J/K/L 以1个单元格移动边缘以调整当前面板大小</span><br><span class="line">q 显示面板编号</span><br><span class="line">o 选择当前窗口中下一个面板</span><br><span class="line">方向键/h/j/k/l 移动光标选择对应面板</span><br><span class="line">&#123; 向前置换当前面板</span><br><span class="line">&#125; 向后置换当前面板</span><br><span class="line">alt+o 逆时针旋转当前窗口的面板</span><br><span class="line">ctrl+o 顺时针旋转当前窗口的面板</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>tmux 滚屏操作，由于tmux接管如果输出大量的数据无法看到上面屏幕的字， 如果此时鼠标操作关闭，那么当使用鼠标滑轮的时候显示的执行过命令的显示， 而不能屏幕翻页， 要想达到这个目的有两个办法：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">打开鼠标操作， 使用滑轮上下翻页 &lt;pre&gt; + m</span><br><span class="line">打开复制模式， 使用vi的翻滚策略来操作， 此时又会碰到一个问题， 如果前缀是ctrl + b那么不好往下整页翻滚， 建议</span><br></pre></td></tr></table></figure>
-<p> 使用半屏翻滚 ctrl + u / d(f)</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">打开鼠标操作， 使用滑轮上下翻页 &lt;pre&gt; + m</span><br><span class="line">打开复制模式， 使用vi的翻滚策略来操作， 此时又会碰到一个问题， 如果前缀是ctrl + b那么不好往下整页翻滚， 建议使用半屏翻滚 ctrl + u / d(f)</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 </li>
@@ -473,7 +501,7 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator new/edit/open project		创建/编辑/打开项目， 可以使用n/e/o简洁表示</span><br><span class="line">tmuxinator start [PROJECT] [ARGS]	启动一个项目</span><br><span class="line">tmuxinator stop [PROJECT]			停止一个项目</span><br><span class="line">tmuxinator list						显示所有项目</span><br><span class="line">tmuxinator delete [PROJECT1] [PROJECT2]	删除一个或者多个项目</span><br><span class="line">tmuxinator copy [EXISTING] [NEW]		复制一个项目</span><br><span class="line">tmuxinator debug [PROJECT] [ARGS]	debug一个项目</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>示例</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># 项目名称</span><br><span class="line">name: sample</span><br><span class="line"># 项目主目录</span><br><span class="line">root: ~/</span><br><span class="line"># 所有的窗口创建之前执行的命令</span><br><span class="line">pre_window: echo &quot;hello world&quot;</span><br><span class="line"></span><br><span class="line"># 所有的windows</span><br><span class="line">windows:</span><br><span class="line">    # windows 1 editor, 指定名字为myeditor</span><br><span class="line">    - editor: myeditor</span><br><span class="line">        # 指定当前window的主目录</span><br><span class="line">        root: ~/projects/editor</span><br><span class="line">        # layout 指定当前window的排版方式， 默认有5种</span><br><span class="line">        # 也可以自己定制， 方法在下面</span><br><span class="line">        layout: main-vertical</span><br><span class="line">        # 当前windows下所有的panes， 使用layout指定的排版方式排版</span><br><span class="line">        panes:</span><br><span class="line">            # 面板一， 此面板只有命令vim， 所以这样写就可以了</span><br><span class="line">            - vim</span><br><span class="line">            # 面板二， 此面板存在多一个命令， 将多个命令回车添加</span><br><span class="line">            # 必须上一个命令执行成功才会执行下一个命令</span><br><span class="line">            - logs:</span><br><span class="line">                - ssh logs@example.com</span><br><span class="line">                - cd /var/logs</span><br><span class="line">                - tail -f development.log</span><br><span class="line"># window 2， 可以看到单个窗口一个命令， 直接写就可以了</span><br><span class="line">- server: bundle exec rails s</span><br><span class="line"># window 3， 同上</span><br><span class="line">- logs: tail -f log/development.log</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># 项目名称</span><br><span class="line">name: sample</span><br><span class="line"># 项目主目录</span><br><span class="line">root: ~/</span><br><span class="line"># 所有的窗口创建之前执行的命令</span><br><span class="line">pre_window: echo &quot;hello world&quot;</span><br><span class="line"></span><br><span class="line"># 所有的windows</span><br><span class="line">windows:</span><br><span class="line">    # windows 1 editor, 指定名字为myeditor</span><br><span class="line">    - editor: myeditor</span><br><span class="line">        # 指定当前window的主目录</span><br><span class="line">        root: ~/projects/editor</span><br><span class="line">        # layout 指定当前window的排版方式， 默认有5种</span><br><span class="line">        # 也可以自己定制， 方法在下面</span><br><span class="line">        layout: main-vertical</span><br><span class="line">        # 当前windows下所有的panes， 使用layout指定的排版方式排版</span><br><span class="line">        panes:</span><br><span class="line">            # 面板一， 此面板只有命令vim， 所以这样写就可以了</span><br><span class="line">            - vim</span><br><span class="line">            # 面板二， 此面板存在多一个命令， 将多个命令回车添加</span><br><span class="line">            # 必须上一个命令执行成功才会执行下一个命令</span><br><span class="line">            - logs:</span><br><span class="line">                - ssh logs@example.com</span><br><span class="line">                - cd /var/logs</span><br><span class="line">                - tail -f development.log</span><br><span class="line">    # window 2， 可以看到单个窗口一个命令， 直接写就可以了</span><br><span class="line">    - server: bundle exec rails s</span><br><span class="line">    # window 3， 同上</span><br><span class="line">    - logs: tail -f log/development.log</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>使用环境变量</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root: &lt;%= ENV[&quot;MY_CUSTOM_DIR&quot;] %&gt;</span><br></pre></td></tr></table></figure>
@@ -504,8 +532,13 @@
 </li>
 </ol>
 </li>
-<li><p>安装网易云音乐</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdebi</span><br><span class="line">sudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb</span><br><span class="line">sudo apt-get install sqlite3</span><br><span class="line">sudo vi /usr/share/applications/netease-cloud-music.desktop</span><br><span class="line">Exec=netease-cloud-music --no-sandbox %U		中在%U 前面添加--no-sandbox 即可解决</span><br><span class="line">cd ~/.cache &amp;&amp; sudo chmod -R 777 netease-cloud-music</span><br></pre></td></tr></table></figure>
+</ol>
+<h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐"></a>安装网易云音乐</h4><ol>
+<li><p>安装</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdebi</span><br><span class="line">sudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb</span><br><span class="line">sudo apt-get install sqlite3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">netease-cloud-music.desktop</span><br><span class="line">Exec=netease-cloud-music --no-sandbox %U		中在%U 前面添加--no-sandbox 即可解决</span><br><span class="line">cd ~/.cache &amp;&amp; sudo chmod -R 777 netease-cloud-music</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h4 id="wifi驱动安装后无法启动"><a href="#wifi驱动安装后无法启动" class="headerlink" title="wifi驱动安装后无法启动"></a>wifi驱动安装后无法启动</h4><ol>
@@ -531,7 +564,11 @@
 </li>
 </ol>
 <h4 id="系统问题修复"><a href="#系统问题修复" class="headerlink" title="系统问题修复"></a>系统问题修复</h4><ol>
-<li>查看dmesg日志， 并且google错误信息 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmesg	查看系统日志</span><br></pre></td></tr></table></figure>
+<li><p>查看dmesg日志， 并且google错误信息</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmesg	查看系统日志</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统卡死现象</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + F1 ~ F6    进入tty1 ~ tty6模式</span><br><span class="line">Ctrl + Alt + F7         恢复到桌面模式</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 
@@ -724,7 +761,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#联想r720安装ubuntu"><span class="nav-number">1.</span> <span class="nav-text">联想r720安装ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#oh-my-zsh"><span class="nav-number">2.</span> <span class="nav-text">oh-my-zsh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim"><span class="nav-number">3.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmux"><span class="nav-number">4.</span> <span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmuxinator"><span class="nav-number">5.</span> <span class="nav-text">tmuxinator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wifi驱动安装后无法启动"><span class="nav-number">6.</span> <span class="nav-text">wifi驱动安装后无法启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自动启动"><span class="nav-number">7.</span> <span class="nav-text">开机自动启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统问题修复"><span class="nav-number">8.</span> <span class="nav-text">系统问题修复</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#联想r720安装ubuntu"><span class="nav-number">1.</span> <span class="nav-text">联想r720安装ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#oh-my-zsh"><span class="nav-number">2.</span> <span class="nav-text">oh-my-zsh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim"><span class="nav-number">3.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmux"><span class="nav-number">4.</span> <span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmuxinator"><span class="nav-number">5.</span> <span class="nav-text">tmuxinator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装网易云音乐"><span class="nav-number">6.</span> <span class="nav-text">安装网易云音乐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wifi驱动安装后无法启动"><span class="nav-number">7.</span> <span class="nav-text">wifi驱动安装后无法启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自动启动"><span class="nav-number">8.</span> <span class="nav-text">开机自动启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统问题修复"><span class="nav-number">9.</span> <span class="nav-text">系统问题修复</span></a></li></ol></div>
             
 
           </div>
