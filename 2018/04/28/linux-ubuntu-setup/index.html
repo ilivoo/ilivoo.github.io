@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get update #更">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-07T06:55:07.901Z">
+<meta property="og:updated_time" content="2018-07-10T03:53:13.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux安装配置">
 <meta name="twitter:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动 安装完成后更改显卡驱动为最新的  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get update #更">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,873
+                  3,336
                 </span>
               
 
@@ -443,6 +443,11 @@
 </li>
 <li><p>安装ubuntu-restricted-extras 获取字体</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ubuntu-restricted-extras ubuntu-restricted-addons</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置快捷键</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install compizconfig-settings-manager</span><br><span class="line">settings -&gt; keyboard -&gt; shortcuts</span><br><span class="line">#仅仅配置shortcuts有时候可能不生效，需要使用compizconfig来修改</span><br></pre></td></tr></table></figure>
+<p> 最终快捷键， 保留几个常用的</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + t        打开终端</span><br><span class="line">Ctrl + Super + up     放大应用</span><br><span class="line">Ctrl + Super + down   缩小应用</span><br><span class="line">Super + d             关闭/显示桌面</span><br><span class="line">Super + l             锁住桌面</span><br><span class="line">Super + w             显示打开的应用</span><br><span class="line">Super                 显示左边栏并打开搜索</span><br><span class="line">Super + Tab           显示左边栏并上下切换打开应用</span><br><span class="line">Alt [+ SHift] +       [向前]向后切换应用</span><br><span class="line">Alt + F4              关闭应用</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h4 id="oh-my-zsh"><a href="#oh-my-zsh" class="headerlink" title="oh-my-zsh"></a>oh-my-zsh</h4><ol>
@@ -533,7 +538,16 @@
 </ol>
 </li>
 </ol>
-<h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐"></a>安装网易云音乐</h4><ol>
+<h4 id="安装fusuma控制触摸板"><a href="#安装fusuma控制触摸板" class="headerlink" title="安装fusuma控制触摸板"></a>安装fusuma控制触摸板</h4><ol>
+<li><p>安装</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo gpasswd -a $USER input #需要管理员权限执行，配置开机启动也可以不用</span><br><span class="line">sudo apt-get install libinput-tools</span><br><span class="line">sudo apt-get install xdotool</span><br><span class="line">gem install fusuma #使用ruby安装</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#确保开启多点触控</span><br><span class="line">gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled</span><br><span class="line">#创建配置文件</span><br><span class="line">mkdir -p ~/config/fusum &amp;&amp; touch ~/.config/fusuma/config.yml</span><br><span class="line">#vi ~/.config/fusuma/config.yml</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">swipe:</span><br><span class="line">  3:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key alt+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key alt+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key ctrl+t&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key ctrl+w&apos;</span><br><span class="line">  4:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key super+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key super+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key super+a&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key super+s&apos;</span><br><span class="line">pinch:</span><br><span class="line">  in:</span><br><span class="line">    command: &apos;xdotool key ctrl+plus&apos;</span><br><span class="line">  out:</span><br><span class="line">    command: &apos;xdotool key ctrl+minus&apos;</span><br><span class="line"></span><br><span class="line">threshold:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br><span class="line"></span><br><span class="line">interval:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置开机启动， 参考下面的shadowsocks配置</p>
+<h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐"></a>安装网易云音乐</h4></li>
 <li><p>安装</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdebi</span><br><span class="line">sudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb</span><br><span class="line">sudo apt-get install sqlite3</span><br></pre></td></tr></table></figure>
 </li>
@@ -569,6 +583,16 @@
 </li>
 <li><p>系统卡死现象</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + F1 ~ F6    进入tty1 ~ tty6模式</span><br><span class="line">Ctrl + Alt + F7         恢复到桌面模式</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="idea快捷键冲突问题"><a href="#idea快捷键冲突问题" class="headerlink" title="idea快捷键冲突问题"></a>idea快捷键冲突问题</h4><ol>
+<li>设置fcitx 网易云音乐</li>
+<li>更改系统快捷键， 不常用的建议都去掉</li>
+<li>安装compizconfig-settings-manager继续修改快捷键</li>
+<li><p>关闭关闭tty防止ctrl + alt + F1-12的影响</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># sudo vi /usr/share/X11/xorg.conf.d/50-novtswitch.conf</span><br><span class="line">Section &quot;ServerFlags&quot;</span><br><span class="line">  Option &quot;DontVTSwitch&quot; &quot;true&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置idea <a href="http://yangbingdong.com/2017/note-of-learning-idea-under-ubuntu/" target="_blank" rel="noopener">博客</a></p>
 </li>
 </ol>
 
@@ -761,7 +785,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#联想r720安装ubuntu"><span class="nav-number">1.</span> <span class="nav-text">联想r720安装ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#oh-my-zsh"><span class="nav-number">2.</span> <span class="nav-text">oh-my-zsh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim"><span class="nav-number">3.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmux"><span class="nav-number">4.</span> <span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmuxinator"><span class="nav-number">5.</span> <span class="nav-text">tmuxinator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装网易云音乐"><span class="nav-number">6.</span> <span class="nav-text">安装网易云音乐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wifi驱动安装后无法启动"><span class="nav-number">7.</span> <span class="nav-text">wifi驱动安装后无法启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自动启动"><span class="nav-number">8.</span> <span class="nav-text">开机自动启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统问题修复"><span class="nav-number">9.</span> <span class="nav-text">系统问题修复</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#联想r720安装ubuntu"><span class="nav-number">1.</span> <span class="nav-text">联想r720安装ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#oh-my-zsh"><span class="nav-number">2.</span> <span class="nav-text">oh-my-zsh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim"><span class="nav-number">3.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmux"><span class="nav-number">4.</span> <span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmuxinator"><span class="nav-number">5.</span> <span class="nav-text">tmuxinator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装fusuma控制触摸板"><span class="nav-number">6.</span> <span class="nav-text">安装fusuma控制触摸板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装网易云音乐"><span class="nav-number">7.</span> <span class="nav-text">安装网易云音乐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wifi驱动安装后无法启动"><span class="nav-number">8.</span> <span class="nav-text">wifi驱动安装后无法启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自动启动"><span class="nav-number">9.</span> <span class="nav-text">开机自动启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统问题修复"><span class="nav-number">10.</span> <span class="nav-text">系统问题修复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idea快捷键冲突问题"><span class="nav-number">11.</span> <span class="nav-text">idea快捷键冲突问题</span></a></li></ol></div>
             
 
           </div>
