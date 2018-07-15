@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-04-29T10:35:43.066Z</updated>
+  <updated>2018-07-15T16:40:14.784Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux-shell-debug</title>
+    <link href="http://yoursite.com/2018/07/15/linux-shell-debug/"/>
+    <id>http://yoursite.com/2018/07/15/linux-shell-debug/</id>
+    <published>2018-07-15T12:41:31.000Z</published>
+    <updated>2018-07-15T16:40:14.784Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;bash-x教程&quot;&gt;&lt;a href=&quot;#bash-x教程&quot; class=&quot;headerlink&quot; title=&quot;bash -x教程&quot;&gt;&lt;/a&gt;bash -x教程&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;设置PS4 &lt;figure class=&quot;highlight plain&quot;&gt;
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>hdfs架构</title>
@@ -148,7 +172,7 @@
     <link href="http://yoursite.com/2018/04/28/linux-ubuntu-setup/"/>
     <id>http://yoursite.com/2018/04/28/linux-ubuntu-setup/</id>
     <published>2018-04-28T07:19:37.000Z</published>
-    <updated>2018-07-10T03:53:13.348Z</updated>
+    <updated>2018-07-10T05:13:09.444Z</updated>
     
     <summary type="html">
     
