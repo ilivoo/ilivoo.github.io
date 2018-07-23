@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-07-15T16:40:14.784Z</updated>
+  <updated>2018-07-20T08:01:38.264Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>kafka-shell-command</title>
+    <link href="http://yoursite.com/2018/07/19/kafka-shell-command/"/>
+    <id>http://yoursite.com/2018/07/19/kafka-shell-command/</id>
+    <published>2018-07-19T01:21:58.000Z</published>
+    <updated>2018-07-20T08:01:38.264Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;kafka-console-producer-sh&quot;&gt;&lt;a href=&quot;#kafka-console-producer-sh&quot; class=&quot;headerlink&quot; title=&quot;kafka-console-producer.sh&quot;&gt;&lt;/a&gt;kafka-conso
+      
+    
+    </summary>
+    
+      <category term="kafka" scheme="http://yoursite.com/categories/kafka/"/>
+    
+    
+      <category term="kafka" scheme="http://yoursite.com/tags/kafka/"/>
+    
+  </entry>
+  
+  <entry>
     <title>linux-shell-debug</title>
     <link href="http://yoursite.com/2018/07/15/linux-shell-debug/"/>
     <id>http://yoursite.com/2018/07/15/linux-shell-debug/</id>
     <published>2018-07-15T12:41:31.000Z</published>
-    <updated>2018-07-15T16:40:14.784Z</updated>
+    <updated>2018-07-19T01:23:14.229Z</updated>
     
     <summary type="html">
     
