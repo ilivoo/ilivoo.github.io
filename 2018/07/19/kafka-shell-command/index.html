@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka ####">
+<meta name="description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka 说明 –">
 <meta name="keywords" content="kafka">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kafka-shell-command">
 <meta property="og:url" content="http://yoursite.com/2018/07/19/kafka-shell-command/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka ####">
+<meta property="og:description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka 说明 –">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-20T08:01:38.264Z">
+<meta property="og:updated_time" content="2018-07-23T08:50:42.307Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kafka-shell-command">
-<meta name="twitter:description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka ####">
+<meta name="twitter:description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka 说明 –">
 
 
 
@@ -408,8 +408,7 @@
 
       
         <h4 id="kafka-console-producer-sh"><a href="#kafka-console-producer-sh" class="headerlink" title="kafka-console-producer.sh"></a>kafka-console-producer.sh</h4><p>用来往topic中生产消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &quot;parse.key=true&quot; --property &quot;key.separator=:&quot; --topic kafka</span><br></pre></td></tr></table></figure></p>
-<p>#####说明</p>
-<ol>
+<h5 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>–broker-list –topic 指定broker列表和生产消息的topic</li>
 <li>–property 指定console读取消息的kafka.tools.ConsoleProducer$LineMessageReader的属性， 也可以–line-reader指定默认的行读取器， 可以指定三个参数：<ol>
 <li>parse.key true 表示是否解析key， 如果不解析默认key为null</li>
@@ -421,9 +420,8 @@
 <li>–producer.config –producer-property 通过配置文件或者直接指定key=value去指定生产者的属性，用于在设置命令行中没有提供的参数</li>
 <li>–key-serializer –value-serializer –compression-codec 指定key value的序列化和压缩方式</li>
 </ol>
-<p>####kafka-console-consumer.sh<br>用来消费topic中的消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hadoop2.feng.com:9092 --topic kafka --property print.key=true --property &quot;key.separator=:&quot; --from-beginning</span><br></pre></td></tr></table></figure></p>
-<p>#####说明</p>
-<ol>
+<h4 id="kafka-console-consumer-sh"><a href="#kafka-console-consumer-sh" class="headerlink" title="kafka-console-consumer.sh"></a>kafka-console-consumer.sh</h4><p>用来消费topic中的消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hadoop2.feng.com:9092 --topic kafka --property print.key=true --property &quot;key.separator=:&quot; --from-beginning</span><br></pre></td></tr></table></figure></p>
+<h5 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>–broker-list –topic 指定broker列表和消费的topic</li>
 <li>–property 指定console读取消息的kafka.tools.DefaultMessageFormatter的属性， 也可以–formatter指定默认的行读取器， 可以指定三个参数：<ol>
 <li>print.key true 打印key</li>
@@ -439,35 +437,30 @@
 <li>–consumer.config –consumer-property 通过配置文件或者直接指定key=value去指定消费者的属性，用于在设置命令行中没有提供的参数</li>
 <li>–isolation-level read_uncommitted/read_committed 指定隔离级别， 用于支持读取消息的一致性语义</li>
 </ol>
-<p>####kafka-consumer-groups.sh<br>用来管理消费者组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hadoop1.feng.com:9092 --group console-consumer-38042 --describe</span><br></pre></td></tr></table></figure></p>
-<p>#####说明</p>
-<ol>
+<h4 id="kafka-consumer-groups-sh"><a href="#kafka-consumer-groups-sh" class="headerlink" title="kafka-consumer-groups.sh"></a>kafka-consumer-groups.sh</h4><p>用来管理消费者组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hadoop1.feng.com:9092 --group console-consumer-38042 --describe</span><br></pre></td></tr></table></figure></p>
+<h5 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>此命令主要存在四个功能–list, –describe, –delete, –reset-offsets</li>
 <li>–list 显示所有的消费者组</li>
 <li>–describe 显示某个消费者组的详细信息</li>
 <li>–delete 删除某个消费者组</li>
 <li>–reset-offsets 重新设置消费者组的偏移量 </li>
 </ol>
-<p>####kafka-log-dirs.sh<br>用来查看broker的日志保存信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-log-dirs.sh --bootstrap-server hadoop1.feng.com:9092 --describe --topic-list kafka --broker-list 2</span><br></pre></td></tr></table></figure></p>
-<p>#####说明</p>
-<ol>
+<h4 id="kafka-log-dirs-sh"><a href="#kafka-log-dirs-sh" class="headerlink" title="kafka-log-dirs.sh"></a>kafka-log-dirs.sh</h4><p>用来查看broker的日志保存信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-log-dirs.sh --bootstrap-server hadoop1.feng.com:9092 --describe --topic-list kafka --broker-list 2</span><br></pre></td></tr></table></figure></p>
+<h5 id="说明-3"><a href="#说明-3" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>–topic-list 需要显示的topic</li>
 <li>–broker-list 需要显示的brokers</li>
 </ol>
-<p>####kafka-delete-records.sh<br>用来删除记录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-delete-records.sh --bootstrap-server hadoop1.feng.com:9092 --offset-json-file myconfig/kafka-delete-records.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;partitions&quot;:</span><br><span class="line">        [</span><br><span class="line">            &#123;&quot;topic&quot;: &quot;kafka&quot;, &quot;partition&quot;: 0,&quot;offset&quot;: 20&#125;</span><br><span class="line">        ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>######说明</p>
-<ol>
+<h4 id="kafka-delete-records-sh"><a href="#kafka-delete-records-sh" class="headerlink" title="kafka-delete-records.sh"></a>kafka-delete-records.sh</h4><p>用来删除记录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-delete-records.sh --bootstrap-server hadoop1.feng.com:9092 --offset-json-file myconfig/kafka-delete-records.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;partitions&quot;:</span><br><span class="line">        [</span><br><span class="line">            &#123;&quot;topic&quot;: &quot;kafka&quot;, &quot;partition&quot;: 0,&quot;offset&quot;: 20&#125;</span><br><span class="line">        ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="说明-4"><a href="#说明-4" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>对于kafka来说默认存在两种删除策略， 一种基于日志量， 二种基于日志保存的时间， 但是有时候我们需要手动的去指定删除到具体的位置， 这个脚本就比较有用了</li>
 <li>日志可能未必立即删除， 但是以及无法消费删除的日志了</li>
 </ol>
-<p>####kafka-preferred-replica-election.sh<br>用来对某个topic的分区进行选举prefered replica， 分区的leader用来读写的， 从而平衡kafka集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-preferred-replica-election.sh --zookeeper hadoop1.feng.com:2181 --path-to-json-file myconfig/kafka-preferred-replica-election.json</span><br></pre></td></tr></table></figure></p>
-<p>#####说明</p>
-<ol>
+<h4 id="kafka-preferred-replica-election-sh"><a href="#kafka-preferred-replica-election-sh" class="headerlink" title="kafka-preferred-replica-election.sh"></a>kafka-preferred-replica-election.sh</h4><p>用来对某个topic的分区进行选举prefered replica， 分区的leader用来读写的， 从而平衡kafka集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-preferred-replica-election.sh --zookeeper hadoop1.feng.com:2181 --path-to-json-file myconfig/kafka-preferred-replica-election.json</span><br></pre></td></tr></table></figure></p>
+<h5 id="说明-5"><a href="#说明-5" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>此处的选举主要是为了kafka能够平衡负载， 并且kafka也保留了auto.leader.rebalance.enable来自动进行分区leader选举， 造成不平衡的原理是因为broker添加或者是broker失败恢复</li>
 </ol>
-<p>####kafka-reassign-partitions.sh<br>生产分配方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-reassign-partitions.sh --zookeeper hadoop1.feng.com:2181 --generate --topics-to-move-json-file myconfig/kafka-reassign-partitions-generate.json --broker-list 0,1,2</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line">kafka-reassign-partitions-generate.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;topics&quot;:</span><br><span class="line">        [</span><br><span class="line">            &#123;&quot;topic&quot;: &quot;kafka&quot;&#125;</span><br><span class="line">        ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>######说明</p>
-<ol>
+<h4 id="kafka-reassign-partitions-sh"><a href="#kafka-reassign-partitions-sh" class="headerlink" title="kafka-reassign-partitions.sh"></a>kafka-reassign-partitions.sh</h4><p>生产分配方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-reassign-partitions.sh --zookeeper hadoop1.feng.com:2181 --generate --topics-to-move-json-file myconfig/kafka-reassign-partitions-generate.json --broker-list 0,1,2</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line">kafka-reassign-partitions-generate.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;topics&quot;:</span><br><span class="line">        [</span><br><span class="line">            &#123;&quot;topic&quot;: &quot;kafka&quot;&#125;</span><br><span class="line">        ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="说明-6"><a href="#说明-6" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>–generate 生成重新分区方案， –topic-to-move-json-file指定需要移动的topic信息， –broker-list 指定移动到的broker</li>
 <li>此处打印出当前的分配信息， 以及建议的分配信息， 可以讲建议信息作为–reassignment-json-file的参数进行手动的执行</li>
 <li>这里不需要指定bootstrap-server是因为当重新进行分配分区的时候实际上仅仅只是在zookeeper中更改状态， 当controller获取到状态的时候就异步的去执行当前分配策略</li>
@@ -667,7 +660,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-console-producer-sh"><span class="nav-number">1.</span> <span class="nav-text">kafka-console-producer.sh</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-console-producer-sh"><span class="nav-number">1.</span> <span class="nav-text">kafka-console-producer.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明"><span class="nav-number">1.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-console-consumer-sh"><span class="nav-number">2.</span> <span class="nav-text">kafka-console-consumer.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-1"><span class="nav-number">2.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-consumer-groups-sh"><span class="nav-number">3.</span> <span class="nav-text">kafka-consumer-groups.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-2"><span class="nav-number">3.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-log-dirs-sh"><span class="nav-number">4.</span> <span class="nav-text">kafka-log-dirs.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-3"><span class="nav-number">4.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-delete-records-sh"><span class="nav-number">5.</span> <span class="nav-text">kafka-delete-records.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-4"><span class="nav-number">5.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-preferred-replica-election-sh"><span class="nav-number">6.</span> <span class="nav-text">kafka-preferred-replica-election.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-5"><span class="nav-number">6.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-reassign-partitions-sh"><span class="nav-number">7.</span> <span class="nav-text">kafka-reassign-partitions.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-6"><span class="nav-number">7.1.</span> <span class="nav-text">说明</span></a></li></ol></li></ol></div>
             
 
           </div>
