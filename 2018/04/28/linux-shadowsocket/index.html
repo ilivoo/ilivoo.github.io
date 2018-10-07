@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-28T08:44:42.361Z">
+<meta property="og:updated_time" content="2018-10-07T07:53:23.765Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shadowsocks代理">
 <meta name="twitter:description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  334
+                  780
                 </span>
               
 
@@ -424,7 +424,7 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install python-pip</span><br><span class="line">sudo pip install shadowsocks</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置shadowsocks</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:&quot;服务器地址&quot;,</span><br><span class="line">    &quot;server_port&quot;:服务器端口号,</span><br><span class="line">    &quot;local_address&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;:1080,</span><br><span class="line">    &quot;password&quot;:&quot;密码&quot;,</span><br><span class="line">    &quot;timeout&quot;:300,</span><br><span class="line">    &quot;method&quot;:&quot;加密方式&quot;,</span><br><span class="line">    &quot;fast_open&quot;: true,  #需要服务端开启</span><br><span class="line">    &quot;workers&quot;: 1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:&quot;服务器地址&quot;,</span><br><span class="line">    &quot;server_port&quot;:服务器端口号,</span><br><span class="line">    &quot;local_address&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;:1080,</span><br><span class="line">    &quot;password&quot;:&quot;密码&quot;,</span><br><span class="line">    &quot;timeout&quot;:300,</span><br><span class="line">    &quot;method&quot;:&quot;加密方式&quot;,</span><br><span class="line">    &quot;fast_open&quot;: true,  #需要服务端开启</span><br><span class="line">    &quot;workers&quot;: 2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>启动shadowsocks， 可以直接配置成开机启动启动</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sslocal -c /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
@@ -440,6 +440,31 @@
 </ol>
 <h4 id="shadowsocks服务端搭建"><a href="#shadowsocks服务端搭建" class="headerlink" title="shadowsocks服务端搭建"></a>shadowsocks服务端搭建</h4><ol>
 <li>建议使用搬瓦工， 并选择手机运营商对应的直连机房</li>
+<li>安装步骤：<ol>
+<li>安装Centos 7 x86_64 bbr 使用谷歌网络优化技术</li>
+<li>安装yum install wget</li>
+<li>wget — no-check-certificate -O shadowsocks.sh <a href="https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh" target="_blank" rel="noopener">https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh</a></li>
+<li>chmod +x shadowsocks.sh</li>
+<li>./shadowsocks.sh 2&gt;&amp;1 | tee shadowsocks.log</li>
+</ol>
+</li>
+<li><p>优化,参照<a href="https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open：" target="_blank" rel="noopener">https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open：</a></p>
+<ol>
+<li><p>服务端优化tcp_fastopen</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;server&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">&quot;server_port&quot;:443,</span><br><span class="line">&quot;local_address&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">&quot;local_port&quot;:1080,</span><br><span class="line">&quot;password&quot;:&quot;fengxiang123&quot;,</span><br><span class="line">&quot;timeout&quot;:300,</span><br><span class="line">&quot;method&quot;:&quot;chacha20&quot;,</span><br><span class="line">&quot;fast_open&quot;:true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>服务端系统开启tcp_fastopen</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#创建文件</span><br><span class="line">vi /etc/sysctl.d/local.conf</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"># 配置如下</span><br><span class="line"># max open files</span><br><span class="line">fs.file-max = 51200</span><br><span class="line"># max read buffer</span><br><span class="line">net.core.rmem_max = 67108864</span><br><span class="line"># max write buffer</span><br><span class="line">net.core.wmem_max = 67108864</span><br><span class="line"># default read buffer</span><br><span class="line">net.core.rmem_default = 65536</span><br><span class="line"># default write buffer</span><br><span class="line">net.core.wmem_default = 65536</span><br><span class="line"># max processor input queue</span><br><span class="line">net.core.netdev_max_backlog = 4096</span><br><span class="line"># max backlog</span><br><span class="line">net.core.somaxconn = 4096</span><br><span class="line"></span><br><span class="line"># resist SYN flood attacks</span><br><span class="line">net.ipv4.tcp_syncookies = 1</span><br><span class="line"># reuse timewait sockets when safe</span><br><span class="line">net.ipv4.tcp_tw_reuse = 1</span><br><span class="line"># turn off fast timewait sockets recycling</span><br><span class="line">net.ipv4.tcp_tw_recycle = 0</span><br><span class="line"># short FIN timeout</span><br><span class="line">net.ipv4.tcp_fin_timeout = 30</span><br><span class="line"># short keepalive time</span><br><span class="line">net.ipv4.tcp_keepalive_time = 1200</span><br><span class="line"># outbound port range</span><br><span class="line">net.ipv4.ip_local_port_range = 10000 65000</span><br><span class="line"># max SYN backlog</span><br><span class="line">net.ipv4.tcp_max_syn_backlog = 4096</span><br><span class="line"># max timewait sockets held by system simultaneously</span><br><span class="line">net.ipv4.tcp_max_tw_buckets = 5000</span><br><span class="line"># turn on TCP Fast Open on both client and server side</span><br><span class="line">net.ipv4.tcp_fastopen = 3</span><br><span class="line"># TCP receive buffer</span><br><span class="line">net.ipv4.tcp_rmem = 4096 87380 67108864</span><br><span class="line"># TCP write buffer</span><br><span class="line">net.ipv4.tcp_wmem = 4096 65536 67108864</span><br><span class="line"># turn on path MTU discovery</span><br><span class="line">net.ipv4.tcp_mtu_probing = 1</span><br><span class="line"></span><br><span class="line"># for high-latency network</span><br><span class="line">net.ipv4.tcp_congestion_control = hybla</span><br><span class="line"></span><br><span class="line"># for low-latency network, use cubic instead</span><br><span class="line"># net.ipv4.tcp_congestion_control = cubic</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#启动</span><br><span class="line">sysctl --system</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端优化tcp_fastopen</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> &#123;</span><br><span class="line">    &quot;server&quot;:&quot;95.163.199.85&quot;,</span><br><span class="line">    &quot;server_port&quot;:443,</span><br><span class="line">    &quot;local_address&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;:1080,</span><br><span class="line">    &quot;password&quot;:&quot;fengxiang123&quot;,</span><br><span class="line">    &quot;timeout&quot;:300,</span><br><span class="line">    &quot;method&quot;:&quot;chacha20&quot;,</span><br><span class="line">    &quot;fast_open&quot;:true,</span><br><span class="line">    &quot;workers&quot;:2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端系统开启tcp_fastopen</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 当前生效</span><br><span class="line">echo 3 &gt; /proc/sys/net/ipv4/tcp_fastopen</span><br><span class="line"># 永久生效,在/etc/sysctl.conf中添加</span><br><span class="line">net.ipv4.tcp_fastopen = 3</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
 </ol>
 
       
@@ -569,7 +594,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
