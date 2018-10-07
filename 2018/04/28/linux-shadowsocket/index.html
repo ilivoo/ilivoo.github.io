@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-07T07:53:23.765Z">
+<meta property="og:updated_time" content="2018-10-07T08:21:32.573Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shadowsocks代理">
 <meta name="twitter:description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  780
+                  785
                 </span>
               
 
@@ -440,13 +440,8 @@
 </ol>
 <h4 id="shadowsocks服务端搭建"><a href="#shadowsocks服务端搭建" class="headerlink" title="shadowsocks服务端搭建"></a>shadowsocks服务端搭建</h4><ol>
 <li>建议使用搬瓦工， 并选择手机运营商对应的直连机房</li>
-<li>安装步骤：<ol>
-<li>安装Centos 7 x86_64 bbr 使用谷歌网络优化技术</li>
-<li>安装yum install wget</li>
-<li>wget — no-check-certificate -O shadowsocks.sh <a href="https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh" target="_blank" rel="noopener">https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh</a></li>
-<li>chmod +x shadowsocks.sh</li>
-<li>./shadowsocks.sh 2&gt;&amp;1 | tee shadowsocks.log</li>
-</ol>
+<li><p>安装步骤：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 安装Centos 7 x86_64 bbr 使用谷歌网络优化技术</span><br><span class="line">2. 安装yum install wget</span><br><span class="line">3. wget — no-check-certificate -O shadowsocks.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh</span><br><span class="line">4. chmod +x shadowsocks.sh</span><br><span class="line">5. ./shadowsocks.sh 2&gt;&amp;1 | tee shadowsocks.log</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>优化,参照<a href="https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open：" target="_blank" rel="noopener">https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open：</a></p>
 <ol>
