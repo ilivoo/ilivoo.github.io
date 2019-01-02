@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-02T11:52:58.723Z</updated>
+  <updated>2019-01-02T11:57:26.541Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://yoursite.com/2019/01/02/mysql-partitions/"/>
     <id>http://yoursite.com/2019/01/02/mysql-partitions/</id>
     <published>2019-01-02T11:44:59.000Z</published>
-    <updated>2019-01-02T11:52:58.723Z</updated>
+    <updated>2019-01-02T11:57:26.541Z</updated>
     
     <summary type="html">
     
@@ -30,7 +30,7 @@
         &lt;ol&gt;
 &lt;li&gt;修改已经存在的表为其添加分区&lt;/li&gt;
 &lt;/ol&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span c
+&lt;figure class=&quot;highlight sql&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span cla
       
     
     </summary>
