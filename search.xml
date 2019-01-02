@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[hadoop-hortonwork]]></title>
+    <url>%2F2019%2F01%2F02%2Fhadoop-hortonwork%2F</url>
+    <content type="text"><![CDATA[安装 hortonwork sandbox 参考 sandbox安装页面。 修改docker 的root密码, 直接登录进入docker就会提示更改密码 更改ambari admin 密码， 终端下执行 ambari-admin-password-reset mysql无法启动 mv /usr/sbin/mysqld /usr/bin/mysqld ln -nfs /usr/bin/mysqld /usr/sbin/mysqld 修改hdfs的yarn日志用户 1hadoop.http.staticuser.user = yarn 修改ranger admin UI密码登入， 保持下面密码全部都是一样的， 并且密码长度大于等于9位 更改ambari admin 密码， 终端下执行 ambari-admin-password-reset 更改ranger admin for Ambari密码， ranger -&gt; config -&gt; advance -&gt; Ranger Admin user’s password for Ambari(Admin Settings下) 更改ranger Admin 密码， ranger -&gt; config -&gt; advance -&gt; Ranger Admin user’s password(Ranger-env下) 更改mysql root用户以方便以后对mysql的更改， 在my.conf中加入skip-grant-tables跳过授权，更改mysql root用户密码 update mysql.user set authentication_string=password(&#39;mypasswd&#39;) where user=&#39;root&#39;; 更改ranger需要的mysql root账户密码， ranger -&gt; config -&gt; ranger admin -&gt; Database Administrator (DBA) password 更改ranger admin账户的登录密码 update ranger.x_portal_user set password = &#39;ceb4f32325eda6142bd65215f4c0f371 &#39; where login_id= &#39;admin&#39;; 此password是有用户名和密码进行MD5求取出来的 echo -n &#39;admin{admin}&#39; | md5sum 使用同样(f步骤)的方法更改amb_ranger_admin的登录密码]]></content>
+      <categories>
+        <category>hadoop</category>
+        <category>hortonwork</category>
+      </categories>
+      <tags>
+        <tag>hadoop</tag>
+        <tag>hortonwork</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[centos7 安装]]></title>
     <url>%2F2019%2F01%2F02%2Flinux-centos-install%2F</url>
     <content type="text"><![CDATA[journalctl 启动过程中遇到任何问题都可通过这里解决 安装完成后配置网卡自动启动 修改配置文件 vi /etc/sysconfig/network-scripts/ifcfg-ent33 1ONBOOT=YES 重启网卡 service network restart 安装网络工具 yum install net-tools 更换阿里云的源 安装wget yum install wget 获取阿里云的源 wget http://mirrors.aliyun.com/repo/Centos-7.repomv CentOS-Base.repo CentOS-Base.repo.bakmv CentOS-7.repo CentOS-Base.repo 更新缓存存并更新 yum clean allyum makecacheyum -y update 设置ssh， 参考ssh使用教程 设置固定ip 编辑配置文件，添加或修改如下类容 vim /etc/sysconfig/network-scripts/ifcfg-eth0 123456BOOTPROTO=&quot;static&quot; #dhcp改为static ONBOOT=&quot;yes&quot; #开机启用本配置IPADDR=192.168.7.106 #静态IPGATEWAY=192.168.7.2 #默认网关NETMASK=255.255.255.0 #子网掩码DNS1=192.168.7.1 #DNS 配置 重启网络 service network restart 注意： 通常情况下，安装虚拟机后使用NAT网络， 那么主机的地址为192.168.7.1, 虚拟机网关地址 192.168.7.2, 剩下的地址才是虚拟机地址 关闭防火墙 systemctl stop firewalld.service systemctl disable firewalld.service 关闭SELINUX vim /etc/selinux/config` 1SELINUX=disabled 安装本地源 挂载U盘 mount -t vfat /dev/sdc4 /mnt/Centos7 步骤参考 [u盘挂载]: https://blog.csdn.net/leshami/article/details/78133716 安装无线网卡参考 设置开机启动 /etc/init.d/中添加可执行脚本, 开头可以参考这个目录下其它的脚本, 如： 添加 sslocal 1234567#!/bin/bash## sshd Start up the OpenSSH server daemon## chkconfig: 2345 55 25# description: sslcal shadowsocks/usr/bin/sslocal -c /etc/shadowsocks.json 添加到启动服务当中 chkconfig sslocal on]]></content>
