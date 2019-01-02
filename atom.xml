@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-02T11:57:26.541Z</updated>
+  <updated>2019-01-02T12:04:07.415Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mysql性能解析</title>
+    <link href="http://yoursite.com/2019/01/02/mysql-profile/"/>
+    <id>http://yoursite.com/2019/01/02/mysql-profile/</id>
+    <published>2019-01-02T12:00:05.000Z</published>
+    <updated>2019-01-02T12:04:07.415Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;New Relic, xhprof&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;可以通过设置long_query_time为0来捕
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql分区</title>

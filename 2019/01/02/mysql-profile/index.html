@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="linux," />
+  <meta name="keywords" content="mysql," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="bash -x教程 设置PS4 1export PS4=&amp;apos;($&amp;#123;BASH_SOURCE&amp;#125;:$&amp;#123;LINENO&amp;#125;): $&amp;#123;FUNCNAME[0]&amp;#125; - [$&amp;#123;SHLVL&amp;#125;,$&amp;#123;BASH_SUBSHELL&amp;#125;, $?]&amp;apos;   bashdb教程安装1sudo apt install bas">
-<meta name="keywords" content="linux">
+<meta name="description" content="profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。  New Relic, xhprof  可以通过设置long_query_time为0来捕获所有的查询   1234slow_query_log = onslow_query_log_file = /var/log/mysql/mysql-slow.loglong_query_time = 0#">
+<meta name="keywords" content="mysql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux-shell-debug">
-<meta property="og:url" content="http://yoursite.com/2018/07/15/linux-shell-debug/index.html">
+<meta property="og:title" content="mysql性能解析">
+<meta property="og:url" content="http://yoursite.com/2019/01/02/mysql-profile/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="bash -x教程 设置PS4 1export PS4=&amp;apos;($&amp;#123;BASH_SOURCE&amp;#125;:$&amp;#123;LINENO&amp;#125;): $&amp;#123;FUNCNAME[0]&amp;#125; - [$&amp;#123;SHLVL&amp;#125;,$&amp;#123;BASH_SUBSHELL&amp;#125;, $?]&amp;apos;   bashdb教程安装1sudo apt install bas">
+<meta property="og:description" content="profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。  New Relic, xhprof  可以通过设置long_query_time为0来捕获所有的查询   1234slow_query_log = onslow_query_log_file = /var/log/mysql/mysql-slow.loglong_query_time = 0#">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-19T01:23:14.229Z">
+<meta property="og:updated_time" content="2019-01-02T12:04:07.415Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="linux-shell-debug">
-<meta name="twitter:description" content="bash -x教程 设置PS4 1export PS4=&amp;apos;($&amp;#123;BASH_SOURCE&amp;#125;:$&amp;#123;LINENO&amp;#125;): $&amp;#123;FUNCNAME[0]&amp;#125; - [$&amp;#123;SHLVL&amp;#125;,$&amp;#123;BASH_SUBSHELL&amp;#125;, $?]&amp;apos;   bashdb教程安装1sudo apt install bas">
+<meta name="twitter:title" content="mysql性能解析">
+<meta name="twitter:description" content="profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。  New Relic, xhprof  可以通过设置long_query_time为0来捕获所有的查询   1234slow_query_log = onslow_query_log_file = /var/log/mysql/mysql-slow.loglong_query_time = 0#">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/15/linux-shell-debug/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/02/mysql-profile/"/>
 
 
 
 
 
-  <title>linux-shell-debug | Ilivoo`s blog</title>
+  <title>mysql性能解析 | Ilivoo`s blog</title>
   
 
 
@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/15/linux-shell-debug/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/mysql-profile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ilivoo">
@@ -316,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linux-shell-debug</h1>
+          <h1 class="post-title" itemprop="name headline">mysql性能解析</h1>
         
 
         <div class="post-meta">
@@ -328,8 +328,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-15T20:41:31+08:00">
-                2018-07-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-02T20:00:05+08:00">
+                2019-01-02
               </time>
             
 
@@ -351,8 +351,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
                   </a>
                 </span>
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  820
+                  492
                 </span>
               
 
@@ -407,58 +407,39 @@
       
 
       
-        <h4 id="bash-x教程"><a href="#bash-x教程" class="headerlink" title="bash -x教程"></a>bash -x教程</h4><ol>
-<li>设置PS4 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PS4=&apos;($&#123;BASH_SOURCE&#125;:$&#123;LINENO&#125;): $&#123;FUNCNAME[0]&#125; - [$&#123;SHLVL&#125;,$&#123;BASH_SUBSHELL&#125;, $?]&apos;</span><br></pre></td></tr></table></figure>
+        <ol>
+<li><p>profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。</p>
+</li>
+<li><p>New Relic, xhprof</p>
+</li>
+<li><p>可以通过设置long_query_time为0来捕获所有的查询</p>
 </li>
 </ol>
-<h4 id="bashdb教程"><a href="#bashdb教程" class="headerlink" title="bashdb教程"></a>bashdb教程</h4><h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install bashdb</span><br></pre></td></tr></table></figure>
-</code></pre><h5 id="命令详解"><a href="#命令详解" class="headerlink" title="命令详解"></a>命令详解</h5><ol>
-<li><p>原始代码 bashdb.sh sub_bashdb.sh</p>
-<ol>
-<li><p>bashdb.sh</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo &quot;hello world&quot;</span><br><span class="line">name=&quot;feng xiang&quot;</span><br><span class="line">age=28</span><br><span class="line">. sub_bashdb.sh $name $age</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log = on</span><br><span class="line">slow_query_log_file = /var/log/mysql/mysql-slow.log</span><br><span class="line">long_query_time = 0</span><br><span class="line">#set global slow_query_log=on;通常情况下，服务器可以通过随时打开来进行开启慢查询</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li><p>pt-query-digest, mysqldumpslow等等来分析满查询</p>
 </li>
-<li><p>sub_bashdb.sh</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">echo &quot;welcome &quot;</span><br><span class="line">name=&quot;wang pei&quot;</span><br><span class="line">age=27</span><br><span class="line">echo &quot;welcome&quot; &gt;&gt; hello.txt</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-<li><p>断点</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#断点, 指定行号或者当前行号</span><br><span class="line">break [LINENO]</span><br><span class="line">#瞬时断点, 指定行号或者当前行号， 断点一次后失效</span><br><span class="line">tbreak</span><br><span class="line">#条件断点, 断点编号， 断点条件</span><br><span class="line">condition BRKPT-NUM condition</span><br><span class="line">#删除一个或多个断点</span><br><span class="line">delete &#123;BRKPT-NUM&#125;...</span><br><span class="line">#清除某行所有断点</span><br><span class="line">clear LINENO</span><br><span class="line">#开启一个或多个断点</span><br><span class="line">enable BPNUM1 [BPNUM2 ...]</span><br><span class="line">#关闭一个或多个断点</span><br><span class="line">disable BPNUM1 [BPNUM2 ...]</span><br><span class="line">#显示断点</span><br><span class="line">info b[reakpoints]</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#继续执行到断点</span><br><span class="line">continue [LINENO | - ]</span><br><span class="line">#1. 执行到下一个断点</span><br><span class="line">continue</span><br><span class="line">#2. 执行到指定的行(首先给指定的行加零时断点，再执行continue命令)</span><br><span class="line">continue LINENO</span><br><span class="line">#关闭debug并执行脚本</span><br><span class="line">continue -</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#前进</span><br><span class="line">1. 前进一步或者多步， 不进入方法</span><br><span class="line">next [COUNT]</span><br><span class="line">2. 前进一步或者多步， 进入方法或者source(.)命令执行的文件</span><br><span class="line">step [COUNT]</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#跳过一行或多行</span><br><span class="line">skip [COUNT]</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#执行完当前方法</span><br><span class="line">finish</span><br><span class="line">#从当前方法中返回</span><br><span class="line">return</span><br><span class="line">#向当前debug的进行发送信号</span><br><span class="line">kill [SIGNAL]</span><br><span class="line">signal SIGNAL</span><br><span class="line">#退出debugger</span><br><span class="line">quit [EXIT-CODE [SHELL-LEVELS]]</span><br><span class="line">#重新运行或者指定重新运行的命令, 如果指定args必须为完整的命令， 不指定则使用原先的命令</span><br><span class="line">run [args]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看变量</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#打印出表达式值</span><br><span class="line">print EXPRESSION</span><br><span class="line"></span><br><span class="line">print $@ $name</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#每次debug停止到一行的时候显示或者直接执行命令</span><br><span class="line">display [EXPRESSION]</span><br><span class="line"></span><br><span class="line">display $@ $name</span><br><span class="line">#删除display的命令</span><br><span class="line">undisplay NUM [NUM2 ...]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示源代码, list显示的时候有个移动往下翻页的概念， 并记录当前浏览到了哪一个位置</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">list[&gt;] [LOC|.|-] [NUMBER]</span><br><span class="line"></span><br><span class="line">list .      # 显示到当前栈的行</span><br><span class="line">list        # 显示当前翻页的行前后</span><br><span class="line">list -      # 显示当前翻页的行前面</span><br><span class="line">list&gt; .     # 显示到当前栈的行</span><br><span class="line">list  10 3  # 显示10附近的三行 9-11</span><br><span class="line">list&gt; 10 3  # 显示是后面的三行 10-12</span><br><span class="line">list  10 13 # 显示10-13行</span><br><span class="line">list  10 -5 # 显示10行到倒数第五行</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示和设置当前debugger的设置信息</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show/set [param]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看当前信息</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bashdb&lt;1&gt; info</span><br><span class="line">Info subcommands are:</span><br><span class="line">  args         display  functions  line     signals  stack     watchpoints</span><br><span class="line">  breakpoints  files    handle     program  source   warranty  </span><br><span class="line">#args 显示参数</span><br><span class="line">#display 显示display表达式</span><br><span class="line">#line 显示当前行号</span><br><span class="line">#breakpoints 显示所有断点</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>debug其它脚本， 并保留当前现场</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">debug [SCRIPT]</span><br><span class="line">#不指定脚本， 执行当前行的命令</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>进入一个嵌套的shell， 不是子shell</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">shell [options]</span><br><span class="line"></span><br><span class="line">options:</span><br><span class="line">   --no-fns  | -F  : don&apos;t copy in function definitions from parent shell</span><br><span class="line">   --no-vars | -V  : don&apos;t copy in variable definitions</span><br><span class="line">   --shell SHELL_NAME</span><br><span class="line">   --posix         : corresponding shell option</span><br><span class="line">   --login | l     : corresponding shell option</span><br><span class="line">   --noprofile     : corresponding shell option</span><br><span class="line">   --norc          : corresponding shell option</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>执行一个命令</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval CMD</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置环境变量</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export VAR1 [VAR2 ...]</span><br></pre></td></tr></table></figure>
+<li><p>性能剖析步骤：</p>
+<p>a. 使用慢查询， 直接开启慢查询或者使用pt-query-digest获取(show full processlist实现)或者直接使用tcpdump将网络包数据保存到磁盘， 然后使用pt-query-digest –type=tcpdump来进行解析并分析查询</p>
+<p>b. 使用pt-query-digest来分析慢查询日志， 并分析出结果</p>
+<p>c. 使用explain分析执行的语句</p>
+<p>d. 使用profiling来分析单条语句</p>
 </li>
 </ol>
-<p>#####</p>
-<ol>
-<li>通过shell来</li>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set profiling=1</span><br><span class="line">select * </span><br><span class="line">show profiles</span><br><span class="line">show profile for query n</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li><p>通常使用show status、show processlist和show innodb status开销是非常低的</p>
+</li>
+<li><p>通过show profile for query n来获取到查询主要的耗时在哪个地方， 如：</p>
+<p>Copying to temp table        0.090623</p>
+<p>Sorting result                0.011555</p>
+<p>Sending result                0.045931</p>
+<p><strong>注意：</strong>可以看到此处最大的消耗是在临时表中， 所有此时我们考虑的是如何去掉临时表， 但经常可能会误导我们的是结果排序， 它占比非常低， 而我们如果简单通过查询语句很容易掉入到这个陷阱当中， 所以一般原则是”不建议优化排序缓冲区”。</p>
+</li>
+<li><p>show status通常是一个很有用的工具， 但是它不是一款剖析工具， show status大多都是一个计数器。</p>
+</li>
+<li><p>mysql在5.6.6中正是加入了performance_schema数据库（它的存储引擎也是performace_schema, 内存式数据引擎）， 用来记录系统中需要记录的性能相关的数据， 并且是默认开启的</p>
+</li>
 </ol>
 
       
@@ -482,7 +463,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
           
         </div>
       
@@ -495,8 +476,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/29/hadoop-hdfs-architecture/" rel="next" title="hdfs架构">
-                <i class="fa fa-chevron-left"></i> hdfs架构
+              <a href="/2019/01/02/mysql-partitions/" rel="next" title="mysql分区">
+                <i class="fa fa-chevron-left"></i> mysql分区
               </a>
             
           </div>
@@ -504,10 +485,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/19/kafka-shell-command/" rel="prev" title="kafka-shell-command">
-                kafka-shell-command <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -559,17 +536,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -640,22 +608,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#bash-x教程"><span class="nav-number">1.</span> <span class="nav-text">bash -x教程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bashdb教程"><span class="nav-number">2.</span> <span class="nav-text">bashdb教程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#安装"><span class="nav-number">2.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#命令详解"><span class="nav-number">2.2.</span> <span class="nav-text">命令详解</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
