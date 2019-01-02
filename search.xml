@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[live-photo]]></title>
+    <title><![CDATA[linux-wifi]]></title>
+    <url>%2F2019%2F01%2F02%2Flinux-wifi%2F</url>
+    <content type="text"><![CDATA[首先下载iw工具。 yum -y install iw 获取无线网卡的名称 执行iw dev，假设获得名称为 wlp3s0（示例） 激活无线网络接口 执行ip link set wlp3s0 up 扫描当前环境中的无线网络 执行iw wlp3s0 scan|grep SSID，假设你能够连接的网络名称是TP-LINK-1（示例） 登录指定网络 执行wpa_supplicant -B -i wlp3s0 -c &lt;(wpa_passphrase “TP-LINK-1” “此网络的密码”) 主动请求动态地址 dhclient wlp3s0 查看获取的网络地址 执行ip addr show wlp3s0 设置自动启动 设置NetworkManager自动启动 chkconfig NetworkManager on 安装NetworkManager-wifi yum -y install NetworkManager-wifi 开启WiFi nmcli r wifi on 测试（扫描信号） nmcli dev wifi 连接 nmcli dev wifi connect wifi_name password wifi_password]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[摄影]]></title>
     <url>%2F2019%2F01%2F02%2Flive-photo%2F</url>
     <content type="text"><![CDATA[摄影的三要素 曝光： 光线通过光圈到照片中接受的多少。 审美： 照片通过各种元素给人的视觉不同的冲击力。 其它： 照片体现的各种主题、人文等等。 曝光的三要素： 光圈： 小孔成像中小孔的描述， 光圈也存在大小。 快门： 光线通过小孔传递到照片， 通过一个开关控制光圈打开的时间。 ISO：由于场景中光线的强度有限， 如果通过大光圈慢快门还是无法达到我们想要的效果，那么通常需要调大ISO， 从而使得照片增加曝光。ISO也叫感光度， 如果ISO增大那么照片的曝光也会增大， 但是同样带来了另外一个问题， 噪音也会变大，所以通常情况下光线良好的都是低ISO。 景深的三要素： 景深定义：对于定焦物体后面的景色清晰程度， 也就是焦点后面物体多远的保持清晰 光圈：通过小孔成像的原理我们知道， 小孔越大照片越模糊， 小孔越小照片越清晰， 所以通常情况下拍摄人物会选择大光圈， 而拍摄景色使用小光圈， 这样也会使得人物定焦后， 人物清晰而人物后面的景色比较朦胧， 而景色整个的都比较清晰。 焦距：当拍摄时的光圈大小不变，被摄体的位置也不改变时，使用的镜头焦距越短，景深就越大;镜头的焦距越长，景深就越小。也就是在光圈不变的条件下，使用广角镜头时，景深的清晰范围就要相对大一些，使用中、长焦距镜头时，景深的清晰范围就相对要小得多。 焦点与相机的距离：而当拍摄时的光圈大小不变，所使用的镜头焦距也不改变时，被摄体越远，画面中的前后清晰范围就越大；反之，被摄体越近，前后的清晰范围也就相对越小。这就提醒我们，在拍摄一些特定和近景的画面时，调焦应该特别仔细，稍有疏忽，使主体景物越出景深范围，整个画面就都虚了。]]></content>
       <categories>

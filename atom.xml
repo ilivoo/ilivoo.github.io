@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-02T12:40:34.903Z</updated>
+  <updated>2019-01-02T12:51:22.078Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,42 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>live-photo</title>
+    <title>linux-wifi</title>
+    <link href="http://yoursite.com/2019/01/02/linux-wifi/"/>
+    <id>http://yoursite.com/2019/01/02/linux-wifi/</id>
+    <published>2019-01-02T12:44:10.000Z</published>
+    <updated>2019-01-02T12:51:22.078Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;首先下载iw工具。&lt;/p&gt;
+&lt;p&gt;yum -y install iw&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;获取无线网卡的名称&lt;/p&gt;
+&lt;p&gt;执行iw dev，假设获得名称为 wlp3s0（示例）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;激活无线网络接口&lt;/p&gt;
+&lt;
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>摄影</title>
     <link href="http://yoursite.com/2019/01/02/live-photo/"/>
     <id>http://yoursite.com/2019/01/02/live-photo/</id>
     <published>2019-01-02T12:32:42.000Z</published>
-    <updated>2019-01-02T12:40:34.903Z</updated>
+    <updated>2019-01-02T12:43:17.721Z</updated>
     
     <summary type="html">
     
