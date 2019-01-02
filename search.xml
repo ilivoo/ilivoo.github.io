@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[centos7 安装]]></title>
+    <url>%2F2019%2F01%2F02%2Flinux-centos-install%2F</url>
+    <content type="text"><![CDATA[journalctl 启动过程中遇到任何问题都可通过这里解决 安装完成后配置网卡自动启动 修改配置文件 vi /etc/sysconfig/network-scripts/ifcfg-ent33 1ONBOOT=YES 重启网卡 service network restart 安装网络工具 yum install net-tools 更换阿里云的源 安装wget yum install wget 获取阿里云的源 wget http://mirrors.aliyun.com/repo/Centos-7.repomv CentOS-Base.repo CentOS-Base.repo.bakmv CentOS-7.repo CentOS-Base.repo 更新缓存存并更新 yum clean allyum makecacheyum -y update 设置ssh， 参考ssh使用教程 设置固定ip 编辑配置文件，添加或修改如下类容 vim /etc/sysconfig/network-scripts/ifcfg-eth0 123456BOOTPROTO=&quot;static&quot; #dhcp改为static ONBOOT=&quot;yes&quot; #开机启用本配置IPADDR=192.168.7.106 #静态IPGATEWAY=192.168.7.2 #默认网关NETMASK=255.255.255.0 #子网掩码DNS1=192.168.7.1 #DNS 配置 重启网络 service network restart 注意： 通常情况下，安装虚拟机后使用NAT网络， 那么主机的地址为192.168.7.1, 虚拟机网关地址 192.168.7.2, 剩下的地址才是虚拟机地址 关闭防火墙 systemctl stop firewalld.service systemctl disable firewalld.service 关闭SELINUX vim /etc/selinux/config` 1SELINUX=disabled 安装本地源 挂载U盘 mount -t vfat /dev/sdc4 /mnt/Centos7 步骤参考 [u盘挂载]: https://blog.csdn.net/leshami/article/details/78133716 安装无线网卡参考 设置开机启动 /etc/init.d/中添加可执行脚本, 开头可以参考这个目录下其它的脚本, 如： 添加 sslocal 1234567#!/bin/bash## sshd Start up the OpenSSH server daemon## chkconfig: 2345 55 25# description: sslcal shadowsocks/usr/bin/sslocal -c /etc/shadowsocks.json 添加到启动服务当中 chkconfig sslocal on]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[linux-wifi]]></title>
     <url>%2F2019%2F01%2F02%2Flinux-wifi%2F</url>
     <content type="text"><![CDATA[首先下载iw工具。 yum -y install iw 获取无线网卡的名称 执行iw dev，假设获得名称为 wlp3s0（示例） 激活无线网络接口 执行ip link set wlp3s0 up 扫描当前环境中的无线网络 执行iw wlp3s0 scan|grep SSID，假设你能够连接的网络名称是TP-LINK-1（示例） 登录指定网络 执行wpa_supplicant -B -i wlp3s0 -c &lt;(wpa_passphrase “TP-LINK-1” “此网络的密码”) 主动请求动态地址 dhclient wlp3s0 查看获取的网络地址 执行ip addr show wlp3s0 设置自动启动 设置NetworkManager自动启动 chkconfig NetworkManager on 安装NetworkManager-wifi yum -y install NetworkManager-wifi 开启WiFi nmcli r wifi on 测试（扫描信号） nmcli dev wifi 连接 nmcli dev wifi connect wifi_name password wifi_password]]></content>
