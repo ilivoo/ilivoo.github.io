@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-02T12:07:55.568Z</updated>
+  <updated>2019-01-02T12:35:48.016Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>live-photo</title>
+    <link href="http://yoursite.com/2019/01/02/live-photo/"/>
+    <id>http://yoursite.com/2019/01/02/live-photo/</id>
+    <published>2019-01-02T12:32:42.000Z</published>
+    <updated>2019-01-02T12:35:48.016Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;摄影的三要素&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;曝光： 光线通过光圈到照片中接受的多少。&lt;/li&gt;
+&lt;li&gt;审美： 照片通过各种元素给人的视觉不同的冲击力。&lt;/li&gt;
+&lt;li&gt;其它： 照片体现的各种主题、人文等等。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;
+      
+    
+    </summary>
+    
+      <category term="live" scheme="http://yoursite.com/categories/live/"/>
+    
+    
+      <category term="live" scheme="http://yoursite.com/tags/live/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql性能解析</title>
@@ -248,7 +279,7 @@
     <link href="http://yoursite.com/2018/04/28/linux-shadowsocket/"/>
     <id>http://yoursite.com/2018/04/28/linux-shadowsocket/</id>
     <published>2018-04-28T08:20:39.000Z</published>
-    <updated>2018-11-23T13:09:09.191Z</updated>
+    <updated>2019-01-02T12:28:46.356Z</updated>
     
     <summary type="html">
     
