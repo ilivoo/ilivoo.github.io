@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。  New Relic, xhprof  可以通过设置long_query_time为0来捕获所有的查询   1234slow_query_log = onslow_query_log_file = /var/log/mysql/mysql-slow.loglong_query_time = 0#">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-02T12:07:55.568Z">
+<meta property="og:updated_time" content="2019-01-03T10:55:33.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql性能解析">
 <meta name="twitter:description" content="profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。  New Relic, xhprof  可以通过设置long_query_time为0来捕获所有的查询   1234slow_query_log = onslow_query_log_file = /var/log/mysql/mysql-slow.loglong_query_time = 0#">
@@ -435,11 +435,7 @@
 <li><p>通常使用show status、show processlist和show innodb status开销是非常低的</p>
 </li>
 <li><p>通过show profile for query n来获取到查询主要的耗时在哪个地方， 如：</p>
-<ol>
-<li>Copying to temp table        0.090623</li>
-<li>Sorting result                0.011555</li>
-<li>Sending result                0.045931</li>
-</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Copying to temp table		0.090623</span><br><span class="line">Sorting result				0.011555</span><br><span class="line">Sending result				0.045931</span><br></pre></td></tr></table></figure>
 <p><strong>注意：</strong>可以看到此处最大的消耗是在临时表中， 所有此时我们考虑的是如何去掉临时表， 但经常可能会误导我们的是结果排序， 它占比非常低， 而我们如果简单通过查询语句很容易掉入到这个陷阱当中， 所以一般原则是”不建议优化排序缓冲区”。</p>
 </li>
 <li><p>show status通常是一个很有用的工具， 但是它不是一款剖析工具， show status大多都是一个计数器。</p>
@@ -566,7 +562,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
