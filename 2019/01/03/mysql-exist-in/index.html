@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="mysql," />
 
 
 
@@ -81,16 +81,18 @@
 
 
 
-<meta name="description" content="我，在這裡，享受等你的時光。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ilivoo`s blog">
-<meta property="og:url" content="http://yoursite.com/categories/hadoop/MapReduce/index.html">
+<meta name="description" content="exists exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exists里的条件语句能够返回记录行时(无论记录行是的多少，只要能返回)，条件就为真，返回当前loop到的这条记录，反之如果exists里的条 件语句不能返回记录行，则当前loop到的这条记录被丢弃，exists的条件就像一个bool条件，当能返回结果集则为true，不能返回结果集则为 false，如">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql exists与in的区别">
+<meta property="og:url" content="http://yoursite.com/2019/01/03/mysql-exist-in/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="我，在這裡，享受等你的時光。">
+<meta property="og:description" content="exists exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exists里的条件语句能够返回记录行时(无论记录行是的多少，只要能返回)，条件就为真，返回当前loop到的这条记录，反之如果exists里的条 件语句不能返回记录行，则当前loop到的这条记录被丢弃，exists的条件就像一个bool条件，当能返回结果集则为true，不能返回结果集则为 false，如">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-04T02:27:34.431Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ilivoo`s blog">
-<meta name="twitter:description" content="我，在這裡，享受等你的時光。">
+<meta name="twitter:title" content="mysql exists与in的区别">
+<meta name="twitter:description" content="exists exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exists里的条件语句能够返回记录行时(无论记录行是的多少，只要能返回)，条件就为真，返回当前loop到的这条记录，反之如果exists里的条 件语句不能返回记录行，则当前loop到的这条记录被丢弃，exists的条件就像一个bool条件，当能返回结果集则为true，不能返回结果集则为 false，如">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/hadoop/MapReduce/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/03/mysql-exist-in/"/>
 
 
 
 
 
-  <title>分类: MapReduce | Ilivoo`s blog</title>
+  <title>mysql exists与in的区别 | Ilivoo`s blog</title>
   
 
 
@@ -145,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -283,55 +285,273 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>MapReduce<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/03/mysql-exist-in/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/04/26/hadoop-map-reduce/" itemprop="url">
-              
-                <span itemprop="name">MapReduce</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">mysql exists与in的区别</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-26T14:42:39+08:00"
-              content="2018-04-26" >
-          04-26
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-03T20:08:08+08:00">
+                2019-01-03
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,249
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="exists"><a href="#exists" class="headerlink" title="exists"></a>exists</h4><ul>
+<li><p>exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exists里的条件语句能够返回记录行时(无论记录行是的多少，只要能返回)，条件就为真，返回当前loop到的这条记录，反之如果exists里的条 件语句不能返回记录行，则当前loop到的这条记录被丢弃，exists的条件就像一个bool条件，当能返回结果集则为true，不能返回结果集则为 false，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user where exists (select 1);</span><br></pre></td></tr></table></figure>
+<p>对user表的记录逐条取出，由于子条件中的select 1永远能返回记录行，那么user表的所有记录都将被加入结果集，所以与 select * from user;是一样的，又如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user where exists (select * from user where userId = 0);</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li><p>可以知道对user表进行loop时，检查条件语句(select * from user where userId = 0),由于userId永远不为0，所以条件语句永远返回空集，条件永远为false，那么user表的所有记录都将被丢弃</p>
+</li>
+<li><p>not exists与exists相反，也就是当exists条件有结果集返回时，loop到的记录将被丢弃，否则将loop到的记录加入结果集</p>
+</li>
+<li><p>总的来说，如果A表有n条记录，那么exists查询就是将这n条记录逐条取出，然后判断n遍exists条件 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="in"><a href="#in" class="headerlink" title="in"></a>in</h4><ul>
+<li><p>in查询相当于多个or条件的叠加，这个比较好理解，比如下面的查询</p>
+<p>select * from user where userId in (1, 2, 3);</p>
+<p>等效于</p>
+<p>select * from user where userId = 1 or userId = 2 or userId = 3;</p>
+</li>
+<li><p>not in与in相反，如下</p>
+<p>select * from user where userId not in (1, 2, 3);</p>
+<p>等效于</p>
+<p>select * from user where userId != 1 and userId != 2 and userId != 3;</p>
+</li>
+<li><p>总的来说，in查询就是先将子查询条件的记录全都查出来，假设结果集为B，共有m条记录，然后在将子查询条件的结果集分解成m个，再进行m次查询</p>
+</li>
+</ul>
+<ul>
+<li><p>值得一提的是，in查询的子条件返回结果必须只有一个字段，例如</p>
+<p>select * from user where userId in (select id from B);</p>
+<p>而不能是</p>
+<p>select * from user where userId in (select id, age from B);</p>
+<p>而exists就没有这个限制</p>
+</li>
+</ul>
+<h4 id="exists和in的性能"><a href="#exists和in的性能" class="headerlink" title="exists和in的性能"></a>exists和in的性能</h4><ul>
+<li><p>考虑如下SQL语句</p>
+<p>1: select <em> from A where exists (select </em> from B where B.id = A.id);</p>
+<p>2: select * from A where A.id in (select id from B);</p>
+<p>查询1.可以转化以下伪代码，便于理解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for ($i = 0; $i &lt; count(A); $i++) &#123;</span><br><span class="line">　　$a = get_record(A, $i); #从A表逐条获取记录</span><br><span class="line">　　if (B.id = $a[id]) #如果子条件成立</span><br><span class="line">　　　　$result[] = $a;</span><br><span class="line">&#125;</span><br><span class="line">return $result;</span><br></pre></td></tr></table></figure>
+<p>大概就是这么个意思，其实可以看到,查询1主要是用到了B表的索引，A表如何对查询的效率影响应该不大</p>
+<p>假设B表的所有id为1,2,3,查询2可以转换为</p>
+<p>select * from A where A.id = 1 or A.id = 2 or A.id = 3;</p>
+<p>这个好理解了，这里主要是用到了A的索引，B表如何对查询影响不大</p>
+</li>
+</ul>
+<ul>
+<li><p>再看not exists 和 not in</p>
+<p>1: select <em> from A where not exists (select </em> from B where B.id = A.id);</p>
+<p>2: select * from A where A.id not in (select id from B);</p>
+<p>看查询1，还是和上面一样，用了B的索引, 而对于查询2，可以转化成如下语句</p>
+<p>select * from A where A.id != 1 and A.id != 2 and A.id != 3;</p>
+<p>可以知道not in是个范围查询，这种!=的范围查询无法使用任何索引,等于说A表的每条记录，都要在B表里遍历一次，查看B表里是否存在这条记录故not exists比not in效率高 </p>
+</li>
+<li><p>mysql中的in语句是把外表和内表作hash 连接，而exists语句是对外表作loop循环，每次loop循环再对内表进行查询。一直大家都认为exists比in语句的效率要高，这种说法其实是不准确的。这个是要区分环境的。</p>
+</li>
+</ul>
+<ul>
+<li><p>如果查询的两个表大小相当，那么用in和exists差别不大。 </p>
+<p>如果两个表中一个较小，一个是大表，则子查询表大的用exists，子查询表小的用in： </p>
+<p>例如：表A（小表），表B（大表）</p>
+<p>1: select * from A where cc in (select cc from B) 效率低，用到了A表上cc列的索引；</p>
+<p> select * from A where exists(select cc from B where cc=A.cc) 效率高，用到了B表上cc列的索引。 </p>
+<p>相反的</p>
+<p>2: select * from B where cc in (select cc from A) 效率高，用到了B表上cc列的索引；</p>
+</li>
+</ul>
+<p>​    select * from B where exists(select cc from A where cc=B.cc) 效率低，用到了A表上cc列的索引。</p>
+<h4 id="not-in-和not-exists"><a href="#not-in-和not-exists" class="headerlink" title="not in 和not exists"></a>not in 和not exists</h4><ul>
+<li><p>如果查询语句使用了not in 那么内外表都进行全表扫描，没有用到索引；而not extsts 的子查询依然能用到表上的索引。所以无论那个表大，用not exists都比not in要快。 </p>
+</li>
+<li><p>in 与 =的区别 </p>
+<p>select name from student where name in (‘zhang’,’wang’,’li’,’zhao’); </p>
+<p>与 </p>
+<p>select name from student where name=’zhang’ or name=’li’ or name=’wang’ or name=’zhao’ </p>
+</li>
+</ul>
 
       
     </div>
+    <div>
+        
+            <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+        
+    </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/03/mysql-select/" rel="next" title="mysql 查询顺序">
+                <i class="fa fa-chevron-left"></i> mysql 查询顺序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -339,6 +559,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -359,8 +583,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -431,6 +664,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#exists"><span class="nav-number">1.</span> <span class="nav-text">exists</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#in"><span class="nav-number">2.</span> <span class="nav-text">in</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#exists和in的性能"><span class="nav-number">3.</span> <span class="nav-text">exists和in的性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#not-in-和not-exists"><span class="nav-number">4.</span> <span class="nav-text">not in 和not exists</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -567,6 +816,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

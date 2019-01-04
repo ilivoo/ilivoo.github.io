@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-03T11:00:53.874Z</updated>
+  <updated>2019-01-04T02:27:34.431Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mysql exists与in的区别</title>
+    <link href="http://yoursite.com/2019/01/03/mysql-exist-in/"/>
+    <id>http://yoursite.com/2019/01/03/mysql-exist-in/</id>
+    <published>2019-01-03T12:08:08.000Z</published>
+    <updated>2019-01-04T02:27:34.431Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;exists&quot;&gt;&lt;a href=&quot;#exists&quot; class=&quot;headerlink&quot; title=&quot;exists&quot;&gt;&lt;/a&gt;exists&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exis
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql 查询顺序</title>
@@ -370,7 +394,7 @@
     <link href="http://yoursite.com/2019/01/02/mysql-partitions/"/>
     <id>http://yoursite.com/2019/01/02/mysql-partitions/</id>
     <published>2019-01-02T11:44:59.000Z</published>
-    <updated>2019-01-02T11:57:26.541Z</updated>
+    <updated>2019-01-04T02:20:38.625Z</updated>
     
     <summary type="html">
     
@@ -505,31 +529,6 @@
       
         &lt;h5 id=&quot;mysql-日志&quot;&gt;&lt;a href=&quot;#mysql-日志&quot; class=&quot;headerlink&quot; title=&quot;mysql 日志&quot;&gt;&lt;/a&gt;mysql 日志&lt;/h5&gt;&lt;ul&gt;
 &lt;li&gt;主要包括： 错误日志、查询日志、慢查询日志、事务日志、二进制日志、回放日志&lt;/l
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql索引导出</title>
-    <link href="http://yoursite.com/2018/04/28/mysql-index-dump/"/>
-    <id>http://yoursite.com/2018/04/28/mysql-index-dump/</id>
-    <published>2018-04-28T09:00:37.000Z</published>
-    <updated>2018-04-28T09:06:54.314Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;打印删除所有的索引的语句， 包括Primary key&lt;/p&gt;
- &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;
       
     
     </summary>

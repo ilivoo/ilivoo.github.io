@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="修改已经存在的表为其添加分区  1234567891011121314151617ALTER TABLE `device_model_report_copy1` PARTITION BY RANGE (to_days(time)) (PARTITION p201811 VALUES LESS THAN (to_days(&apos;2018-12-01&apos;)), PARTITION p201812 VALU">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-02T11:57:26.541Z">
+<meta property="og:updated_time" content="2019-01-04T02:20:38.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql分区">
 <meta name="twitter:description" content="修改已经存在的表为其添加分区  1234567891011121314151617ALTER TABLE `device_model_report_copy1` PARTITION BY RANGE (to_days(time)) (PARTITION p201811 VALUES LESS THAN (to_days(&apos;2018-12-01&apos;)), PARTITION p201812 VALU">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  538
+                  574
                 </span>
               
 
@@ -430,6 +430,10 @@
 </ol>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> orders_range(</span><br><span class="line"><span class="keyword">id</span> <span class="built_in">int</span> auto_increment primary <span class="keyword">key</span>,</span><br><span class="line">customer_surname <span class="built_in">varchar</span>(<span class="number">30</span>),</span><br><span class="line">store_id <span class="built_in">int</span>,</span><br><span class="line">salesperson_id <span class="built_in">int</span>,</span><br><span class="line">order_Date <span class="built_in">date</span>,</span><br><span class="line">note <span class="built_in">varchar</span>(<span class="number">500</span>)</span><br><span class="line">) <span class="keyword">engine</span>=myisam  <span class="keyword">partition</span> <span class="keyword">by</span> <span class="keyword">range</span>(<span class="keyword">id</span>) </span><br><span class="line"><span class="keyword">subpartition</span> <span class="keyword">by</span> <span class="keyword">hash</span>(store_id) <span class="keyword">subpartitions</span> <span class="number">2</span>(</span><br><span class="line"><span class="keyword">partition</span> p0 <span class="keyword">values</span> <span class="keyword">less</span> <span class="keyword">than</span>(<span class="number">5</span>),</span><br><span class="line"><span class="keyword">partition</span> p1 <span class="keyword">values</span> <span class="keyword">less</span> <span class="keyword">than</span>(<span class="number">10</span>),</span><br><span class="line"><span class="keyword">partition</span> p3 <span class="keyword">values</span> <span class="keyword">less</span> <span class="keyword">than</span>(<span class="number">15</span>));</span><br></pre></td></tr></table></figure>
 <p><strong>注意 : </strong>只允许对range和list类型的分区再进行分区，子分区的类型只允许是hash或key.</p>
+<ol start="6">
+<li>查看分区信息</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">  partition_name part,  </span><br><span class="line">  partition_expression expr,  </span><br><span class="line">  partition_description <span class="keyword">descr</span>,  </span><br><span class="line">  table_rows,</span><br><span class="line">  data_length/<span class="number">1024</span>/<span class="number">1024</span></span><br><span class="line"><span class="keyword">from</span> information_schema.partitions  <span class="keyword">where</span> </span><br><span class="line">  table_schema = <span class="keyword">schema</span>()  </span><br><span class="line">  <span class="keyword">and</span> table_name=<span class="string">'device_model_report'</span>;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -549,7 +553,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
