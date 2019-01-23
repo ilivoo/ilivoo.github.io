@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-04T10:37:10.981Z</updated>
+  <updated>2019-01-13T12:16:36.273Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hadoop-kerberos</title>
+    <link href="http://yoursite.com/2019/01/13/hadoop-kerberos/"/>
+    <id>http://yoursite.com/2019/01/13/hadoop-kerberos/</id>
+    <published>2019-01-13T11:06:14.000Z</published>
+    <updated>2019-01-13T12:16:36.273Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;kerberos客户端配置&quot;&gt;&lt;a href=&quot;#kerberos客户端配置&quot; class=&quot;headerlink&quot; title=&quot;kerberos客户端配置&quot;&gt;&lt;/a&gt;kerberos客户端配置&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;krb5.conf配置选项参考： 
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="kerberos" scheme="http://yoursite.com/categories/hadoop/kerberos/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="kerberos" scheme="http://yoursite.com/tags/kerberos/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>docker-network</title>
+    <link href="http://yoursite.com/2019/01/12/docker-network/"/>
+    <id>http://yoursite.com/2019/01/12/docker-network/</id>
+    <published>2019-01-12T13:38:23.000Z</published>
+    <updated>2019-01-13T03:15:31.785Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;docker四种网络类型&quot;&gt;&lt;a href=&quot;#docker四种网络类型&quot; class=&quot;headerlink&quot; title=&quot;docker四种网络类型&quot;&gt;&lt;/a&gt;docker四种网络类型&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;host模式，容器将不会获得一个独立的Netwo
+      
+    
+    </summary>
+    
+      <category term="docker" scheme="http://yoursite.com/categories/docker/"/>
+    
+    
+      <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
+    
+  </entry>
   
   <entry>
     <title>mysql 存储程序</title>
@@ -187,15 +239,14 @@
     <link href="http://yoursite.com/2019/01/03/linux-gopass/"/>
     <id>http://yoursite.com/2019/01/03/linux-gopass/</id>
     <published>2019-01-03T06:50:00.000Z</published>
-    <updated>2019-01-03T10:51:28.952Z</updated>
+    <updated>2019-01-11T16:10:19.662Z</updated>
     
     <summary type="html">
     
       
       
-        &lt;h4 id=&quot;安装gopass&quot;&gt;&lt;a href=&quot;#安装gopass&quot; class=&quot;headerlink&quot; title=&quot;安装gopass&quot;&gt;&lt;/a&gt;安装gopass&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;安装基本工具&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;apt-get install g
+        &lt;h4 id=&quot;gopass各组件说明&quot;&gt;&lt;a href=&quot;#gopass各组件说明&quot; class=&quot;headerlink&quot; title=&quot;gopass各组件说明&quot;&gt;&lt;/a&gt;gopass各组件说明&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;gopass 用于密码管理的工具， 是pass的go语言
       
     
     </summary>
@@ -268,7 +319,7 @@
     <link href="http://yoursite.com/2019/01/02/hadoop-hortonwork/"/>
     <id>http://yoursite.com/2019/01/02/hadoop-hortonwork/</id>
     <published>2019-01-02T13:18:21.000Z</published>
-    <updated>2019-01-03T10:51:06.238Z</updated>
+    <updated>2019-01-19T04:40:04.600Z</updated>
     
     <summary type="html">
     
@@ -276,9 +327,7 @@
       
         &lt;p&gt;&lt;strong&gt;安装 hortonwork sandbox 参考 sandbox安装页面。&lt;/strong&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;修改docker 的root密码, 直接登录进入docker就会提示更改密码&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;更改ambari a
+&lt;li&gt;&lt;p&gt;安装的过程中会出现端口冲突，直接修改 &lt;code&gt;sandbox/proxy/proxy-deploy.sh&lt;/code&gt; 配置就可
       
     
     </summary>
@@ -418,7 +467,7 @@
     <link href="http://yoursite.com/2019/01/02/mysql-partitions/"/>
     <id>http://yoursite.com/2019/01/02/mysql-partitions/</id>
     <published>2019-01-02T11:44:59.000Z</published>
-    <updated>2019-01-04T15:24:48.977Z</updated>
+    <updated>2019-01-04T15:46:11.318Z</updated>
     
     <summary type="html">
     
@@ -483,60 +532,6 @@
     
     
       <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>hdfs架构</title>
-    <link href="http://yoursite.com/2018/04/29/hadoop-hdfs-architecture/"/>
-    <id>http://yoursite.com/2018/04/29/hadoop-hdfs-architecture/</id>
-    <published>2018-04-29T09:54:14.000Z</published>
-    <updated>2018-04-29T10:35:43.066Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h5 id=&quot;介绍&quot;&gt;&lt;a href=&quot;#介绍&quot; class=&quot;headerlink&quot; title=&quot;介绍&quot;&gt;&lt;/a&gt;介绍&lt;/h5&gt;&lt;ol&gt;
-&lt;li&gt;hdfs是被设计运行在廉价的机器上的分布式文件系统， 它和现有的文件系统有这很多相似之处， 然而也存在这最为重要的区别， hdf
-      
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
-    
-      <category term="hdfs" scheme="http://yoursite.com/categories/hadoop/hdfs/"/>
-    
-    
-      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
-    
-      <category term="hdfs" scheme="http://yoursite.com/tags/hdfs/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>git使用</title>
-    <link href="http://yoursite.com/2018/04/28/tools-git/"/>
-    <id>http://yoursite.com/2018/04/28/tools-git/</id>
-    <published>2018-04-28T09:28:57.000Z</published>
-    <updated>2019-01-03T10:52:53.047Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h5 id=&quot;概念&quot;&gt;&lt;a href=&quot;#概念&quot; class=&quot;headerlink&quot; title=&quot;概念&quot;&gt;&lt;/a&gt;概念&lt;/h5&gt;&lt;ul&gt;
-&lt;li&gt;git存在工作区， 暂存区， 本地仓库， 远程仓库&lt;ul&gt;
-&lt;li&gt;工作区: 当前项目root目录&lt;/li&gt;
-&lt;li&gt;暂存区: 
-      
-    
-    </summary>
-    
-      <category term="tools" scheme="http://yoursite.com/categories/tools/"/>
-    
-    
-      <category term="tools" scheme="http://yoursite.com/tags/tools/"/>
     
   </entry>
   

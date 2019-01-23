@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="kafka," />
+  <meta name="keywords" content="docker," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka 说明 –">
-<meta name="keywords" content="kafka">
+<meta name="description" content="docker四种网络类型 host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口，Docker Container可以和宿主机一样，使用宿主机的eth0，实现和外界的通信。换言之，Docker Container的IP地址即为宿主机eth0的IP地址，">
+<meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kafka 命令行工具">
-<meta property="og:url" content="http://yoursite.com/2018/07/19/kafka-shell-command/index.html">
+<meta property="og:title" content="docker-network">
+<meta property="og:url" content="http://yoursite.com/2019/01/12/docker-network/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka 说明 –">
+<meta property="og:description" content="docker四种网络类型 host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口，Docker Container可以和宿主机一样，使用宿主机的eth0，实现和外界的通信。换言之，Docker Container的IP地址即为宿主机eth0的IP地址，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-03T10:50:45.524Z">
+<meta property="og:updated_time" content="2019-01-13T03:15:31.785Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kafka 命令行工具">
-<meta name="twitter:description" content="kafka-console-producer.sh用来往topic中生产消息1bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &amp;quot;parse.key=true&amp;quot; --property &amp;quot;key.separator=:&amp;quot; --topic kafka 说明 –">
+<meta name="twitter:title" content="docker-network">
+<meta name="twitter:description" content="docker四种网络类型 host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口，Docker Container可以和宿主机一样，使用宿主机的eth0，实现和外界的通信。换言之，Docker Container的IP地址即为宿主机eth0的IP地址，">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/19/kafka-shell-command/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/12/docker-network/"/>
 
 
 
 
 
-  <title>kafka 命令行工具 | Ilivoo`s blog</title>
+  <title>docker-network | Ilivoo`s blog</title>
   
 
 
@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/kafka-shell-command/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/12/docker-network/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ilivoo">
@@ -316,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">kafka 命令行工具</h1>
+          <h1 class="post-title" itemprop="name headline">docker-network</h1>
         
 
         <div class="post-meta">
@@ -328,8 +328,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T09:21:58+08:00">
-                2018-07-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-12T21:38:23+08:00">
+                2019-01-12
               </time>
             
 
@@ -351,8 +351,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kafka/" itemprop="url" rel="index">
-                    <span itemprop="name">kafka</span>
+                  <a href="/categories/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
                   </a>
                 </span>
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,285
+                  996
                 </span>
               
 
@@ -407,73 +407,57 @@
       
 
       
-        <h4 id="kafka-console-producer-sh"><a href="#kafka-console-producer-sh" class="headerlink" title="kafka-console-producer.sh"></a>kafka-console-producer.sh</h4><p>用来往topic中生产消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &quot;parse.key=true&quot; --property &quot;key.separator=:&quot; --topic kafka</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>–broker-list –topic 指定broker列表和生产消息的topic</li>
-<li>–property 指定console读取消息的kafka.tools.ConsoleProducer$LineMessageReader的属性， 也可以–line-reader指定默认的行读取器， 可以指定三个参数：<ol>
-<li>parse.key true 表示是否解析key， 如果不解析默认key为null</li>
-<li>key.separator 指定key分隔符， 默认为 \t</li>
-<li>ignore.error true 指定是否忽略错误</li>
-</ol>
+        <h4 id="docker四种网络类型"><a href="#docker四种网络类型" class="headerlink" title="docker四种网络类型"></a>docker四种网络类型</h4><ul>
+<li>host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口，Docker Container可以和宿主机一样，使用宿主机的eth0，实现和外界的通信。换言之，Docker Container的IP地址即为宿主机eth0的IP地址， 不需要NET转换，使用–net =bridge指定。</li>
+<li>bridge模式是Docker默认的网络设置，此模式会为每一个容器分配Network Namespace、设置IP等，并将一个主机上的Docker容器连接到一个虚拟网桥上。Brdige桥接模式为Docker Container创建独立的网络栈，保证容器内的进程组使用独立的网络环境，实现容器间、容器与宿主机之间的网络栈隔离。另外，Docker通过宿主机上的网桥(docker0)来连通容器内部的网络栈与宿主机的网络栈，实现容器与宿主机乃至外界的网络通信，使用–net =host指定。</li>
+<li>在none模式下，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。也就是说，这个Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等，使用–net =none模式启动容器</li>
+<li>这个模式指定新创建的容器和已经存在的一个容器共享一个Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过lo网卡设备通信，使用–net =container模式启动容器：</li>
+</ul>
+<h4 id="更换默认网桥"><a href="#更换默认网桥" class="headerlink" title="更换默认网桥"></a>更换默认网桥</h4><ul>
+<li><p>安装网桥管理工具</p>
+<p><code>sudo apt install bridge-utils</code></p>
 </li>
-<li>如果不解析key那么， 生产的消息会均匀的发送到所有的Partition当中</li>
-<li>–producer.config –producer-property 通过配置文件或者直接指定key=value去指定生产者的属性，用于在设置命令行中没有提供的参数</li>
-<li>–key-serializer –value-serializer –compression-codec 指定key value的序列化和压缩方式</li>
-</ol>
-<h4 id="kafka-console-consumer-sh"><a href="#kafka-console-consumer-sh" class="headerlink" title="kafka-console-consumer.sh"></a>kafka-console-consumer.sh</h4><p>用来消费topic中的消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hadoop2.feng.com:9092 --topic kafka --property print.key=true --property &quot;key.separator=:&quot; --from-beginning</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明-1"><a href="#说明-1" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>–broker-list –topic 指定broker列表和消费的topic</li>
-<li>–property 指定console读取消息的kafka.tools.DefaultMessageFormatter的属性， 也可以–formatter指定默认的行读取器， 可以指定三个参数：<ol>
-<li>print.key true 打印key</li>
-<li>print.value true 打印value</li>
-<li>key.separator 指定key分隔符</li>
-<li>line.separator 指定行分隔符</li>
-</ol>
+<li><p>添加网桥</p>
+<p><code>sudo brctl addbr br0</code></p>
 </li>
-<li>–from-beginning 指定从日志头开始消费</li>
-<li>–group 指定消费者组， 如果不指定那么默认会自动生产一个唯一的消费者组， 如果想要多个不同的consumer消费某个topic那么此处必须指定</li>
-<li>–Partition 指定消费的topic的分组， 如果不指定默认消费全部的分组</li>
-<li>–offset 指定消费者的位置非负整数或者earliest和latest， 默认为latest</li>
-<li>–consumer.config –consumer-property 通过配置文件或者直接指定key=value去指定消费者的属性，用于在设置命令行中没有提供的参数</li>
-<li>–isolation-level read_uncommitted/read_committed 指定隔离级别， 用于支持读取消息的一致性语义</li>
-</ol>
-<h4 id="kafka-consumer-groups-sh"><a href="#kafka-consumer-groups-sh" class="headerlink" title="kafka-consumer-groups.sh"></a>kafka-consumer-groups.sh</h4><p>用来管理消费者组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hadoop1.feng.com:9092 --group console-consumer-38042 --describe</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明-2"><a href="#说明-2" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>此命令主要存在四个功能–list, –describe, –delete, –reset-offsets</li>
-<li>–list 显示所有的消费者组</li>
-<li>–describe 显示某个消费者组的详细信息</li>
-<li>–delete 删除某个消费者组</li>
-<li>–reset-offsets 重新设置消费者组的偏移量 </li>
-</ol>
-<h4 id="kafka-log-dirs-sh"><a href="#kafka-log-dirs-sh" class="headerlink" title="kafka-log-dirs.sh"></a>kafka-log-dirs.sh</h4><p>用来查看broker的日志保存信息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-log-dirs.sh --bootstrap-server hadoop1.feng.com:9092 --describe --topic-list kafka --broker-list 2</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明-3"><a href="#说明-3" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>–topic-list 需要显示的topic</li>
-<li>–broker-list 需要显示的brokers</li>
-</ol>
-<h4 id="kafka-delete-records-sh"><a href="#kafka-delete-records-sh" class="headerlink" title="kafka-delete-records.sh"></a>kafka-delete-records.sh</h4><p>用来删除记录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-delete-records.sh --bootstrap-server hadoop1.feng.com:9092 --offset-json-file myconfig/kafka-delete-records.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;partitions&quot;:</span><br><span class="line">        [</span><br><span class="line">            &#123;&quot;topic&quot;: &quot;kafka&quot;, &quot;partition&quot;: 0,&quot;offset&quot;: 20&#125;</span><br><span class="line">        ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明-4"><a href="#说明-4" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>对于kafka来说默认存在两种删除策略， 一种基于日志量， 二种基于日志保存的时间， 但是有时候我们需要手动的去指定删除到具体的位置， 这个脚本就比较有用了</li>
-<li>日志可能未必立即删除， 但是以及无法消费删除的日志了</li>
-</ol>
-<h4 id="kafka-preferred-replica-election-sh"><a href="#kafka-preferred-replica-election-sh" class="headerlink" title="kafka-preferred-replica-election.sh"></a>kafka-preferred-replica-election.sh</h4><p>用来对某个topic的分区进行选举prefered replica， 分区的leader用来读写的， 从而平衡kafka集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-preferred-replica-election.sh --zookeeper hadoop1.feng.com:2181 --path-to-json-file myconfig/kafka-preferred-replica-election.json</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明-5"><a href="#说明-5" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>此处的选举主要是为了kafka能够平衡负载， 并且kafka也保留了auto.leader.rebalance.enable来自动进行分区leader选举， 造成不平衡的原理是因为broker添加或者是broker失败恢复</li>
-</ol>
-<h4 id="kafka-reassign-partitions-sh"><a href="#kafka-reassign-partitions-sh" class="headerlink" title="kafka-reassign-partitions.sh"></a>kafka-reassign-partitions.sh</h4><p>生产分配方案<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-reassign-partitions.sh --zookeeper hadoop1.feng.com:2181 --generate --topics-to-move-json-file myconfig/kafka-reassign-partitions-generate.json --broker-list 0,1,2</span><br><span class="line"></span><br><span class="line">Current partition replica assignment</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line">Proposed partition reassignment configuration</span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br><span class="line"></span><br><span class="line">kafka-reassign-partitions-generate.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;topics&quot;:</span><br><span class="line">        [</span><br><span class="line">            &#123;&quot;topic&quot;: &quot;kafka&quot;&#125;</span><br><span class="line">        ],</span><br><span class="line">    &quot;version&quot;:1</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h5 id="说明-6"><a href="#说明-6" class="headerlink" title="说明"></a>说明</h5><ol>
-<li>–generate 生成重新分区方案， –topic-to-move-json-file指定需要移动的topic信息， –broker-list 指定移动到的broker</li>
-<li>此处打印出当前的分配信息， 以及建议的分配信息， 可以讲建议信息作为–reassignment-json-file的参数进行手动的执行</li>
-<li>这里不需要指定bootstrap-server是因为当重新进行分配分区的时候实际上仅仅只是在zookeeper中更改状态， 当controller获取到状态的时候就异步的去执行当前分配策略</li>
-</ol>
-<p>执行分配<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-reassign-partitions.sh --zookeeper hadoop1.feng.com:2181 --execute --reassignment-json-file myconfig/kafka-reassign-partitions-execute.json</span><br><span class="line"></span><br><span class="line">&#123;&quot;version&quot;:1,&quot;partitions&quot;:[]&#125;</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>在Partition移动的过程中会有大量的io操作， 所以对于集群中网络带宽这种稀有资源应该加以限制， 使用throttle进行设定</li>
-</ol>
-<p>检查分配<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-reassign-partitions.sh --zookeeper hadoop1.feng.com:2181 --verify --reassignment-json-file myconfig/kafka-reassign-partitions-execute.json</span><br></pre></td></tr></table></figure></p>
-<ol>
-<li>检查移动分区的执行情况</li>
-<li>移除当前移动分区时设置的网络配额</li>
-</ol>
+<li><p>修改网桥IP地址</p>
+<p><code>sudo ifconfig br0 172.37.0.1 netmask 255.255.0.0</code></p>
+</li>
+<li><p>更改docker守护进程配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>vim /lib/systemd/system/docker.service</span><br><span class="line">ExecStart=/usr/bin/dockerd --b dr0 -H unix://</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>还可以直接更改<code>docker0</code>的<code>IP</code>地址， 如果没有文件直接创建</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo cat /etc/docker/daemon.json </span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"bip"</span>: <span class="string">"172.37.0.1/16"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>也可以直接在docker运行的时候直接加上参数指定网络设备</p>
+<p><code>docker run -itd --name test --network br0 --ip 172.37.0.2 centos:latest`</code>/bin/bash`</p>
+</li>
+</ul>
+<h4 id="跨主机访问"><a href="#跨主机访问" class="headerlink" title="跨主机访问"></a>跨主机访问</h4><ul>
+<li><p>环境，两台独立主机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">host1: 192.168.0.100 netmask 255.255.255.0</span><br><span class="line">host2: 192.168.0.101 netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>网桥方式</p>
+<ul>
+<li><p>原理，将主机的物理网卡当做一个网桥工具（更像是一个路由器），对外暴露物理网卡分配IP地址，对内建立局域网络环境， 物理网卡通过NET进行网络转换， 这样也就达到了只有两台物理主机可以进行访问，那么整个网络就是连通的。但是存在一个缺陷， 那就是必须有效的控制网络中的IP地址段。</p>
+</li>
+<li><p>创建网桥</p>
+<p><code>sudo brctl addbr br0</code></p>
+</li>
+<li><p>由于使用网桥管理工具添加网桥后，配置IP地址会在下次启动的时候自动失效， 所以我们需要将网络配置信息写入到文件当中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#vi /etc/network/interfaces</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto br0</span><br><span class="line">iface br0 inet static #也可以直接使用动态地址 </span><br><span class="line">address 192.168.0.100</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">gateway 192.168.0.1</span><br><span class="line">bridge_ports eth0 #将主机网卡绑定到网桥上面</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置docker启动参数, 限定docker网络可以分配的ip地址段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#vim /lib/systemd/system/docker.service</span><br><span class="line">ExecStart=/usr/bin/dockerd --b dr0 --fixed-cidr 192.168.0.128/26  -H unix://</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>两台机器使用相同配置， 但是控制不同的IP段</p>
+</li>
+</ul>
+</li>
+<li><p>weave方式</p>
+<p>参考：极客学院课程</p>
+</li>
+</ul>
 
       
     </div>
@@ -496,7 +480,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/kafka/" rel="tag"># kafka</a>
+            <a href="/tags/docker/" rel="tag"># docker</a>
           
         </div>
       
@@ -509,8 +493,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/15/linux-shell-debug/" rel="next" title="shell debug">
-                <i class="fa fa-chevron-left"></i> shell debug
+              <a href="/2019/01/04/mysql-procedure/" rel="next" title="mysql 存储程序">
+                <i class="fa fa-chevron-left"></i> mysql 存储程序
               </a>
             
           </div>
@@ -519,8 +503,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/02/mysql-partitions/" rel="prev" title="mysql分区">
-                mysql分区 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/01/13/hadoop-kerberos/" rel="prev" title="hadoop-kerberos">
+                hadoop-kerberos <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -664,7 +648,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-console-producer-sh"><span class="nav-number">1.</span> <span class="nav-text">kafka-console-producer.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明"><span class="nav-number">1.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-console-consumer-sh"><span class="nav-number">2.</span> <span class="nav-text">kafka-console-consumer.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-1"><span class="nav-number">2.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-consumer-groups-sh"><span class="nav-number">3.</span> <span class="nav-text">kafka-consumer-groups.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-2"><span class="nav-number">3.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-log-dirs-sh"><span class="nav-number">4.</span> <span class="nav-text">kafka-log-dirs.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-3"><span class="nav-number">4.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-delete-records-sh"><span class="nav-number">5.</span> <span class="nav-text">kafka-delete-records.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-4"><span class="nav-number">5.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-preferred-replica-election-sh"><span class="nav-number">6.</span> <span class="nav-text">kafka-preferred-replica-election.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-5"><span class="nav-number">6.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka-reassign-partitions-sh"><span class="nav-number">7.</span> <span class="nav-text">kafka-reassign-partitions.sh</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#说明-6"><span class="nav-number">7.1.</span> <span class="nav-text">说明</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#docker四种网络类型"><span class="nav-number">1.</span> <span class="nav-text">docker四种网络类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更换默认网桥"><span class="nav-number">2.</span> <span class="nav-text">更换默认网桥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#跨主机访问"><span class="nav-number">3.</span> <span class="nav-text">跨主机访问</span></a></li></ol></div>
             
 
           </div>

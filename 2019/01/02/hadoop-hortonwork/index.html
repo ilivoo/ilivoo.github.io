@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-password-reset  mysql无法启动 mv /usr/sbin/mysqld /usr/bin/mysqld ln -nfs /usr/bin/mysq">
+<meta name="description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
 <meta name="keywords" content="hadoop,hortonwork">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hortonwork 使用">
 <meta property="og:url" content="http://yoursite.com/2019/01/02/hadoop-hortonwork/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-password-reset  mysql无法启动 mv /usr/sbin/mysqld /usr/bin/mysqld ln -nfs /usr/bin/mysq">
+<meta property="og:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-03T10:51:06.238Z">
+<meta property="og:updated_time" content="2019-01-19T04:40:04.600Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hortonwork 使用">
-<meta name="twitter:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-password-reset  mysql无法启动 mv /usr/sbin/mysqld /usr/bin/mysqld ln -nfs /usr/bin/mysq">
+<meta name="twitter:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
 
 
 
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  300
+                  1,002
                 </span>
               
 
@@ -420,6 +420,9 @@
       
         <p><strong>安装 hortonwork sandbox 参考 sandbox安装页面。</strong></p>
 <ol>
+<li><p>安装的过程中会出现端口冲突，直接修改 <code>sandbox/proxy/proxy-deploy.sh</code> 配置就可了， 如：</p>
+<p><code>-p 31080 1080 \</code></p>
+</li>
 <li><p>修改docker 的root密码, 直接登录进入docker就会提示更改密码</p>
 </li>
 <li><p>更改ambari admin 密码， 终端下执行 ambari-admin-password-reset</p>
@@ -429,7 +432,7 @@
 <p><code>ln -nfs /usr/bin/mysqld /usr/sbin/mysqld</code></p>
 </li>
 <li><p>修改hdfs的yarn日志用户</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop.http.staticuser.user = yarn</span><br></pre></td></tr></table></figure>
+<p><code>hadoop.http.staticuser.user = yarn</code></p>
 </li>
 <li><p>修改ranger admin UI密码登入， 保持下面密码全部都是一样的， 并且密码长度大于等于9位</p>
 <ul>
@@ -440,18 +443,65 @@
 <li><p>更改ranger Admin 密码， ranger -&gt; config -&gt; advance -&gt; Ranger Admin user’s password(Ranger-env下)</p>
 </li>
 <li><p>更改mysql root用户以方便以后对mysql的更改， 在my.conf中加入skip-grant-tables跳过授权，更改mysql root用户密码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update mysql.user set authentication_string=password(&apos;mypasswd&apos;) where user=&apos;root&apos;;</span><br></pre></td></tr></table></figure>
+<p><code>update mysql.user set authentication_string=password(&#39;mypasswd&#39;) where user=&#39;root&#39;;</code></p>
 </li>
 <li><p>更改ranger需要的mysql root账户密码， ranger -&gt; config -&gt; ranger admin -&gt; Database Administrator (DBA) password</p>
 </li>
 <li><p>更改ranger admin账户的登录密码 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update ranger.x_portal_user set password = &apos;ceb4f32325eda6142bd65215f4c0f371 &apos; where login_id= &apos;admin&apos;;</span><br></pre></td></tr></table></figure>
+<p><code>update ranger.x_portal_user set password = &#39;ceb4f32325eda6142bd65215f4c0f371 &#39; where login_id= &#39;admin&#39;;</code></p>
 <p>此password是有用户名和密码进行MD5求取出来的</p>
 <p><code>echo -n &#39;admin{admin}&#39; | md5sum</code></p>
 </li>
 <li><p>使用同样(f步骤)的方法更改amb_ranger_admin的登录密码</p>
 </li>
 </ul>
+</li>
+<li><p>修改 Atlas admin密码</p>
+<p><code>Configs-&gt; Advanced -&gt; Advanced atlas-env -&gt; Admin password</code></p>
+</li>
+</ol>
+<h4 id="启动kerberos"><a href="#启动kerberos" class="headerlink" title="启动kerberos"></a>启动kerberos</h4><ol>
+<li><p>安装并配置kerberos</p>
+<p>参考: <code>https://blog.csdn.net/Dr_Guo/article/details/53534927</code></p>
+</li>
+<li><p>导出kerberos创建的admin/admin用户的keytab到需要的环境中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>kadmin.local</span><br><span class="line">xst -k admin.keytab -norandkey admin/admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置firefox kerberos认证</p>
+<ul>
+<li><p>firefox中输入<code>about:config</code> </p>
+</li>
+<li><p>搜索并修改选项<code>network.negotiate-auth.trusted-uris</code> 内容如下：</p>
+<p><code>.hortonworks.com</code></p>
+</li>
+</ul>
+</li>
+<li><p>配置chrome认证，直接添加命令行参数就可以</p>
+<p><code>google-chrome --auth-server-whitelist=&quot;*.hortonworks.com&quot; --auth-negotiate-delegate-whitelist=&quot;*.hortonworks.com&quot;</code></p>
+</li>
+<li><p>修改sandbox-proxy， 让其暴露出kerberos认证需要的三个端口</p>
+<ul>
+<li>修改 <code>sandbox/proxy/proxy-deploy.sh</code>  添加如下内容：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-p 749:749 \</span><br><span class="line">-p 464:464 \</span><br><span class="line">-p 88:88 \</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改 <code>sandbox/proxy/conf.stream.d/tcp-hdp.conf</code> 添加如下内容：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 749;</span><br><span class="line">  proxy_pass sandbox-hdp:749;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">  listen 464;</span><br><span class="line">  proxy_pass sandbox-hdp:464;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">  listen 88;</span><br><span class="line">  proxy_pass sandbox-hdp:88;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong> 由于kerberos需要的是tcp端口， 所以我们只需要该tcp的配置就可以了， 如果需要http端口则可以修改http配置</p>
+</li>
+</ol>
+<h4 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h4><ol>
+<li><p>通常情况下来说为了方便， 我们会在kerberos中创建一个admin用户， 以后使用admin账户就可以访问所有的hadoop服务， 而在hadoop中也建立一个admin用户，并加入到hadoop组当中， 让其和kerberos中的admin用户对应， 但是实际上它们没有任何的关系。</p>
+</li>
+<li><p>kerberos权限仅仅用来判定AB问题， 也就是说如何证明自己是自己所申称的人， 所以它需要引入一个受信的第三方来作为验证。 但是对于hadoop中的各组件来说， 通常都是每个组件一个用户， 并且把所有的组件用户加入到一个hadoop用户组当中。所以对于kerberos的admin用户仅仅只是能够声明我是一个管理员用户，它可以访问所有的启动kerberos的hadoop服务， 但是hadoop通常来说每个用户都有自己的用户访问权限， 也就是说kerberos只是作为第一个访问这个服务的权限， 而服务自身的权限就和kerberos没有任何关系了。如hdfs当中， 所有的用户权限是根据本地linux模型来管理的， 所以必须要有linux本地用户的权限才可以进行访问。</p>
+</li>
+<li><p>yarn 队列有自己的提交权限策略， 需要配置才能提交任务</p>
+<p><code>yarn.scheduler.capacity.root.acl_administer_queue=yarn,spark,hive,admin,zeppelin</code></p>
+</li>
+<li><p>spark的历史日志查看也需要进行权限设置， 通常关闭</p>
+<p><code>spark.history.ui.acls.enable</code></p>
+<p>因为日志通常记录在hdfs中， 所以还必须拥有hdfs的文件访问权限</p>
 </li>
 </ol>
 
@@ -555,8 +605,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -575,7 +634,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -586,7 +645,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -597,7 +656,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -627,6 +686,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#启动kerberos"><span class="nav-number">1.</span> <span class="nav-text">启动kerberos</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#权限管理"><span class="nav-number">2.</span> <span class="nav-text">权限管理</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
