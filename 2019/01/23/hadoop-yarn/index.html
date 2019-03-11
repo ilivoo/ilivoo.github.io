@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="hadoop,hortonwork," />
+  <meta name="keywords" content="hadoop,spark," />
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
-<meta name="keywords" content="hadoop,hortonwork">
+<meta name="description" content="spark动态资源分配 开启External shuffle service  Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Servic">
+<meta name="keywords" content="hadoop,spark">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hortonwork 使用">
-<meta property="og:url" content="http://yoursite.com/2019/01/02/hadoop-hortonwork/index.html">
+<meta property="og:title" content="yarn 动态资源分配">
+<meta property="og:url" content="http://yoursite.com/2019/01/23/hadoop-yarn/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
+<meta property="og:description" content="spark动态资源分配 开启External shuffle service  Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Servic">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-07T03:13:16.899Z">
+<meta property="og:updated_time" content="2019-01-23T12:20:04.538Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hortonwork 使用">
-<meta name="twitter:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
+<meta name="twitter:title" content="yarn 动态资源分配">
+<meta name="twitter:description" content="spark动态资源分配 开启External shuffle service  Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Servic">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/02/hadoop-hortonwork/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/23/hadoop-yarn/"/>
 
 
 
 
 
-  <title>hortonwork 使用 | Ilivoo`s blog</title>
+  <title>yarn 动态资源分配 | Ilivoo`s blog</title>
   
 
 
@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/hadoop-hortonwork/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/hadoop-yarn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="ilivoo">
@@ -316,7 +316,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hortonwork 使用</h1>
+          <h1 class="post-title" itemprop="name headline">yarn 动态资源分配</h1>
         
 
         <div class="post-meta">
@@ -328,8 +328,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-02T21:18:21+08:00">
-                2019-01-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T15:06:04+08:00">
+                2019-01-23
               </time>
             
 
@@ -362,8 +362,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/hadoop/hortonwork/" itemprop="url" rel="index">
-                    <span itemprop="name">hortonwork</span>
+                  <a href="/categories/hadoop/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
                   </a>
                 </span>
 
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,010
+                  485
                 </span>
               
 
@@ -418,95 +418,39 @@
       
 
       
-        <p><strong>安装 hortonwork sandbox 参考 sandbox安装页面。</strong></p>
-<ol>
-<li><p>安装的过程中会出现端口冲突，直接修改 <code>sandbox/proxy/proxy-deploy.sh</code> 配置就可了， 如：</p>
-<p><code>-p 31080 1080 \</code></p>
-</li>
-<li><p>修改docker 的root密码, 直接登录进入docker就会提示更改密码</p>
-</li>
-<li><p>更改ambari admin 密码， 终端下执行 ambari-admin-password-reset</p>
-</li>
-<li><p>mysql无法启动</p>
-<p><code>mv /usr/sbin/mysqld /usr/bin/mysqld</code></p>
-<p><code>ln -nfs /usr/bin/mysqld /usr/sbin/mysqld</code></p>
-</li>
-<li><p>修改hdfs的yarn日志用户</p>
-<p><code>hadoop.http.staticuser.user = yarn</code></p>
-</li>
-<li><p>修改ranger admin UI密码登入， 保持下面密码全部都是一样的， 并且密码长度大于等于9位</p>
+        <h4 id="spark动态资源分配"><a href="#spark动态资源分配" class="headerlink" title="spark动态资源分配"></a>spark动态资源分配</h4><ul>
+<li><p>开启External shuffle service</p>
 <ul>
-<li><p>更改ambari admin 密码， 终端下执行 ambari-admin-password-reset</p>
+<li><p>Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Service是长期存在于NodeManager进程中的一个辅助服务。通过该服务来抓取shuffle数据，减少了Executor的压力，在Executor GC的时候也不会影响其他Executor的任务运行。</p>
 </li>
-<li><p>更改ranger admin for Ambari密码， ranger -&gt; config -&gt; advance -&gt; Ranger Admin user’s password for Ambari(Admin Settings下)</p>
+<li><p>NodeManager中启动External shuffle Service</p>
+<p>在<code>yarn-site.xml</code>中添加如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;                                                                        	  &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;                                         &lt;value&gt;spark_shuffle&lt;/value&gt;                                                   &lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.aux-services.spark_shuffle.class&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;org.apache.spark.network.yarn.YarnShuffleService&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;!-- 可选配置--&gt;</span><br><span class="line">    &lt;name&gt;spark.shuffle.service.port&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;7337&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>更改ranger Admin 密码， ranger -&gt; config -&gt; advance -&gt; Ranger Admin user’s password(Ranger-env下)</p>
+<li><p>拷贝<code>${SPARK_HOME}/lib/spark-${SPARK_VERSION}-yarn-shuffle.jar</code></p>
+<p>到<code>${HADOOP_HOME}/share/hadoop/yarn/lib/</code>目录下, 并重启NodeManager进程，也就启动了External shuffle Service。</p>
 </li>
-<li><p>更改mysql root用户以方便以后对mysql的更改， 在my.conf中加入skip-grant-tables跳过授权，更改mysql root用户密码</p>
-<p><code>update mysql.user set authentication_string=password(&#39;mypasswd&#39;) where user=&#39;root&#39;;</code></p>
+<li><p>Spark应用中使用External shuffle Service， 在spark-defaults.conf中添加配置或者直接使用–conf配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spark.shuffle.service.enabled  true</span><br><span class="line">spark.shuffle.service.port     7337</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>更改ranger需要的mysql root账户密码， ranger -&gt; config -&gt; ranger admin -&gt; Database Administrator (DBA) password</p>
-</li>
-<li><p>更改ranger admin账户的登录密码 </p>
-<p><code>update ranger.x_portal_user set password = &#39;ceb4f32325eda6142bd65215f4c0f371&#39; where login_id= &#39;admin&#39;;</code></p>
-<p>此password是有用户名和密码进行MD5求取出来的</p>
-<p><code>echo -n &#39;password{admin}&#39; | md5sum</code></p>
-</li>
-<li><p>使用同样(f步骤)的方法更改amb_ranger_admin的登录密码</p>
+<li><p>注意：</p>
+<p>如果 <code>yarn.nodemanager.aux-services</code>配置项已存在，则在 value 中添加park_shuffle，且用逗号和其他值分开。    </p>
+<p><code>spark.shuffle.service.port</code>的值需要和上面yarn-site.xml中的值一样， 可以都直接使用默认值。</p>
 </li>
 </ul>
 </li>
-<li><p>修改 Atlas admin密码</p>
-<p><code>Configs-&gt; Advanced -&gt; Advanced atlas-env -&gt; Admin password</code></p>
-</li>
-<li><p>mysql 相关配置</p>
-<p><code>max_connect_errors=10000</code></p>
-</li>
-</ol>
-<h4 id="启动kerberos"><a href="#启动kerberos" class="headerlink" title="启动kerberos"></a>启动kerberos</h4><ol>
-<li><p>安装并配置kerberos</p>
-<p>参考: <code>https://blog.csdn.net/Dr_Guo/article/details/53534927</code></p>
-</li>
-<li><p>导出kerberos创建的admin/admin用户的keytab到需要的环境中</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>kadmin.local</span><br><span class="line">xst -k admin.keytab -norandkey admin/admin</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置firefox kerberos认证</p>
+<li><p>spark程序开启动态资源分配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">spark.dynamicAllocation.enabled				true</span><br><span class="line">spark.dynamicAllocation.minExecutors		1</span><br><span class="line">spark.dynamicAllocation.initialExecutors	1</span><br><span class="line">spark.dynamicAllocation.maxExecutors		9</span><br><span class="line">spark.dynamicAllocation.executorIdleTimeout	60</span><br><span class="line">spark.dynamicAllocation.cachedExecutorIdleTimeout	60</span><br><span class="line">spark.executor.cores	2</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>firefox中输入<code>about:config</code> </p>
-</li>
-<li><p>搜索并修改选项<code>network.negotiate-auth.trusted-uris</code> 内容如下：</p>
-<p><code>.hortonworks.com</code></p>
+<li><p>注意：</p>
+<p>cores尽量设置为 &lt;= 3, 也就是说通常都是增大maxExecutors, 减小cores</p>
 </li>
 </ul>
 </li>
-<li><p>配置chrome认证，直接添加命令行参数就可以</p>
-<p><code>google-chrome --auth-server-whitelist=&quot;*.hortonworks.com&quot; --auth-negotiate-delegate-whitelist=&quot;*.hortonworks.com&quot;</code></p>
-</li>
-<li><p>修改sandbox-proxy， 让其暴露出kerberos认证需要的三个端口</p>
-<ul>
-<li>修改 <code>sandbox/proxy/proxy-deploy.sh</code>  添加如下内容：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-p 749:749 \</span><br><span class="line">-p 464:464 \</span><br><span class="line">-p 88:88 \</span><br></pre></td></tr></table></figure>
-<ul>
-<li>修改 <code>sandbox/proxy/conf.stream.d/tcp-hdp.conf</code> 添加如下内容：</li>
+<h4 id="yarn-资源分配建议"><a href="#yarn-资源分配建议" class="headerlink" title="yarn 资源分配建议"></a>yarn 资源分配建议</h4><ul>
+<li>设置Executor最大可用cores 和 memery， 这样能防止单个机器压力过大， 对于总的物理cores和memery来说需要减去操作系统以及hbase等其它的存储需要消耗的资源才为yarn最大可用资源， 通常需要预留生效资源的10%左右</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 749;</span><br><span class="line">  proxy_pass sandbox-hdp:749;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">  listen 464;</span><br><span class="line">  proxy_pass sandbox-hdp:464;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">  listen 88;</span><br><span class="line">  proxy_pass sandbox-hdp:88;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>注意：</strong> 由于kerberos需要的是tcp端口， 所以我们只需要该tcp的配置就可以了， 如果需要http端口则可以修改http配置</p>
-</li>
-</ol>
-<h4 id="权限管理"><a href="#权限管理" class="headerlink" title="权限管理"></a>权限管理</h4><ol>
-<li><p>通常情况下来说为了方便， 我们会在kerberos中创建一个admin用户， 以后使用admin账户就可以访问所有的hadoop服务， 而在hadoop中也建立一个admin用户，并加入到hadoop组当中， 让其和kerberos中的admin用户对应， 但是实际上它们没有任何的关系。</p>
-</li>
-<li><p>kerberos权限仅仅用来判定AB问题， 也就是说如何证明自己是自己所申称的人， 所以它需要引入一个受信的第三方来作为验证。 但是对于hadoop中的各组件来说， 通常都是每个组件一个用户， 并且把所有的组件用户加入到一个hadoop用户组当中。所以对于kerberos的admin用户仅仅只是能够声明我是一个管理员用户，它可以访问所有的启动kerberos的hadoop服务， 但是hadoop通常来说每个用户都有自己的用户访问权限， 也就是说kerberos只是作为第一个访问这个服务的权限， 而服务自身的权限就和kerberos没有任何关系了。如hdfs当中， 所有的用户权限是根据本地linux模型来管理的， 所以必须要有linux本地用户的权限才可以进行访问。</p>
-</li>
-<li><p>yarn 队列有自己的提交权限策略， 需要配置才能提交任务</p>
-<p><code>yarn.scheduler.capacity.root.acl_administer_queue=yarn,spark,hive,admin,zeppelin</code></p>
-</li>
-<li><p>spark的历史日志查看也需要进行权限设置， 通常关闭</p>
-<p><code>spark.history.ui.acls.enable</code></p>
-<p>因为日志通常记录在hdfs中， 所以还必须拥有hdfs的文件访问权限</p>
-</li>
-</ol>
 
       
     </div>
@@ -531,7 +475,7 @@
           
             <a href="/tags/hadoop/" rel="tag"># hadoop</a>
           
-            <a href="/tags/hortonwork/" rel="tag"># hortonwork</a>
+            <a href="/tags/spark/" rel="tag"># spark</a>
           
         </div>
       
@@ -544,8 +488,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/02/linux-centos-install/" rel="next" title="centos7 安装">
-                <i class="fa fa-chevron-left"></i> centos7 安装
+              <a href="/2019/01/13/hadoop-kerberos/" rel="next" title="hadoop-kerberos">
+                <i class="fa fa-chevron-left"></i> hadoop-kerberos
               </a>
             
           </div>
@@ -554,8 +498,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/02/hadoop-spark/" rel="prev" title="spark注意点">
-                spark注意点 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/01/23/hadoop-spark-hive/" rel="prev" title="spark 集成hive">
+                spark 集成hive <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -699,7 +643,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#启动kerberos"><span class="nav-number">1.</span> <span class="nav-text">启动kerberos</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#权限管理"><span class="nav-number">2.</span> <span class="nav-text">权限管理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#spark动态资源分配"><span class="nav-number">1.</span> <span class="nav-text">spark动态资源分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yarn-资源分配建议"><span class="nav-number">2.</span> <span class="nav-text">yarn 资源分配建议</span></a></li></ol></div>
             
 
           </div>

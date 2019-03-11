@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-13T12:16:36.273Z</updated>
+  <updated>2019-01-23T12:20:24.235Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>spark 集成hive</title>
+    <link href="http://yoursite.com/2019/01/23/hadoop-spark-hive/"/>
+    <id>http://yoursite.com/2019/01/23/hadoop-spark-hive/</id>
+    <published>2019-01-23T12:18:47.000Z</published>
+    <updated>2019-01-23T12:20:24.235Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="spark" scheme="http://yoursite.com/categories/hadoop/spark/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/categories/hadoop/spark/hive/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="spark" scheme="http://yoursite.com/tags/spark/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>yarn 动态资源分配</title>
+    <link href="http://yoursite.com/2019/01/23/hadoop-yarn/"/>
+    <id>http://yoursite.com/2019/01/23/hadoop-yarn/</id>
+    <published>2019-01-23T07:06:04.000Z</published>
+    <updated>2019-01-23T12:20:04.538Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;spark动态资源分配&quot;&gt;&lt;a href=&quot;#spark动态资源分配&quot; class=&quot;headerlink&quot; title=&quot;spark动态资源分配&quot;&gt;&lt;/a&gt;spark动态资源分配&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;开启External shuffle servic
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="spark" scheme="http://yoursite.com/categories/hadoop/spark/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="spark" scheme="http://yoursite.com/tags/spark/"/>
+    
+  </entry>
   
   <entry>
     <title>hadoop-kerberos</title>
@@ -319,7 +373,7 @@
     <link href="http://yoursite.com/2019/01/02/hadoop-hortonwork/"/>
     <id>http://yoursite.com/2019/01/02/hadoop-hortonwork/</id>
     <published>2019-01-02T13:18:21.000Z</published>
-    <updated>2019-01-19T04:40:04.600Z</updated>
+    <updated>2019-03-07T03:13:16.899Z</updated>
     
     <summary type="html">
     
@@ -348,7 +402,7 @@
     <link href="http://yoursite.com/2019/01/02/linux-centos-install/"/>
     <id>http://yoursite.com/2019/01/02/linux-centos-install/</id>
     <published>2019-01-02T12:53:11.000Z</published>
-    <updated>2019-01-02T13:14:58.585Z</updated>
+    <updated>2019-03-11T10:16:53.731Z</updated>
     
     <summary type="html">
     
@@ -485,53 +539,6 @@
     
     
       <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>kafka 命令行工具</title>
-    <link href="http://yoursite.com/2018/07/19/kafka-shell-command/"/>
-    <id>http://yoursite.com/2018/07/19/kafka-shell-command/</id>
-    <published>2018-07-19T01:21:58.000Z</published>
-    <updated>2019-01-03T10:50:45.524Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;kafka-console-producer-sh&quot;&gt;&lt;a href=&quot;#kafka-console-producer-sh&quot; class=&quot;headerlink&quot; title=&quot;kafka-console-producer.sh&quot;&gt;&lt;/a&gt;kafka-conso
-      
-    
-    </summary>
-    
-      <category term="kafka" scheme="http://yoursite.com/categories/kafka/"/>
-    
-    
-      <category term="kafka" scheme="http://yoursite.com/tags/kafka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>shell debug</title>
-    <link href="http://yoursite.com/2018/07/15/linux-shell-debug/"/>
-    <id>http://yoursite.com/2018/07/15/linux-shell-debug/</id>
-    <published>2018-07-15T12:41:31.000Z</published>
-    <updated>2019-01-03T10:52:07.567Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;bash-x教程&quot;&gt;&lt;a href=&quot;#bash-x教程&quot; class=&quot;headerlink&quot; title=&quot;bash -x教程&quot;&gt;&lt;/a&gt;bash -x教程&lt;/h4&gt;&lt;ol&gt;
-&lt;li&gt;设置PS4 &lt;figure class=&quot;highlight plain&quot;&gt;
-      
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
     
   </entry>
   
