@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-01-23T12:20:24.235Z</updated>
+  <updated>2019-03-17T03:51:00.019Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,44 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>linux-httpie</title>
+    <link href="http://yoursite.com/2019/03/17/linux-httpie/"/>
+    <id>http://yoursite.com/2019/03/17/linux-httpie/</id>
+    <published>2019-03-17T03:51:00.000Z</published>
+    <updated>2019-03-17T03:51:00.019Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>linux-openvpn</title>
+    <link href="http://yoursite.com/2019/03/15/linux-openvpn/"/>
+    <id>http://yoursite.com/2019/03/15/linux-openvpn/</id>
+    <published>2019-03-15T09:41:45.000Z</published>
+    <updated>2019-03-22T03:57:39.447Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;openvpn服务端安装&quot;&gt;&lt;a href=&quot;#openvpn服务端安装&quot; class=&quot;headerlink&quot; title=&quot;openvpn服务端安装&quot;&gt;&lt;/a&gt;openvpn服务端安装&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;直接使用搬瓦工的openvpn安装&lt;/p&gt;
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>spark 集成hive</title>
@@ -75,7 +113,7 @@
     <link href="http://yoursite.com/2019/01/13/hadoop-kerberos/"/>
     <id>http://yoursite.com/2019/01/13/hadoop-kerberos/</id>
     <published>2019-01-13T11:06:14.000Z</published>
-    <updated>2019-01-13T12:16:36.273Z</updated>
+    <updated>2019-03-21T08:50:24.509Z</updated>
     
     <summary type="html">
     
@@ -373,7 +411,7 @@
     <link href="http://yoursite.com/2019/01/02/hadoop-hortonwork/"/>
     <id>http://yoursite.com/2019/01/02/hadoop-hortonwork/</id>
     <published>2019-01-02T13:18:21.000Z</published>
-    <updated>2019-03-07T03:13:16.899Z</updated>
+    <updated>2019-03-13T06:19:03.055Z</updated>
     
     <summary type="html">
     
@@ -485,60 +523,6 @@
     
     
       <category term="live" scheme="http://yoursite.com/tags/live/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql性能解析</title>
-    <link href="http://yoursite.com/2019/01/02/mysql-profile/"/>
-    <id>http://yoursite.com/2019/01/02/mysql-profile/</id>
-    <published>2019-01-02T12:00:05.000Z</published>
-    <updated>2019-01-03T10:55:33.997Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;profiling使用： 性能剖析一般分为两步， 测量任务所花费的时间， 然后对结果进行统计和排序。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;New Relic, xhprof&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;可以通过设置long_query_time为0来捕
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql分区</title>
-    <link href="http://yoursite.com/2019/01/02/mysql-partitions/"/>
-    <id>http://yoursite.com/2019/01/02/mysql-partitions/</id>
-    <published>2019-01-02T11:44:59.000Z</published>
-    <updated>2019-01-04T15:46:11.318Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;修改已经存在的表为其添加分区&lt;/li&gt;
-&lt;/ol&gt;
-&lt;figure class=&quot;highlight sql&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span cla
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
     
   </entry>
   
