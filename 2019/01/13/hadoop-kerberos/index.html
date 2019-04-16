@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-21T08:50:24.509Z">
+<meta property="og:updated_time" content="2019-04-09T03:10:32.367Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop-kerberos">
 <meta name="twitter:description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,019
+                  2,304
                 </span>
               
 
@@ -526,14 +526,31 @@
 <li><p>启用kerberos后，部分kafka管理脚本需要增加额外的参数才能使用, 建立 <code>client.properties</code>文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">security.protocol=SASL_PLAINTEXT</span><br><span class="line">sasl.kerberos.service.name=kafka</span><br><span class="line">sasl.mechanism=GSSAPI</span><br></pre></td></tr></table></figure>
 <p>新命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">所以新命令的使用方式为</span><br><span class="line"></span><br><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hdp1.ilivoo.com:6667 --list --command-config client.properties</span><br><span class="line"></span><br><span class="line">bin/kafka-console-producer.sh --broker-list hdp1.ilivoo.com:6667 --topic dxTT --producer.config client.properties</span><br><span class="line"></span><br><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hdp1.ilivoo.com:6667 --topic dxTT --consumer.config client.properties --from-beginning</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">所以新命令的使用方式为</span><br><span class="line"></span><br><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hdp1.ilivoo.com:6667 --list --command-config client.properties</span><br><span class="line"></span><br><span class="line">bin/kafka-console-producer.sh --broker-list hdp1.ilivoo.com:6667 --topic dxTT --producer.config client.properties</span><br><span class="line">过期，需要重新申请或者renew。Ticket</span><br><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hdp1.ilivoo.com:6667 --topic dxTT --consumer.config client.properties --from-beginning</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h4 id="kerberos遇到的问题"><a href="#kerberos遇到的问题" class="headerlink" title="kerberos遇到的问题"></a>kerberos遇到的问题</h4><ul>
-<li><p><code>kinit -R</code> 无法续约，这是因为kerberos的每个principal都可以指定有效时间和刷新时间， 默认添加principal的时候并没有指定它的刷新时间和有效时间，所以就使用了服务器默认配置的时间</p>
-<p><code>kadmin.local</code></p>
+<li><p><code>kinit -R</code> 无法续约，这是因为kerberos的每个principal都可以指定超过此时间则ticket就会过期，需要重新申请或者renew有效时间和刷新时间， 默认添加principal的时候并没有指定它的刷新时间和有效时间，所以就使用了服务器默认配置的时间</p>
+<p><code>kerberos Server上的/var/kerberos/krb5kdbc/kdc.conf中的max_life kadmin.local</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">modprinc -maxlife &quot;1 week&quot; feng@ILIVOO.COM</span><br><span class="line">modprinc -maxrenewlife &quot;1 week&quot; feng@ILIVOO.COM</span><br><span class="line">modprinc -maxlife &quot;1 week&quot; krbtgt/ILIVOO.COM@ILIVOO.COM</span><br><span class="line">modprinc -maxrenewlife &quot;1 week&quot; krbtgt/ILIVOO.COM@ILIVOO.COM</span><br></pre></td></tr></table></figure>
 <p><strong>注意：</strong>krbtgt表示服务端的tgt必须设置， 设置完成需要重新<code>kinit</code></p>
+</li>
+<li><p>kerberos 的票据的生命周期由lifetime和renewlifetime决定， 当生命周期超过lifetime则ticket就会过期，需要重新申请或者renew，如果重新申请非常容易理解， 直接重新申请就可以了。如果需要renew则首先要开启renew功能， 由上一个问题解决。通常情况下来说，renewlifetime会大于lifetime，如：lifetime=2d，renewlifetime=7d。而这两个时间由五个基本的时间决定：</p>
+<ul>
+<li><p>最基本由kerberos Server上的/var/kerberos/krb5kdbc/kdc.conf中的max_life 和 max_renewable_life决定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[realms]</span><br><span class="line"> ILIVOO.COM = &#123;</span><br><span class="line">  max_life = 2d</span><br><span class="line">  max_renewable_life = 7d</span><br><span class="line">  ...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内置principal krbtgt的maxmum ticket life 和 renew life,可在kadmin命令下执行getprinc命令查看</p>
+</li>
+<li><p>使用的rincipal的maximum tiket life 和 renew life，可在kadmin命令下用getprinc命令查看</p>
+</li>
+<li><p>再就是kerberos client上/etc/krb5.conf的ticket_lifetime 和 renew_lifetime</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[libdefaults]</span><br><span class="line">  ticket_lifetime = 2d</span><br><span class="line">  renew_lifetime = 7d</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kinit 参数后面指定的时间, 如： <code>kinit -l 2d -r 7d my_principal</code></p>
+</li>
+</ul>
+<p><strong>注意：</strong>上面五个生命周期依次往上逐渐取最小</p>
 </li>
 <li><p>kerberos spark集群连接hbase、kafka， 由于spark以及处理了kerberos认证问题，在spark的Driver启动的时候spark获取kerberos认证， 并将认证打包成代理Token存放在HDFS上， 当启动Executor的时候会带上这个Token用于Executor上的验证。当Token快要失效的时候Spark Driver会再次去刷新认证， 并讲认证信息告诉Executor，从而保证整个过程中长时间运行。</p>
 <p><strong>注意：</strong>hbase的classpath是一个麻烦的事情， 因为通常情况下如果简单指定hbase-client会导致hbase 在Executor中没有认证的现象，所以必须讲hbase-server依赖带上。</p>
