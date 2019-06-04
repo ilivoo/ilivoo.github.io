@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="spark动态资源分配 开启External shuffle service  Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Servic">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-23T12:20:04.538Z">
+<meta property="og:updated_time" content="2019-06-03T10:08:42.002Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="yarn 动态资源分配">
 <meta name="twitter:description" content="spark动态资源分配 开启External shuffle service  Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Servic">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  485
+                  527
                 </span>
               
 
@@ -434,8 +434,10 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spark.shuffle.service.enabled  true</span><br><span class="line">spark.shuffle.service.port     7337</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>注意：</p>
-<p>如果 <code>yarn.nodemanager.aux-services</code>配置项已存在，则在 value 中添加park_shuffle，且用逗号和其他值分开。    </p>
+<p>如果 <code>yarn.nodemanager.aux-services</code>配置项已存在，则在 value 中添加spark_shuffle，且用逗号和其他值分开。    </p>
 <p><code>spark.shuffle.service.port</code>的值需要和上面yarn-site.xml中的值一样， 可以都直接使用默认值。</p>
+</li>
+<li><p>实际上现在hdp3.0 以上版本都已经自动开启了spark的External shuffle Service, 只需要设置在spark-defaults 和 yarn-site中设置 <code>spark.shuffle.service.port=7337</code></p>
 </li>
 </ul>
 </li>
@@ -581,7 +583,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

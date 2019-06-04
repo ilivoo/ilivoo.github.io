@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="openvpn服务端安装 直接使用搬瓦工的openvpn安装  安装obfsproxy， 服务端和客户端完全一样  修改openvpn服务端配置 123456789101112131415161718port 3737proto tcpdev tunserver 10.10.10.0 255.255.255.0ifconfig-pool-persist ipp.txtca ca.crtcert s">
+<meta name="description" content="openvpn服务端安装 安装openvpn 12345yum install -y epel-release yum update -yyum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expectyum install -y easy-rsayum install -y openvpn  配置easy-rsa 12">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux-openvpn">
 <meta property="og:url" content="http://yoursite.com/2019/03/15/linux-openvpn/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="openvpn服务端安装 直接使用搬瓦工的openvpn安装  安装obfsproxy， 服务端和客户端完全一样  修改openvpn服务端配置 123456789101112131415161718port 3737proto tcpdev tunserver 10.10.10.0 255.255.255.0ifconfig-pool-persist ipp.txtca ca.crtcert s">
+<meta property="og:description" content="openvpn服务端安装 安装openvpn 12345yum install -y epel-release yum update -yyum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expectyum install -y easy-rsayum install -y openvpn  配置easy-rsa 12">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-22T03:57:39.447Z">
+<meta property="og:updated_time" content="2019-05-20T07:34:29.553Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux-openvpn">
-<meta name="twitter:description" content="openvpn服务端安装 直接使用搬瓦工的openvpn安装  安装obfsproxy， 服务端和客户端完全一样  修改openvpn服务端配置 123456789101112131415161718port 3737proto tcpdev tunserver 10.10.10.0 255.255.255.0ifconfig-pool-persist ipp.txtca ca.crtcert s">
+<meta name="twitter:description" content="openvpn服务端安装 安装openvpn 12345yum install -y epel-release yum update -yyum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expectyum install -y easy-rsayum install -y openvpn  配置easy-rsa 12">
 
 
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  708
+                  1,467
                 </span>
               
 
@@ -408,55 +408,83 @@
 
       
         <h4 id="openvpn服务端安装"><a href="#openvpn服务端安装" class="headerlink" title="openvpn服务端安装"></a>openvpn服务端安装</h4><ol>
-<li><p>直接使用搬瓦工的openvpn安装</p>
+<li><p>安装openvpn</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install -y epel-release </span><br><span class="line">yum update -y</span><br><span class="line">yum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expect</span><br><span class="line">yum install -y easy-rsa</span><br><span class="line">yum install -y openvpn</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>安装obfsproxy， 服务端和客户端完全一样</p>
+<li><p>配置easy-rsa</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cp -rf /usr/share/easy-rsa/3.0.3 /etc/openvpn/server/easy-rsa</span><br><span class="line">cd /etc/openvpn/server/easy-rsa</span><br><span class="line">./easyrsa init-pki</span><br><span class="line">./easyrsa build-ca nopass</span><br><span class="line">./easyrsa build-server-full server nopass</span><br><span class="line">./easyrsa build-client-full client nopass</span><br><span class="line">./easyrsa gen-dh</span><br><span class="line">openvpn --genkey --secret ta.key</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>修改openvpn服务端配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">port 3737</span><br><span class="line">proto tcp</span><br><span class="line">dev tun</span><br><span class="line">server 10.10.10.0 255.255.255.0</span><br><span class="line">ifconfig-pool-persist ipp.txt</span><br><span class="line">ca ca.crt</span><br><span class="line">cert server.crt</span><br><span class="line">key server.key</span><br><span class="line">dh dh2048.pem</span><br><span class="line">push &quot;route 10.10.10.0 255.255.255.0&quot;</span><br><span class="line">push &quot;redirect-gateway&quot;</span><br><span class="line">comp-lzo</span><br><span class="line">keepalive 20 120</span><br><span class="line">ping-timer-rem</span><br><span class="line">persist-tun</span><br><span class="line">persist-key</span><br><span class="line">group nobody</span><br><span class="line">daemon</span><br></pre></td></tr></table></figure>
+<li><p>配置openvpn</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 日志存放目录</span></span><br><span class="line">mkdir -p /var/log/openvpn/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置权限</span></span><br><span class="line">chown openvpn:openvpn /var/log/openvpn</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用户管理目录</span></span><br><span class="line">mkdir -p /etc/openvpn/server/user</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用户IP固定目录</span></span><br><span class="line">mkdir -p /etc/openvpn/server/ccd</span><br></pre></td></tr></table></figure>
+<p>编辑<code>/etc/openvpn/server/server.conf</code>文件，并写入以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#################################################</span></span><br><span class="line"><span class="comment"># This file is for the server side              #</span></span><br><span class="line"><span class="comment"># of a many-clients &lt;-&gt; one-server              #</span></span><br><span class="line"><span class="comment"># OpenVPN configuration.                        #</span></span><br><span class="line"><span class="comment">#                                               #</span></span><br><span class="line"><span class="comment"># Comments are preceded with '#' or ';'         #</span></span><br><span class="line"><span class="comment">#################################################</span></span><br><span class="line">port 1194</span><br><span class="line">proto tcp-server</span><br><span class="line"><span class="comment">## Enable the management interface</span></span><br><span class="line"><span class="comment"># management-client-auth</span></span><br><span class="line"><span class="comment"># management localhost 7505 /etc/openvpn/user/management-file</span></span><br><span class="line">dev tap     <span class="comment"># TUN/TAP virtual network device</span></span><br><span class="line">user openvpn</span><br><span class="line">group openvpn</span><br><span class="line">ca /etc/openvpn/server/easy-rsa/pki/ca.crt</span><br><span class="line">cert /etc/openvpn/server/easy-rsa/pki/issued/server.crt</span><br><span class="line">key /etc/openvpn/server/easy-rsa/pki/private/server.key</span><br><span class="line">dh /etc/openvpn/server/easy-rsa/pki/dh.pem</span><br><span class="line">tls-auth /etc/openvpn/server/easy-rsa/ta.key 0</span><br><span class="line"><span class="comment">## Using System user auth.</span></span><br><span class="line"><span class="comment"># plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so login</span></span><br><span class="line"><span class="comment">## Using Script Plugins</span></span><br><span class="line">auth-user-pass-verify /etc/openvpn/server/user/checkpsw.sh via-env</span><br><span class="line">script-security 3</span><br><span class="line"><span class="comment"># client-cert-not-required  # Deprecated option</span></span><br><span class="line">verify-client-cert</span><br><span class="line">username-as-common-name</span><br><span class="line"><span class="comment">## Connecting clients to be able to reach each other over the VPN.</span></span><br><span class="line">client-to-client</span><br><span class="line"><span class="comment">## Allow multiple clients with the same common name to concurrently connect.</span></span><br><span class="line"><span class="comment"># duplicate-cn</span></span><br><span class="line">client-config-dir ccd</span><br><span class="line"><span class="comment"># ifconfig-pool-persist ipp.txt</span></span><br><span class="line">server 10.8.0.0 255.255.255.0</span><br><span class="line">push <span class="string">"dhcp-option DNS 114.114.114.114"</span></span><br><span class="line">push <span class="string">"dhcp-option DNS 8.8.8.8"</span></span><br><span class="line"><span class="comment"># push "route 10.93.0.0 255.255.255.0"</span></span><br><span class="line"><span class="comment"># comp-lzo - DEPRECATED This option will be removed in a future OpenVPN release. Use the newer --compress instead.</span></span><br><span class="line">compress lzo</span><br><span class="line"><span class="comment"># cipher AES-256-CBC</span></span><br><span class="line">ncp-ciphers <span class="string">"AES-256-GCM:AES-128-GCM"</span></span><br><span class="line"><span class="comment">## In UDP client mode or point-to-point mode, send server/peer an exit notification if tunnel is restarted or OpenVPN process is exited.</span></span><br><span class="line"><span class="comment"># explicit-exit-notify 1</span></span><br><span class="line">keepalive 10 120</span><br><span class="line">persist-key</span><br><span class="line">persist-tun</span><br><span class="line">verb 3</span><br><span class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/openvpn/server.log</span><br><span class="line"><span class="built_in">log</span>-append /var/<span class="built_in">log</span>/openvpn/server.log</span><br><span class="line">status /var/<span class="built_in">log</span>/openvpn/status.log</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>启动openvpn和obfsproxy</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy obfs3 --dest=127.0.0.1:3737 server 0.0.0.0:8088 &amp;</span><br></pre></td></tr></table></figure>
+<li><p>启动配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/openvpn/server/</span><br><span class="line">ln -sf server.conf .service.conf</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<h4 id="openvpn-说明"><a href="#openvpn-说明" class="headerlink" title="openvpn 说明"></a>openvpn 说明</h4><ol>
-<li><p>openvpn主要是用来解决虚拟局域网的功能和高度加密功能</p>
+<li><p>创建用户密码文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tee /etc/openvpn/server/user/psw-file &lt;&lt; EOF</span><br><span class="line">mytest mytestpass</span><br><span class="line">EOF</span><br><span class="line">chmod 600 /etc/openvpn/server/user/psw-file</span><br><span class="line">chown openvpn:openvpn /etc/openvpn/server/user/psw-file</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 用户名和密码可以多行, 表示多个用户. 这里的用户名和密码, 和上面的 <code>client</code> 不是一回事, <code>client</code> 表示密钥, 所有的用户都可以使用同一个密钥, 也可以使用不同的, 所有通常为了简单只创建一个密钥, 并通过用户名来区分.</p>
 </li>
-<li><p>obfsproxy混淆tcp，用于讲上层协议的包封装成obfsproxy的包</p>
+<li><p>创建密码检查脚本 <code>/etc/openvpn/server/user/checkpsw.sh</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##########################################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> checkpsw.sh (C) 2004 Mathias Sundman &lt;mathias@openvpn.se&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script will authenticate OpenVPN users against</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> a plain text file. The passfile should simply contain</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> one row per user with the username first followed by</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> one or more space(s) or tab(s) and <span class="keyword">then</span> the password.</span></span><br><span class="line">PASSFILE="/etc/openvpn/server/user/psw-file"</span><br><span class="line">LOG_FILE="/var/log/openvpn/password.log"</span><br><span class="line">TIME_STAMP=`date "+%Y-%m-%d %T"`</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##########################################################</span></span></span><br><span class="line">if [ ! -r "$&#123;PASSFILE&#125;" ]; then</span><br><span class="line">  echo "$&#123;TIME_STAMP&#125;: Could not open password file \"$&#123;PASSFILE&#125;\" for reading." &gt;&gt;  $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line">CORRECT_PASSWORD=`awk '!/^;/&amp;&amp;!/^#/&amp;&amp;$1=="'$&#123;username&#125;'"&#123;print $2;exit&#125;' $&#123;PASSFILE&#125;`</span><br><span class="line">if [ "$&#123;CORRECT_PASSWORD&#125;" = "" ]; then</span><br><span class="line">  echo "$&#123;TIME_STAMP&#125;: User does not exist: username=\"$&#123;username&#125;\", password=</span><br><span class="line">\"$&#123;password&#125;\"." &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line">if [ "$&#123;password&#125;" = "$&#123;CORRECT_PASSWORD&#125;" ]; then</span><br><span class="line">  echo "$&#123;TIME_STAMP&#125;: Successful authentication: username=\"$&#123;username&#125;\"." &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 0</span><br><span class="line">fi</span><br><span class="line">echo "$&#123;TIME_STAMP&#125;: Incorrect password: username=\"$&#123;username&#125;\", password=</span><br><span class="line">\"$&#123;password&#125;\"." &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">exit 1</span><br></pre></td></tr></table></figure>
+<p>赋予写权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/openvpn/server/user/checkpsw.sh</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>整个流程 openvpn client –&gt; obfsproxy client –&gt; wall –&gt; obfsproxy server –&gt; openvpn server –&gt; others</p>
+<li><p>启动服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 查看service名</span><br><span class="line">rpm -ql openvpn |grep service</span><br><span class="line">/usr/lib/systemd/system/openvpn-client@.service</span><br><span class="line">/usr/lib/systemd/system/openvpn-server@.service</span><br><span class="line">/usr/lib/systemd/system/openvpn@.service</span><br><span class="line"># 启动</span><br><span class="line">systemctl start openvpn-server@.service.service</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>openvpn的安装建议直接使用搬瓦工的自动安装就可以了， 并下载它的 <code>Download key files</code>， 再创建客户端密钥。</p>
+<li><p>问题总结:</p>
+<ul>
+<li><p>添加用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo user password &gt;&gt; /etc/openvpn/server/user/psw-file</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>openvpn安装完成之后需要每个客户端需要添加不同的密钥， 这样每个客户端才分配不同的IP地址，以便搭建虚拟局域网, 路径 <code>/etc/openvpn</code></p>
-<p>更改变量 <code>vi vars</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export KEY_COUNTRY=&quot;CN&quot;</span><br><span class="line">export KEY_PROVINCE=&quot;HUBEI&quot;</span><br><span class="line">export KEY_CITY=&quot;wuhan&quot;</span><br><span class="line">export KEY_ORG=&quot;tepia&quot;</span><br><span class="line">export KEY_EMAIL=&quot;316488140@qq.com&quot;</span><br><span class="line">export KEY_OU=&quot;tepia&quot;</span><br></pre></td></tr></table></figure>
-<p>生成客户端配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd easy-rsa</span><br><span class="line">source ./vars</span><br><span class="line">./build-key newclient</span><br></pre></td></tr></table></figure>
-<p> 复制客户端密钥文件到客户端</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp root@地址:/etc/openvpn/easy-rsa/keys/newclient.* /etc/openvpn/client</span><br></pre></td></tr></table></figure>
-<p>下载最原始的客户端配置文件，从搬瓦工官网下载 <code>openvpn-keys.zip</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mv openvpn-keys.zip /etc/openvpn/client</span><br><span class="line">unzip openvpn-keys.zip</span><br><span class="line">ls #查看所有文件</span><br><span class="line">ca.crt  ca.key  client1.crt  client1.csr  client1.key  newclient.crt  newclient.csr  newclient.key  host.localdomain.ovpn  openvpn-keys.zip</span><br></pre></td></tr></table></figure>
-<p>更改 <code>host.localdomain.ovpn</code>文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cert newclient.crt</span><br><span class="line">key newclient.key</span><br></pre></td></tr></table></figure>
+<li><p>为用户固定IP地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tee /etc/openvpn/server/ccd/$&#123;user&#125; &lt;&lt; EOF</span><br><span class="line">ifconfig-push 10.8.0.30 255.255.255.0</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 替换此处的用户名, 和IP地址</p>
 </li>
-<li><p>安装openvpn后需要更改openvpn走obfsproxy通道, 配置说明</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">client</span><br><span class="line">dev tun</span><br><span class="line">proto tcp</span><br><span class="line">remote 127.0.0.1 9999 #本地obfsproxy的地址</span><br><span class="line">resolv-retry infinite</span><br><span class="line">comp-lzo</span><br><span class="line">ca ca.crt</span><br><span class="line">cert newclient.crt</span><br><span class="line">key newclient.key</span><br><span class="line">route-delay 2</span><br><span class="line">route-method exe</span><br><span class="line">redirect-gateway def1</span><br><span class="line">verb 3</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="obfsproxy-说明"><a href="#obfsproxy-说明" class="headerlink" title="obfsproxy 说明"></a>obfsproxy 说明</h4><ol>
-<li><p>安装obfsproxy，最好是先将python升级到2.7最新版本</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/dounine/obfsproxy.git</span><br><span class="line">cd obfsproxy</span><br><span class="line">tar -xzf obfsproxy-0.2.13.tar.gz</span><br><span class="line">cd obfsproxy-0.2.13</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-<p><strong>说明：</strong>可能需要解决python相关的问题</p>
-</li>
-<li><p>安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://twistedmatrix.com/Releases/Twisted/18.9/Twisted-18.9.0.tar.bz2</span><br><span class="line">tar -jxvf Twisted-18.9.0.tar.bz2</span><br><span class="line">cd Twisted-18.9.0</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>启动</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo obfsproxy obfs3 --dest=服务端地址:服务端obfsproxy端口 client 127.0.0.1:9999</span><br></pre></td></tr></table></figure>
+</ul>
 </li>
 </ol>
-<h4 id="启动openvpn和obfsproxy"><a href="#启动openvpn和obfsproxy" class="headerlink" title="启动openvpn和obfsproxy"></a>启动openvpn和obfsproxy</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy obfs3 --dest=服务端地址:服务端obfsproxy端口 client 127.0.0.1:9999 &amp;</span><br><span class="line">cd /etc/openvpn/client/</span><br><span class="line">openvpn --config host.localdomain.ovpn &amp;</span><br><span class="line">route del -net 128.0.0.0/1</span><br><span class="line">route del -net 0.0.0.0/1</span><br></pre></td></tr></table></figure>
+<h4 id="obfsproxy服务端安装"><a href="#obfsproxy服务端安装" class="headerlink" title="obfsproxy服务端安装"></a>obfsproxy服务端安装</h4><ol>
+<li><p>安装python, 版本最好是大于2.7.5</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y python-devel bzip2 bzip2-devel zlib</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li><p>安装pip和对应工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://bootstrap.pypa.io/get-pip.py</span><br><span class="line">python get-pip.py</span><br><span class="line">pip install --upgrade setuptools</span><br><span class="line">pip install --upgrade incremental</span><br><span class="line">pip install psutil</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Twisted</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://twistedmatrix.com/Releases/Twisted/18.9/Twisted-18.9.0.tar.bz2</span><br><span class="line">tar -jxvf Twisted-18.9.0.tar.bz2</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装obfsproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/dounine/obfsproxy.git</span><br><span class="line">tar -xzf obfsproxy-0.2.13.tar.gz</span><br><span class="line">python setup.py install</span><br><span class="line">ln -s /usr/bin/obfsproxy /usr/local/bin/obfsproxy</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 中间可能还会出现其它python问题, google解决即可</p>
+</li>
+<li><p>启动obfsproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy obfs3 --dest=127.0.0.1:1194 server 0.0.0.0:10102</span><br></pre></td></tr></table></figure>
+<p><strong>说明 : </strong> dest表示obfsproxy接收到的数据传输到哪里, 此处接收到数据传输到openvpn, server表示它是服务端,  0.0.0.0:10102表示监听的端口号.</p>
+</li>
+<li><p>添加obfsproxy的防火墙配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent  --add-port=10102/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="obfsproxy客户端安装"><a href="#obfsproxy客户端安装" class="headerlink" title="obfsproxy客户端安装"></a>obfsproxy客户端安装</h4><ol>
+<li><p>安装obfsproxy客户端和服务端完全一样</p>
+</li>
+<li><p>启动obfsproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy obfs3 --dest=服务端IP地址:10102 client 127.0.0.1:9997</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="openvpn客户端安装"><a href="#openvpn客户端安装" class="headerlink" title="openvpn客户端安装"></a>openvpn客户端安装</h4><ol>
+<li><p>安装openvpn客户端和服务端完全一样</p>
+</li>
+<li><p>配置openvpn, 从server上将生成的<code>ca.crt</code>、<code>client.crt</code>、<code>client.key</code>、<code>ta.key</code>文件下载到客户端，并添加配置文件<code>client.ovpn</code>, 内容如下: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">client</span><br><span class="line">proto tcp-client</span><br><span class="line">dev tap</span><br><span class="line">auth-user-pass</span><br><span class="line">remote 127.0.0.1 9997</span><br><span class="line">ca ca.crt</span><br><span class="line">cert client.crt</span><br><span class="line">key client.key</span><br><span class="line">tls-auth ta.key 1</span><br><span class="line">remote-cert-tls server</span><br><span class="line">auth-nocache</span><br><span class="line">persist-tun</span><br><span class="line">persist-key</span><br><span class="line">comp-lzo</span><br><span class="line">verb 4</span><br><span class="line">mute 10</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 此处的remote并没有设置为openvpn的服务端地址, 而是设置为obfsproxy客户端监听的地址, 这样openvpn就先把数据发送给obfsproxy客户端, obfsproxy客户端再发送给obfsproxy服务端, obfsproxy服务端再发送给openvpn服务端.</p>
+</li>
+</ol>
 
       
     </div>
@@ -585,7 +613,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -647,7 +675,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn服务端安装"><span class="nav-number">1.</span> <span class="nav-text">openvpn服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn-说明"><span class="nav-number">2.</span> <span class="nav-text">openvpn 说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy-说明"><span class="nav-number">3.</span> <span class="nav-text">obfsproxy 说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动openvpn和obfsproxy"><span class="nav-number">4.</span> <span class="nav-text">启动openvpn和obfsproxy</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn服务端安装"><span class="nav-number">1.</span> <span class="nav-text">openvpn服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy服务端安装"><span class="nav-number">2.</span> <span class="nav-text">obfsproxy服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy客户端安装"><span class="nav-number">3.</span> <span class="nav-text">obfsproxy客户端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn客户端安装"><span class="nav-number">4.</span> <span class="nav-text">openvpn客户端安装</span></a></li></ol></div>
             
 
           </div>

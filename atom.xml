@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-03-17T03:51:00.019Z</updated>
+  <updated>2019-05-21T14:23:45.013Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hbase、phoenix 创建表</title>
+    <link href="http://yoursite.com/2019/04/16/hadoop-hbase/"/>
+    <id>http://yoursite.com/2019/04/16/hadoop-hbase/</id>
+    <published>2019-04-16T06:53:35.000Z</published>
+    <updated>2019-05-21T14:23:45.013Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;创建日志表&quot;&gt;&lt;a href=&quot;#创建日志表&quot; class=&quot;headerlink&quot; title=&quot;创建日志表&quot;&gt;&lt;/a&gt;创建日志表&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;创建test表&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;tabl
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="spark" scheme="http://yoursite.com/categories/hadoop/spark/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="spark" scheme="http://yoursite.com/tags/spark/"/>
+    
+  </entry>
   
   <entry>
     <title>linux-httpie</title>
@@ -35,14 +64,15 @@
     <link href="http://yoursite.com/2019/03/15/linux-openvpn/"/>
     <id>http://yoursite.com/2019/03/15/linux-openvpn/</id>
     <published>2019-03-15T09:41:45.000Z</published>
-    <updated>2019-03-22T03:57:39.447Z</updated>
+    <updated>2019-05-20T07:34:29.553Z</updated>
     
     <summary type="html">
     
       
       
         &lt;h4 id=&quot;openvpn服务端安装&quot;&gt;&lt;a href=&quot;#openvpn服务端安装&quot; class=&quot;headerlink&quot; title=&quot;openvpn服务端安装&quot;&gt;&lt;/a&gt;openvpn服务端安装&lt;/h4&gt;&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;直接使用搬瓦工的openvpn安装&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;安装openvpn&lt;/p&gt;
+&lt;figure
       
     
     </summary>
@@ -85,7 +115,7 @@
     <link href="http://yoursite.com/2019/01/23/hadoop-yarn/"/>
     <id>http://yoursite.com/2019/01/23/hadoop-yarn/</id>
     <published>2019-01-23T07:06:04.000Z</published>
-    <updated>2019-01-23T12:20:04.538Z</updated>
+    <updated>2019-06-03T10:08:42.002Z</updated>
     
     <summary type="html">
     
@@ -113,7 +143,7 @@
     <link href="http://yoursite.com/2019/01/13/hadoop-kerberos/"/>
     <id>http://yoursite.com/2019/01/13/hadoop-kerberos/</id>
     <published>2019-01-13T11:06:14.000Z</published>
-    <updated>2019-04-09T03:10:32.367Z</updated>
+    <updated>2019-04-23T06:44:16.998Z</updated>
     
     <summary type="html">
     
@@ -411,7 +441,7 @@
     <link href="http://yoursite.com/2019/01/02/hadoop-hortonwork/"/>
     <id>http://yoursite.com/2019/01/02/hadoop-hortonwork/</id>
     <published>2019-01-02T13:18:21.000Z</published>
-    <updated>2019-04-16T01:46:44.124Z</updated>
+    <updated>2019-06-04T07:28:13.988Z</updated>
     
     <summary type="html">
     
@@ -440,7 +470,7 @@
     <link href="http://yoursite.com/2019/01/02/linux-centos-install/"/>
     <id>http://yoursite.com/2019/01/02/linux-centos-install/</id>
     <published>2019-01-02T12:53:11.000Z</published>
-    <updated>2019-03-11T10:16:53.731Z</updated>
+    <updated>2019-05-21T02:14:11.037Z</updated>
     
     <summary type="html">
     
@@ -492,37 +522,6 @@
     
     
       <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>摄影</title>
-    <link href="http://yoursite.com/2019/01/02/live-photo/"/>
-    <id>http://yoursite.com/2019/01/02/live-photo/</id>
-    <published>2019-01-02T12:32:42.000Z</published>
-    <updated>2019-01-02T12:43:17.721Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;摄影的三要素&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;曝光： 光线通过光圈到照片中接受的多少。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;审美： 照片通过各种元素给人的视觉不同的冲击力。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;其它： 照片体现的各种主题、人文等等。&lt;/p&gt;
-&lt;
-      
-    
-    </summary>
-    
-      <category term="live" scheme="http://yoursite.com/categories/live/"/>
-    
-    
-      <category term="live" scheme="http://yoursite.com/tags/live/"/>
     
   </entry>
   

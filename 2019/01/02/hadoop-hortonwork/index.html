@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-16T01:46:44.124Z">
+<meta property="og:updated_time" content="2019-06-04T07:28:13.988Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hortonwork 使用">
 <meta name="twitter:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,673
+                  2,393
                 </span>
               
 
@@ -464,6 +464,7 @@
 </li>
 <li><p>mysql 相关配置</p>
 <p><code>max_connect_errors=10000</code></p>
+<p><code>validate_password=OFF</code></p>
 </li>
 </ol>
 <h4 id="启动kerberos"><a href="#启动kerberos" class="headerlink" title="启动kerberos"></a>启动kerberos</h4><ol>
@@ -529,6 +530,56 @@
 <p>修改KDC密码, <code>kadmin.local</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">change_password admin/admin@ILIVOO.COM</span><br></pre></td></tr></table></figure>
 <p>最后， 由于amberi server的密码是可以直接<code>persisted</code>，所以我们可以开启这个持久化功能，具体参照 <code>https://community.hortonworks.com/articles/42927/adding-kdc-administrator-credentials-to-the-ambari.html</code>， 开启之后以后添加服务就可以不用添加amberi server密码了，只需要执行修改KDC的密码就可以，但是注意KDC密码必须是amberi server保存的密码</p>
+</li>
+<li><p><code>kerberos kafka</code> 需要配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listeners = SASL_PLAINTEXT://:6667</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>NameNode UI不能访问, 这是因为服务器存在多个网卡,  默认NameNode默认只是绑定到集群指定的网卡, 并没有绑定到所有的网卡, 所以如果使用了openvpn后, 实际上50070并没有绑定到openvpn指定的网卡, 所以就会导致无法openvpn的网卡无法访问了, 通过指定 <code>hdfs-site.xml</code> 绑定所有网卡</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.namenode.http-bind-host&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.namenode.https-bind-host&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">     &lt;name&gt;dfs.namenode.http-bind-host&lt;/name&gt;</span><br><span class="line">     &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">   &lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.namenode.https-bind-host&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kafka日志目录必须为空, 对于单独挂载的目录来说通常下来存在 <code>lost+found</code> , 所以必须再加一层目录. kafka的 <code>zookeeper.connect</code>  应该添加根目录, 这样更加便于管理, 如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zookeeper.connect=cmsw2.tepia.com:2181,cmsw1.tepia.com:2181/kafka</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同上面NameNode UI不能访问网络道理相同, kafka绑定ip时, 如果仅仅只是绑定某个ip而没有绑定openvpn网卡, 那么同样无法访问, 所以需要配置为 <code>listeners=PLAINTEXT://:6667</code></p>
+</li>
+<li><p>hbase 双网卡绑定问题, 在hbase-site.xml中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase.master.ipc.address 0.0.0.0</span><br><span class="line">hbase.regionserver.ipc.address 0.0.0.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改hadoop运行用户, 指定环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_USER_NAME=tepia</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yarn timeline 三种配置后端存储模式</p>
+<ul>
+<li><p>第一种嵌入式hbase(小集群默认模式)</p>
+</li>
+<li><p>第二种外部hbase模式</p>
+<ol>
+<li><p>配置基本信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2181use_external_hbase = true</span><br><span class="line">hbase.zookeeper.quorum = cmsw2.tepia.com,cmsw1.tepia.com</span><br><span class="line">hbase.zookeeper.property.clientPort = 2181</span><br><span class="line">zookeeper.znode.parent = /hbase-unsecure</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用hbase用户创建yarn需要的schema</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_CLASSPATH_PREFIX=/usr/hdp/3.1.0.0-78/hadoop-yarn/timelineservice/*</span><br><span class="line">/usr/hdp/3.1.0.0-78/hbase/bin/hbase org.apache.hadoop.yarn.server.timelineservice.storage.TimelineSchemaCreator -Dhbase.client.retries.number=35 -create -s</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为新添加的表(prod.*)增加权限, 使用基本方式或者ranger</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grant &apos;yarn&apos;, &apos;RWXCA&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>系统服务模式, 使用spark运行ats-hbase服务</p>
+</li>
+</ul>
+</li>
+<li><p>phoenix 包冲突问题， 由于项目中现在基本上使用logback，但是phoenix中使用log4j并且使用slf4j进行进行桥接，所以解决phoenix包冲突前先应该去掉slf4j和log4j，再更具具体情形进行对比。</p>
+</li>
+<li><p><code>hdp3.1</code> 中 <code>spark stream</code>  内存占用太高bug修复，通常情况下修复spark bug需要非常仔细。 </p>
+<ol>
+<li>找准spark 对应的源代码（通过maven源代码）</li>
+<li>找准scala版本（查看spark中的pom文件获取）</li>
+<li>创建项目拷贝对应源代码， 修改源代码。</li>
+<li>获取spark集群中的jar包， 并且备份jar包</li>
+<li>解压jar包（jar -xf ），并拷贝编译的新的class文件，并重新打包(jar cvfM)</li>
+<li>上传新的jar包， 并重启history server</li>
+</ol>
 </li>
 </ol>
 
@@ -661,7 +712,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

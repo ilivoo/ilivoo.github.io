@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="概念 git存在工作区， 暂存区， 本地仓库， 远程仓库 工作区: 当前项目root目录 暂存区: 新文件通过git add添加， 或者已经关联的文件都在暂存区当中 本地仓库： 本地的仓库， ！，通过commit将暂存区中的内容提交到本地仓库 远程仓库： 远程的仓库， 通过push将本地的commit的版本push到远程   对于已经新添加的文件或者已经关联的文件修改， 都必须通过git add将">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-03T10:52:53.047Z">
+<meta property="og:updated_time" content="2019-05-24T07:49:05.671Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git使用">
 <meta name="twitter:description" content="概念 git存在工作区， 暂存区， 本地仓库， 远程仓库 工作区: 当前项目root目录 暂存区: 新文件通过git add添加， 或者已经关联的文件都在暂存区当中 本地仓库： 本地的仓库， ！，通过commit将暂存区中的内容提交到本地仓库 远程仓库： 远程的仓库， 通过push将本地的commit的版本push到远程   对于已经新添加的文件或者已经关联的文件修改， 都必须通过git add将">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,074
+                  2,104
                 </span>
               
 
@@ -421,7 +421,7 @@
 <h5 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add . 将工作空间中的改变文件添加到暂存区</span><br></pre></td></tr></table></figure>
 <h5 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git reset用户回退一个已经commit但是并没有push的代码， 常见的参数： --hard  --merge  --mixed  --patch  --soft</span><br><span class="line">git reset --mixed version_hash 会保留源码， 只是将git commit和index信息回退到某个版本 --mixed是git reset的默认模式， git reset --mixed 等价于 git reset</span><br><span class="line">git reset --soft 会保留源码， 只是回退到commit信息到某个版本，不涉及index的回退， 如果还需要提交直接提交就可以了</span><br><span class="line">git reset --hard 源代码也会回退到某个版本，commit和index都会回退到某个版本，如果没有指定版本那么就会放弃当前所有的更改回退当上一个commit</span><br></pre></td></tr></table></figure>
 <p><em>注意</em>： 上面reset只是更改本地仓库的代码， 远程仓库代码还没有改变， 所以如果index发生变化， 而线上的index没有发生变化， 那么必定会导致不发进行push， 所以必须pull下来， 再进行<br>push， 此时代码还是回变为线上index的版本， 所以总的来说这种方式不适合回退到线上index版本<br>之前的， 它无法做到， 所以我们经常将其作为本地代码回滚的策略。</p>
-<h5 id="git-revert"><a href="#git-revert" class="headerlink" title="git revert"></a>git revert</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git revert 用于反正提交， 执行时必须要求工作目录必须是干净的</span><br><span class="line">git revert 用一个新提交来消除一个历史提交的所做的任何修改， 所以它的index不会回退， 而是继续向前， revert之后本地的代码也会回滚到指定的历史版本， 这个时候再push是不会发生任何冲突的</span><br></pre></td></tr></table></figure>
+<h5 id="git-revert"><a href="#git-revert" class="headerlink" title="git revert"></a>git revert</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git revert 用于反正提交， 执行时必须要求工作目录必须是干净的</span><br><span class="line">git revert 用一个新提交来消除一个历史提交的所做的任何修改， 所以它的index不会回退， 而是继续向前， revert之后本地的代码也会回滚到指定的历史版本， 这个时候再push是不会发生任何冲突的</span><br><span class="line">git revert commit1 commit2 ... revert 只是回滚某个commit， 所以如果需要回滚多个commit需要指定多个commit</span><br></pre></td></tr></table></figure>
 <h5 id="git-reset-revert总结"><a href="#git-reset-revert总结" class="headerlink" title="git reset/revert总结"></a>git reset/revert总结</h5><p>git reset是直接删除制定的commit（不会影响远程机器上的代码， index直接被删除）， git revert是用一次新的commit来回滚之前的commit（会影响远程机器上的代码， index会继续前进）</p>
 <h5 id="git-fetch-远程仓库-远程仓库分支"><a href="#git-fetch-远程仓库-远程仓库分支" class="headerlink" title="git fetch [远程仓库 [远程仓库分支]]"></a>git fetch [远程仓库 [远程仓库分支]]</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin master</span><br><span class="line">git merge origin/master， 此时可能需要解决冲突等等， 合并之后我们就可以在当前分支上工作并提交到远程分支如果不希望合并当前分支， 但是希望在远处分支上工作， 可以checkout出来一个新的分支</span><br><span class="line">git checkout -b newremotebranch origin/master 可以看到checkout可以直接从一个分支上创建一个新的分支，并不需要工作在origin/master分支上</span><br></pre></td></tr></table></figure>
 <p><em>注意：</em> 下载远程分支， 但并不会合并远程分支到当前分支， 也就是说当前分支可能比下载下来的远程分支滞后几个分支， 所以如果我们希望在远处分支上工作， 那么我们必须将远程分支合并到当前分支</p>
@@ -575,7 +575,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

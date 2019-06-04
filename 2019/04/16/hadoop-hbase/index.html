@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="hadoop,spark," />
 
 
 
@@ -81,16 +81,18 @@
 
 
 
-<meta name="description" content="我，在這裡，享受等你的時光。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ilivoo`s blog">
-<meta property="og:url" content="http://yoursite.com/tags/hdfs/index.html">
+<meta name="description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
+<meta name="keywords" content="hadoop,spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hbase、phoenix 创建表">
+<meta property="og:url" content="http://yoursite.com/2019/04/16/hadoop-hbase/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="我，在這裡，享受等你的時光。">
+<meta property="og:description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-21T14:23:45.013Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ilivoo`s blog">
-<meta name="twitter:description" content="我，在這裡，享受等你的時光。">
+<meta name="twitter:title" content="hbase、phoenix 创建表">
+<meta name="twitter:description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/hdfs/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/04/16/hadoop-hbase/"/>
 
 
 
 
 
-  <title>标签: hdfs | Ilivoo`s blog</title>
+  <title>hbase、phoenix 创建表 | Ilivoo`s blog</title>
   
 
 
@@ -145,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -283,54 +285,240 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>hdfs<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/16/hadoop-hbase/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/04/29/hadoop-hdfs-architecture/" itemprop="url">
-              
-                <span itemprop="name">hdfs架构</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">hbase、phoenix 创建表</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-04-29T17:54:14+08:00"
-              content="2018-04-29" >
-          04-29
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-16T14:53:35+08:00">
+                2019-04-16
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/spark/" itemprop="url" rel="index">
+                    <span itemprop="name">spark</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  464
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="创建日志表"><a href="#创建日志表" class="headerlink" title="创建日志表"></a>创建日志表</h4><ol>
+<li><p>创建test表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create &apos;test&apos;, \</span><br><span class="line">&#123;NAME =&gt; &apos;f&apos;, COMPRESSION =&gt; &apos;SNAPPY&apos;&#125;, \</span><br><span class="line">&#123;SPLITS =&gt; [&apos;40&apos;,&apos;80&apos;,&apos;c0&apos;], SPLIT_POLICY =&gt; &apos;org.apache.hadoop.hbase.regionserver.KeyPrefixRegionSplitPolicy&apos;, CONFIGURATION =&gt; &#123;&apos;KeyPrefixRegionSplitPolicy.prefix_length&apos; =&gt; &apos;2&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建testIndex</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create &apos;testIndex&apos;, &#123;NAME =&gt; &apos;f&apos;, COMPRESSION =&gt; &apos;SNAPPY&apos;&#125;, &#123;SPLITS =&gt; [&apos;40&apos;,&apos;80&apos;,&apos;c0&apos;]&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建最新一条数据表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create &apos;testNewest&apos;, &#123;NAME =&gt; &apos;f&apos;, VERSIONS =&gt; 1, BLOCKCACHE =&gt; true, IN_MEMORY =&gt; true&#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>注意: </strong> 此处可以设置 <code>DURABILITY =&gt; &#39;SKIP_WAL&#39;</code>, 不过最好是在程序中控制WAL是否写入.</p>
+</li>
+<li><p>创建phoenix表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table TEST(prefix char(2) not null, time bigint not null, id char(10) not null,  message varchar, constraint pk primary key(prefix, time desc row_timestamp, id)) IMMUTABLE_ROWS=true SPLIT ON (&apos;40&apos;, &apos;80&apos;, &apos;c0&apos;);</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong></p>
+<ul>
+<li><code>IMMUTABLE_ROWS</code> 对于不可变行来说, 这里仅仅只是一个申明, 主要是用来创建索引的时候如果是不可变的那么所以就不需要进行实时维护, 但是数据本身是可以变化的</li>
+<li><code>row_timestamp</code> 指定某一行为timestamp, 那么在插入的时候就指定这个时间为数据的真实timestamp, 此处必须注意, 所以如果数据删除之后, 再不能插入主键为相同的数据, 所以对于这样的表, 数据一定不能删除. 不建议在表中使用这个字段, 除非自己知道自己在干什么.</li>
+</ul>
+<p>更改表的分区策略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter &apos;TEST&apos;, &#123;SPLIT_POLICY =&gt; &apos;org.apache.hadoop.hbase.regionserver.KeyPrefixRegionSplitPolicy&apos;, CONFIGURATION =&gt; &#123;&apos;KeyPrefixRegionSplitPolicy.prefix_length&apos; =&gt; &apos;2&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upsert into test values(&apos;00&apos;, 1555385043000, &apos;1234567890&apos;, &apos;hello phoenix&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table TEST(PREFIX char(2) not null, TM char(14) not null, STCD char(10) not null, DRP varchar, INTV varchar, PDR varchar, DYP varchar, WTH varchar, constraint pk primary key(PREFIX, TM desc, STCD)) SPLIT ON (&apos;40&apos;, &apos;80&apos;, &apos;c0&apos;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table st_statistics_pptn_day_new(stcd char(10) not null, tm char(8) not null, drp BIGINT, constraint pk primary key(stcd, tm desc)) SALT_BUCKETS = 4;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table st_statistics_pptn_hour_new(stcd char(10) not null, tm char(10) not null, drp BIGINT, constraint pk primary key(stcd, tm desc)) SALT_BUCKETS = 4;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>   <strong>说明 : </strong> <code>SALT_BUCKETS</code> 大小通常是cpu core <em> (0.5 ~ 2) </em> region server, 例如: 6 <em> 0.5 </em> 3 = 9</p>
+<ol start="6">
+<li><p>查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scan &#123; STARTROW =&gt; &apos;FixedWidthUsername&apos; LIMIT =&gt; 30&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 
       
     </div>
+    <div>
+        
+            <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+        
+    </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/17/linux-httpie/" rel="next" title="linux-httpie">
+                <i class="fa fa-chevron-left"></i> linux-httpie
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -338,6 +526,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -358,8 +550,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -430,6 +631,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建日志表"><span class="nav-number">1.</span> <span class="nav-text">创建日志表</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -566,6 +783,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
