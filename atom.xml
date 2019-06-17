@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-05-21T14:23:45.013Z</updated>
+  <updated>2019-06-17T02:12:38.705Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hdp-cluster-config</title>
+    <link href="http://yoursite.com/2019/06/17/hdp-cluster-config/"/>
+    <id>http://yoursite.com/2019/06/17/hdp-cluster-config/</id>
+    <published>2019-06-17T02:11:47.000Z</published>
+    <updated>2019-06-17T02:12:38.705Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;HDFS配置&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td clas
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="hortonwork" scheme="http://yoursite.com/categories/hadoop/hortonwork/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="hortonwork" scheme="http://yoursite.com/tags/hortonwork/"/>
+    
+  </entry>
   
   <entry>
     <title>hbase、phoenix 创建表</title>
@@ -413,7 +442,7 @@
     <link href="http://yoursite.com/2019/01/02/hadoop-spark/"/>
     <id>http://yoursite.com/2019/01/02/hadoop-spark/</id>
     <published>2019-01-02T13:26:35.000Z</published>
-    <updated>2019-01-02T13:33:27.129Z</updated>
+    <updated>2019-06-12T07:05:22.306Z</updated>
     
     <summary type="html">
     
@@ -441,7 +470,7 @@
     <link href="http://yoursite.com/2019/01/02/hadoop-hortonwork/"/>
     <id>http://yoursite.com/2019/01/02/hadoop-hortonwork/</id>
     <published>2019-01-02T13:18:21.000Z</published>
-    <updated>2019-06-04T07:28:13.988Z</updated>
+    <updated>2019-06-17T02:40:19.924Z</updated>
     
     <summary type="html">
     
@@ -483,37 +512,6 @@
 &lt;li&gt;修改配置文件&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;vi /etc/sysconfig/n
-      
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux wifi配置</title>
-    <link href="http://yoursite.com/2019/01/02/linux-wifi/"/>
-    <id>http://yoursite.com/2019/01/02/linux-wifi/</id>
-    <published>2019-01-02T12:44:10.000Z</published>
-    <updated>2019-01-03T10:52:34.265Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;首先下载iw工具。&lt;/p&gt;
-&lt;p&gt;yum -y install iw&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;获取无线网卡的名称&lt;/p&gt;
-&lt;p&gt;执行iw dev，假设获得名称为 wlp3s0（示例）&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;激活无线网络接口&lt;/p&gt;
-&lt;
       
     
     </summary>

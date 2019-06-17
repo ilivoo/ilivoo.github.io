@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-04T07:28:13.988Z">
+<meta property="og:updated_time" content="2019-06-17T02:40:19.924Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hortonwork 使用">
 <meta name="twitter:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,393
+                  2,739
                 </span>
               
 
@@ -535,7 +535,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">listeners = SASL_PLAINTEXT://:6667</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>NameNode UI不能访问, 这是因为服务器存在多个网卡,  默认NameNode默认只是绑定到集群指定的网卡, 并没有绑定到所有的网卡, 所以如果使用了openvpn后, 实际上50070并没有绑定到openvpn指定的网卡, 所以就会导致无法openvpn的网卡无法访问了, 通过指定 <code>hdfs-site.xml</code> 绑定所有网卡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.namenode.http-bind-host&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.namenode.https-bind-host&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">     &lt;name&gt;dfs.namenode.http-bind-host&lt;/name&gt;</span><br><span class="line">     &lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">   &lt;/property&gt;</span><br><span class="line"></span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;dfs.namenode.https-bind-host&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;0.0.0.0&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dfs.namenode.http-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.https-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.rpc-bind-host=0.0.0.0 </span><br><span class="line">dfs.namenode.servicerpc-bind-host=0.0.0.0</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>kafka日志目录必须为空, 对于单独挂载的目录来说通常下来存在 <code>lost+found</code> , 所以必须再加一层目录. kafka的 <code>zookeeper.connect</code>  应该添加根目录, 这样更加便于管理, 如:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zookeeper.connect=cmsw2.tepia.com:2181,cmsw1.tepia.com:2181/kafka</span><br></pre></td></tr></table></figure>
@@ -545,17 +545,17 @@
 <li><p>hbase 双网卡绑定问题, 在hbase-site.xml中配置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hbase.master.ipc.address 0.0.0.0</span><br><span class="line">hbase.regionserver.ipc.address 0.0.0.0</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>更改hadoop运行用户, 指定环境变量</p>
+<li><p>更改hadoop运行用户, 通常情况下线上用户和线下用户不是同一个用户,如果 线下调试线上spark程序,需要指定本地为线上用户, 则通过指定环境变量来指定运行用户</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_USER_NAME=tepia</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>yarn timeline 三种配置后端存储模式</p>
 <ul>
 <li><p>第一种嵌入式hbase(小集群默认模式)</p>
 </li>
-<li><p>第二种外部hbase模式</p>
+<li><p>第二种外部hbase模式， 小集群如果安装hbase, 推荐使用这种</p>
 <ol>
 <li><p>配置基本信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2181use_external_hbase = true</span><br><span class="line">hbase.zookeeper.quorum = cmsw2.tepia.com,cmsw1.tepia.com</span><br><span class="line">hbase.zookeeper.property.clientPort = 2181</span><br><span class="line">zookeeper.znode.parent = /hbase-unsecure</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">use_external_hbase = true</span><br><span class="line">hbase.zookeeper.quorum = cmsw2.tepia.com,cmsw1.tepia.com</span><br><span class="line">hbase.zookeeper.property.clientPort = 2181</span><br><span class="line">zookeeper.znode.parent = /hbase-unsecure</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>使用hbase用户创建yarn需要的schema</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_CLASSPATH_PREFIX=/usr/hdp/3.1.0.0-78/hadoop-yarn/timelineservice/*</span><br><span class="line">/usr/hdp/3.1.0.0-78/hbase/bin/hbase org.apache.hadoop.yarn.server.timelineservice.storage.TimelineSchemaCreator -Dhbase.client.retries.number=35 -create -s</span><br></pre></td></tr></table></figure>
@@ -578,9 +578,29 @@
 <li>创建项目拷贝对应源代码， 修改源代码。</li>
 <li>获取spark集群中的jar包， 并且备份jar包</li>
 <li>解压jar包（jar -xf ），并拷贝编译的新的class文件，并重新打包(jar cvfM)</li>
-<li>上传新的jar包， 并重启history server</li>
 </ol>
 </li>
+<li><p>上传新的jar包， 并重启history server</p>
+</li>
+<li><p>yarn 本地缓存导致jar包冲突</p>
+<ol>
+<li>查看yarn本地缓存位置 <code>yarn.nodemanager.local-dirs</code></li>
+<li><p>删除 <code>rm -rf filecache/ usercache/</code></p>
+</li>
+<li><p>重启yarn</p>
+</li>
+</ol>
+</li>
+<li><p>更改spark history日志自动删除，在 <code>Custom spark-defaults</code> 中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spark.history.fs.cleaner.enabled=true</span><br><span class="line">spark.history.fs.cleaner.interval=1d</span><br><span class="line">spark.history.fs.cleaner.maxAge=7d</span><br></pre></td></tr></table></figure>
+<p>手动最近30天的脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> delete 30 day's before spark history logs </span><br><span class="line"><span class="meta">#</span>#######################start ########################</span><br><span class="line">days=30</span><br><span class="line">day_01=`date -d "-$&#123;days&#125; day" +%Y-%m-%d`</span><br><span class="line">echo $day_01</span><br><span class="line"><span class="meta">#</span>running_array=(`yarn application -list | grep application_1 | awk '&#123;print  $1&#125;' &gt; running.log `)</span><br><span class="line"><span class="meta">#</span>running_array=(`more running.log`)</span><br><span class="line">running_array=(`yarn application -list | grep application_1 | awk '&#123;print  $1&#125;' `)</span><br><span class="line">len=$&#123;#running_array[*]&#125;</span><br><span class="line">len=$(($len-1))</span><br><span class="line"></span><br><span class="line">running_string=""</span><br><span class="line">for ((i=0; i&lt; $&#123;#running_array[*]&#125;; i++))</span><br><span class="line">do</span><br><span class="line">if [ $i -lt $len ];then</span><br><span class="line">        running_string+=$&#123;running_array[$i]&#125;"\|"</span><br><span class="line">else</span><br><span class="line">        running_string+=$&#123;running_array[$i]&#125;</span><br><span class="line">fi</span><br><span class="line">done</span><br><span class="line">echo $running_string </span><br><span class="line"><span class="meta">#</span>history_logs_to_delete=(`hdfs dfs -ls /spark2-history/ | grep application_ | grep -v $running_string | awk '&#123;if( $6 &lt; $day_01) print $8&#125;'`)</span><br><span class="line">history_logs_to_delete=(`hdfs dfs -ls /spark2-history/ | grep application_ | grep -v $running_string | awk '&#123;if( $6 lt $day_01) print $8 &#125; ' `)</span><br><span class="line">for ((j=0; j&lt; $&#123;#history_logs_to_delete[*]&#125;; j++))</span><br><span class="line">do</span><br><span class="line">history_logs_str=$&#123;history_logs_to_delete[$j]&#125;</span><br><span class="line">echo "`date +%F\ %T` to delete $j ==$history_logs_str"</span><br><span class="line"><span class="meta">#</span>hdfs dfs -rm -r -f -skipTrash $history_logs_str</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小集群配置hdfs客户端，防止写入报错，在 <code>hdfs-site</code> 中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dfs.client.block.write.replace-datanode-on-failure.enable=true</span><br><span class="line">dfs.client.block.write.replace-datanode-on-failure.policy=NEVER</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yarn 配置shuffle service， 在 <code>yarn-site</code> 和 <code>spark2-defaults</code> 中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark.shuffle.service.port=7337</span><br></pre></td></tr></table></figure></li>
 </ol>
 
       
@@ -712,7 +732,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
