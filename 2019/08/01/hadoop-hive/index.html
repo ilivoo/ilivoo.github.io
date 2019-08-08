@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="hive使用phoenix PhoenixStorageHandler 配置hive访问phoenix jar包  在hive-env.sh中配置 1export HIVE_AUX_JARS_PATH=$&amp;#123;HIVE_AUX_JARS_PATH&amp;#125;:/usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-hive.jar">
+<meta name="description" content="hive与其它系统集成说明 现在hive使用StorageHandler只能创建external表, 外部表不能使用load语法 使用hive作为数据仓库，这样和其它系统直接集成，这样可以打通和其它系统直接的交互，直接导入导出数据 其它系统通过hive进行连接，也可以达到不同系统之间互通导数据  hive使用phoenix PhoenixStorageHandler 配置hive访问phoenix">
 <meta name="keywords" content="hadoop,hive">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hadoop-hive">
 <meta property="og:url" content="http://yoursite.com/2019/08/01/hadoop-hive/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="hive使用phoenix PhoenixStorageHandler 配置hive访问phoenix jar包  在hive-env.sh中配置 1export HIVE_AUX_JARS_PATH=$&amp;#123;HIVE_AUX_JARS_PATH&amp;#125;:/usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-hive.jar">
+<meta property="og:description" content="hive与其它系统集成说明 现在hive使用StorageHandler只能创建external表, 外部表不能使用load语法 使用hive作为数据仓库，这样和其它系统直接集成，这样可以打通和其它系统直接的交互，直接导入导出数据 其它系统通过hive进行连接，也可以达到不同系统之间互通导数据  hive使用phoenix PhoenixStorageHandler 配置hive访问phoenix">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-02T02:45:48.587Z">
+<meta property="og:updated_time" content="2019-08-08T12:46:49.878Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop-hive">
-<meta name="twitter:description" content="hive使用phoenix PhoenixStorageHandler 配置hive访问phoenix jar包  在hive-env.sh中配置 1export HIVE_AUX_JARS_PATH=$&amp;#123;HIVE_AUX_JARS_PATH&amp;#125;:/usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-hive.jar">
+<meta name="twitter:description" content="hive与其它系统集成说明 现在hive使用StorageHandler只能创建external表, 外部表不能使用load语法 使用hive作为数据仓库，这样和其它系统直接集成，这样可以打通和其它系统直接的交互，直接导入导出数据 其它系统通过hive进行连接，也可以达到不同系统之间互通导数据  hive使用phoenix PhoenixStorageHandler 配置hive访问phoenix">
 
 
 
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  348
+                  1,990
                 </span>
               
 
@@ -418,7 +418,12 @@
       
 
       
-        <h4 id="hive使用phoenix-PhoenixStorageHandler"><a href="#hive使用phoenix-PhoenixStorageHandler" class="headerlink" title="hive使用phoenix PhoenixStorageHandler"></a>hive使用phoenix PhoenixStorageHandler</h4><ul>
+        <h4 id="hive与其它系统集成说明"><a href="#hive与其它系统集成说明" class="headerlink" title="hive与其它系统集成说明"></a>hive与其它系统集成说明</h4><ul>
+<li>现在hive使用StorageHandler只能创建external表, 外部表不能使用load语法</li>
+<li>使用hive作为数据仓库，这样和其它系统直接集成，这样可以打通和其它系统直接的交互，直接导入导出数据</li>
+<li>其它系统通过hive进行连接，也可以达到不同系统之间互通导数据</li>
+</ul>
+<h4 id="hive使用phoenix-PhoenixStorageHandler"><a href="#hive使用phoenix-PhoenixStorageHandler" class="headerlink" title="hive使用phoenix PhoenixStorageHandler"></a>hive使用phoenix PhoenixStorageHandler</h4><ul>
 <li><p>配置hive访问phoenix jar包</p>
 <ul>
 <li><p>在hive-env.sh中配置</p>
@@ -444,6 +449,67 @@
 <blockquote>
 <p>将数据存储Phoenix，本质是HBase提供的SQL。用于后端的查询，要求RT在秒级以内。phoenix作为hbase二级索引的最佳组合，测试过上百万级别的数据构建二级索引最快的能在毫秒内返回。另外还有数据的统计分析及数据处理、机器学习建模，当然可以直接操作phoenix或spark+phoenix。对于离线的建模业务，我们希望使用hive做更复杂的处理。</p>
 </blockquote>
+<h4 id="hive使用HBaseStorageHandler"><a href="#hive使用HBaseStorageHandler" class="headerlink" title="hive使用HBaseStorageHandler"></a>hive使用HBaseStorageHandler</h4><ul>
+<li><p>配置hive访问hbase jar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;hive.aux.jars.path&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;</span><br><span class="line">		/usr/hdp/3.1.0.0-78/hbase/lib/commons-lang3-3.6.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-zookeeper-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-mapreduce-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/jackson-annotations-2.9.5.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-shaded-miscellaneous-2.1.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/jackson-databind-2.9.5.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-hadoop-compat-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-metrics-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-client-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-protocol-shaded-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/jackson-core-2.9.5.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/protobuf-java-2.5.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-shaded-netty-2.1.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/metrics-core-3.2.1.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-server-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-hadoop2-compat-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-metrics-api-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-common-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-protocol-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-shaded-protobuf-2.1.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/htrace-core4-4.2.0-incubating.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/zookeeper.jar</span><br><span class="line">	&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在创建hive时，需要添加访问hbase的权限，根据创建或者访问添加具体权限</p>
+</li>
+<li><p>hbase表不存在，需要添加hbase的创建表权限（设置当前用户有创建hbase_table表的权限）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> hive_table (<span class="keyword">key</span> <span class="built_in">int</span>, <span class="keyword">value</span> <span class="keyword">string</span>) </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span></span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,cf1:val"</span>)</span><br><span class="line">TBLPROPERTIES (<span class="string">"hbase.table.name"</span> = <span class="string">"default:hbase_table"</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong></p>
+<ul>
+<li>hbase.columns.mapping 是必须的，这将会和 HBase 表的列族进行验证</li>
+<li>hbase.table.name 属性是可选的，默认指定 HBase 表名与 Hive 表名一致</li>
+<li>当将 hive_table 表删除，对应的 hbase_table 表不受影响，里面依旧有数据</li>
+<li>当删除 hbase_table 表后，再查询 hive_table 表数据</li>
+<li>hive外部表不支持load语句，所以可以直接将数据导入到hbase中，或者创建hive内部表使用load导入，再通过 <code>insert ... select ...</code> 语句导入到外部表中</li>
+<li>Hive 读取的是 HBase 表最新的数据，并且创建的hbase表默认只有一个version, 可以修改最大version</li>
+</ul>
+</li>
+<li><p>hbase存在，需要添加hbase访问权限</p>
+<ul>
+<li><p>hbase中创建表，并添加数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create &apos;person&apos;, &apos;cf&apos;</span><br><span class="line">put &apos;person&apos;, &apos;r001&apos;, &apos;cf:name&apos;, &apos;feng&apos;</span><br><span class="line">put &apos;person&apos;, &apos;r001&apos;, &apos;cf:age&apos;, &apos;10&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建hive表，并插入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> person(<span class="keyword">id</span> <span class="keyword">string</span>, <span class="keyword">name</span> <span class="keyword">string</span>, age <span class="keyword">string</span>) <span class="keyword">stored</span> <span class="keyword">by</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span> <span class="keyword">with</span> serdeproperties (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,cf:name,cf:age"</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> person <span class="keyword">values</span>(<span class="string">'r002'</span>, <span class="string">'xiang'</span>, <span class="string">'12'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="hive使用KafkaStorageHandler"><a href="#hive使用KafkaStorageHandler" class="headerlink" title="hive使用KafkaStorageHandler"></a>hive使用KafkaStorageHandler</h4><ul>
+<li><p>创建默认json序列化表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> kafka_table(<span class="string">`message_type`</span> <span class="keyword">string</span>, <span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`tm`</span> <span class="keyword">string</span>) <span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span> TBLPROPERTIES (<span class="string">"kafka.topic"</span> = <span class="string">"cmsw"</span>, <span class="string">"kafka.bootstrap.servers"</span>=<span class="string">"cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示表的信息 <code>show create table kafka_table</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> <span class="string">`kafka_table`</span>(               </span><br><span class="line">  <span class="string">`message_type`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,  </span><br><span class="line">  <span class="string">`stcd`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,       </span><br><span class="line">  <span class="string">`tm`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,         </span><br><span class="line">  <span class="string">`__key`</span> <span class="built_in">binary</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,      </span><br><span class="line">  <span class="string">`__partition`</span> <span class="built_in">int</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__offset`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__timestamp`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>) </span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> SERDE                                   </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaSerDe'</span>        </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span>                                          </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span>  </span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (                             </span><br><span class="line">  <span class="string">'serialization.format'</span>=<span class="string">'1'</span>)                      </span><br><span class="line">LOCATION                                           </span><br><span class="line">  <span class="string">'hdfs://tepia/warehouse/tablespace/external/hive/kafka_table'</span> </span><br><span class="line">TBLPROPERTIES (                                    </span><br><span class="line">  <span class="string">'bucketing_version'</span>=<span class="string">'2'</span>,                         </span><br><span class="line">  <span class="string">'hive.kafka.max.retries'</span>=<span class="string">'6'</span>,                    </span><br><span class="line">  <span class="string">'hive.kafka.metadata.poll.timeout.ms'</span>=<span class="string">'30000'</span>,   </span><br><span class="line">  <span class="string">'hive.kafka.optimistic.commit'</span>=<span class="string">'false'</span>,          </span><br><span class="line">  <span class="string">'hive.kafka.poll.timeout.ms'</span>=<span class="string">'5000'</span>,             </span><br><span class="line">  <span class="string">'kafka.bootstrap.servers'</span>=<span class="string">'cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667'</span>,  </span><br><span class="line">  <span class="string">'kafka.serde.class'</span>=<span class="string">'org.apache.hadoop.hive.serde2.JsonSerDe'</span>,  </span><br><span class="line">  <span class="string">'kafka.topic'</span>=<span class="string">'cmsw'</span>,                            </span><br><span class="line">  <span class="string">'kafka.write.semantic'</span>=<span class="string">'AT_LEAST_ONCE'</span>,          </span><br><span class="line">  <span class="string">'transient_lastDdlTime'</span>=<span class="string">'1565258896'</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong></p>
+<ul>
+<li>可以看到此处多了几个kafka记录元数据，并且每个元数据都可以用来作为条件过滤</li>
+<li>kafka记录的值使用json、avro或者orc进行解码，解析后值的类型必须和hive指定的类型相匹配，不然会报错，通常情况下我们只需要映射需要的字段即可</li>
+<li>此处 <code>kafka.write.semantic</code> 指定写入数据到kafka的语义，默认为最少一次，如果kafka版本支持事务，那么此处可以设置为 <code>&quot;kafka.write.semantic&quot;=&quot;EXACTLY_ONCE&quot;</code>精确一次</li>
+<li>写入到kafka时，元数据列也必须设置，<code>__key</code> 设置出array以外的值，可以为null，<code>__partition</code>指定partition或者不设置，<code>__offset</code>固定为-1，<code>__timestamp</code> null或者-1（系统自动生产时间）或者有意义的时间（生产者可以指定的时间）</li>
+</ul>
+</li>
+<li><p>示例</p>
+<ul>
+<li><p>查看最近十分钟数据记录</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*) <span class="keyword">FROM</span> kafka_table </span><br><span class="line">  <span class="keyword">WHERE</span> <span class="string">`__timestamp`</span> &gt;  <span class="number">1000</span> * to_unix_timestamp(<span class="keyword">CURRENT_TIMESTAMP</span> - <span class="built_in">interval</span> <span class="string">'10'</span> MINUTES);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>与维度表进行连接</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//创建最近10分钟视图</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> last_10_minutes_of_kafka_table <span class="keyword">AS</span> <span class="keyword">SELECT</span>  <span class="string">`stcd`</span>, <span class="string">`message_type`</span>, <span class="string">`tm`</span> <span class="keyword">FROM</span> kafka_table </span><br><span class="line">  <span class="keyword">WHERE</span> <span class="string">`__timestamp`</span> &gt;  <span class="number">1000</span> * to_unix_timestamp(<span class="keyword">CURRENT_TIMESTAMP</span> - <span class="built_in">interval</span> <span class="string">'10'</span> MINUTES) ;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> stcd_table (<span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`name`</span> <span class="keyword">string</span> ,addr <span class="keyword">string</span>) </span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> stcd, <span class="keyword">name</span>, <span class="keyword">sum</span>(message_type) <span class="keyword">from</span> last_10_minutes_of_kafka_table lk <span class="keyword">join</span> stcd_table st <span class="keyword">on</span> lk.stcd = st.stcd <span class="keyword">group</span> <span class="keyword">by</span> stcd, <span class="keyword">name</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">sum</span>(message_type)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive实现kafka ETL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//创建offset记录表</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kafka_table_offsets(partition_id <span class="built_in">int</span>, max_offset <span class="built_in">bigint</span>, insert_time <span class="keyword">timestamp</span>);                </span><br><span class="line">//初始化offset记录表</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> kafka_table_offsets </span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`__partition`</span>, <span class="keyword">min</span>(<span class="string">`__offset`</span>) - <span class="number">1</span>, <span class="keyword">CURRENT_TIMESTAMP</span> </span><br><span class="line"><span class="keyword">FROM</span> kafka_table </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`__partition`</span>, <span class="keyword">CURRENT_TIMESTAMP</span>;</span><br><span class="line">//创建ETL表</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orc_kafka_table (partition_id <span class="built_in">int</span>, koffset <span class="built_in">bigint</span>, ktimestamp <span class="built_in">bigint</span>,</span><br><span class="line"><span class="string">`message_type`</span> <span class="keyword">string</span>, <span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`tm`</span> <span class="keyword">string</span>)</span><br><span class="line">//单事务中进行ETL</span><br><span class="line"><span class="keyword">FROM</span> kafka_table kt <span class="keyword">JOIN</span> kafka_table_offsets ot</span><br><span class="line"><span class="keyword">ON</span> (kt.<span class="string">`__partition`</span> = ot.partition_id </span><br><span class="line"><span class="keyword">AND</span> kt.<span class="string">`__offset`</span> &gt; ot.max_offset )</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> orc_kafka_table </span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`__partition`</span>, <span class="string">`__offset`</span>, <span class="string">`__timestamp`</span>, message_type, stcd, tm</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> kafka_table_offsets </span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`__partition`</span>, <span class="keyword">max</span>(<span class="string">`__offset`</span>), <span class="keyword">CURRENT_TIMESTAMP</span> </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`__partition`</span>, <span class="keyword">CURRENT_TIMESTAMP</span>;</span><br><span class="line">//重复上面步骤可以实现ETL，注意如果partition添加的时候需要更新offset表</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="hive使用JdbcStorageHandler"><a href="#hive使用JdbcStorageHandler" class="headerlink" title="hive使用JdbcStorageHandler"></a>hive使用JdbcStorageHandler</h4><ul>
+<li><p>创建表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> user_jdbc(</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>,</span><br><span class="line">  <span class="keyword">name</span> <span class="keyword">string</span>,</span><br><span class="line">  age <span class="built_in">int</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hive.storage.jdbc.JdbcStorageHandler'</span></span><br><span class="line">TBLPROPERTIES (</span><br><span class="line">  <span class="string">"hive.sql.database.type"</span> = <span class="string">"MYSQL"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.driver"</span> = <span class="string">"com.mysql.jdbc.Driver"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.url"</span> = <span class="string">"jdbc:mysql://cmsw1.tepia.com/cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.username"</span> = <span class="string">"cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.password"</span> = <span class="string">"Cmsw@123"</span>,</span><br><span class="line">  <span class="string">"hive.sql.table"</span> = <span class="string">"user"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.maxActive"</span> = <span class="string">"1"</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
     </div>
@@ -574,7 +640,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -585,7 +651,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -596,7 +662,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -636,7 +702,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive使用phoenix-PhoenixStorageHandler"><span class="nav-number">1.</span> <span class="nav-text">hive使用phoenix PhoenixStorageHandler</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive与其它系统集成说明"><span class="nav-number">1.</span> <span class="nav-text">hive与其它系统集成说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive使用phoenix-PhoenixStorageHandler"><span class="nav-number">2.</span> <span class="nav-text">hive使用phoenix PhoenixStorageHandler</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive使用HBaseStorageHandler"><span class="nav-number">3.</span> <span class="nav-text">hive使用HBaseStorageHandler</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive使用KafkaStorageHandler"><span class="nav-number">4.</span> <span class="nav-text">hive使用KafkaStorageHandler</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hive使用JdbcStorageHandler"><span class="nav-number">5.</span> <span class="nav-text">hive使用JdbcStorageHandler</span></a></li></ol></div>
             
 
           </div>

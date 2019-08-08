@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="我，在這裡，享受等你的時光。">
+<meta name="description" content="phoenix 读写考虑 phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计  关注读性能，通常是创建多个global index, http://phoenix.apache.org/secondary_indexin">
 <meta name="keywords" content="hadoop,phoenix">
 <meta property="og:type" content="article">
 <meta property="og:title" content="hadoop-phoenix">
 <meta property="og:url" content="http://yoursite.com/2019/08/01/hadoop-phoenix/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="我，在這裡，享受等你的時光。">
+<meta property="og:description" content="phoenix 读写考虑 phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计  关注读性能，通常是创建多个global index, http://phoenix.apache.org/secondary_indexin">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-01T06:07:08.492Z">
+<meta property="og:updated_time" content="2019-08-08T03:50:34.855Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hadoop-phoenix">
-<meta name="twitter:description" content="我，在這裡，享受等你的時光。">
+<meta name="twitter:description" content="phoenix 读写考虑 phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计  关注读性能，通常是创建多个global index, http://phoenix.apache.org/secondary_indexin">
 
 
 
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  1,126
                 </span>
               
 
@@ -418,7 +418,73 @@
       
 
       
-        
+        <h4 id="phoenix-读写考虑"><a href="#phoenix-读写考虑" class="headerlink" title="phoenix 读写考虑"></a>phoenix 读写考虑</h4><ul>
+<li><p>phoenix 在每一行中添加一个默认的列，并且设置为 <code>x</code>，每次更新都会自动更新这一列</p>
+</li>
+<li><p>性能影响最大的因素一定是主键、salt 表(<code>http://phoenix.apache.org/salted.html</code>)以及schema设计</p>
+</li>
+<li><p>关注读性能，通常是创建多个global index, <code>http://phoenix.apache.org/secondary_indexing.html</code></p>
+</li>
+<li><p>关注写性能，预定义分区或使用salt表，使用真实类型代替原始类型，使用local index</p>
+</li>
+<li><p>为了保证读性能，可以考虑使用覆盖索引， <code>CREATE INDEX index ON table（...）INCLUDE(...)</code></p>
+</li>
+<li><p>对于不可变表或者只插入的表创建设置 <code>IMMUTABLE_ROWS=true</code></p>
+</li>
+<li><p>如果速度更加重要，设置 <code>DISABLE_WAL</code>， 注意可能会丢失数据</p>
+</li>
+<li><p><code>row timestamp</code> 将hbase行的时间映射到行键上面，这样在scan的时候就可以使用这个时间了，这个时间可以自己设置，也可以让hbase服务端自动设置, 一旦这个时间写入到行键，那么行健肯定是不会变了。但是如果行进行了update，那么此时默认列 <code>x</code> 的时间戳会更新, 可见每次进行更新的时候，系统都会带上默认列进行更新。从上面的信息可以看出，<code>row_timestamp</code> 仅仅只是提供了一种可以不用设置时间的方式并显示它， 但是在实际使用过程中并没有任何用处，所以如果没有特别的理由，最好不要使用这个时间戳，说明 <code>http://phoenix.apache.org/rowtimestamp.html</code></p>
+</li>
+<li><p>如果表的元数据改变不是特别平凡，设置 <code>UPDATE_CACHE_FREQUENCY</code>为15分钟左右</p>
+</li>
+<li><p>如果数据表不是稀疏表（超过50%列有值），设置 <code>SINGLE_CELL_ARRAY_WITH_OFFSETS</code> 数据编码模式（将整个列族的一行放入到一个hbase cell当中）, <code>http://phoenix.apache.org/columnencoding.html</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> IMMUTABLE <span class="keyword">TABLE</span> T   </span><br><span class="line">(  </span><br><span class="line">    a_string <span class="built_in">varchar</span> <span class="keyword">not</span> <span class="literal">null</span>,   </span><br><span class="line">    col1 <span class="built_in">integer</span>  </span><br><span class="line">    <span class="keyword">CONSTRAINT</span> pk PRIMARY <span class="keyword">KEY</span> (a_string)  </span><br><span class="line">)   </span><br><span class="line">IMMUTABLE_STORAGE_SCHEME = SINGLE_CELL_ARRAY_WITH_OFFSETS,  </span><br><span class="line">COLUMN_ENCODED_BYTES = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置块编码 <code>CREATE TABLE … ( … ) DATA_BLOCK_ENCODING=‘FAST_DIFF’</code> ， <code>FAST_DIFF</code> 和 <code>SNAPPY</code> 都是不错的选择</p>
+</li>
+<li><p>表的数据如果存在分离，创建多个列族</p>
+</li>
+<li><p>对于结构体对象，不要使用json（压缩性能不好），可以使用protobuf、avro、bson等等</p>
+</li>
+<li><p>尽量不要关闭列mapping</p>
+</li>
+<li><p>表太大使用 <code>ASYNC</code> 创建index， <code>if not exists event_object_id_idx_b on trans.event (object_id) ASYNC UPDATE_CACHE_FREQUENCY=60000</code></p>
+</li>
+<li><p>大范围查询，可以使用 <code>GZIP</code> 压缩，但是需要注意写性能，以及在scan的时候，设置 <code>Scan.setCacheBlocks(false)</code></p>
+</li>
+<li><p>对于大的查询或者连接查询，推荐使用 <code>Hints</code> 来优化性能</p>
+</li>
+<li><p>对于大客户端，不要使用 <code>executeBatch</code> ，使用多条进行<code>update and commit</code>，对于瘦客户端，推荐使用 <code>executeBatch</code>，可以减少与query server的RPC调用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">try (Connection conn = DriverManager.getConnection(url)) &#123;</span><br><span class="line">  conn.setAutoCommit(false);</span><br><span class="line">  int batchSize = 0;</span><br><span class="line">  int commitSize = 1000; // number of rows you want to <span class="keyword">commit</span> per batch.  </span><br><span class="line">  try (<span class="keyword">Statement</span> stmt = conn.prepareStatement(<span class="keyword">upsert</span>)) &#123;</span><br><span class="line">    stmt.set ... <span class="keyword">while</span> (there <span class="keyword">are</span> <span class="keyword">records</span> <span class="keyword">to</span> <span class="keyword">upsert</span>) &#123;</span><br><span class="line">      stmt.executeUpdate(); </span><br><span class="line">      batchSize++; </span><br><span class="line">      if (batchSize % commitSize == 0) &#123; </span><br><span class="line">        conn.commit(); </span><br><span class="line">      &#125; </span><br><span class="line">   &#125; </span><br><span class="line"> conn.commit(); // <span class="keyword">commit</span> the <span class="keyword">last</span> batch <span class="keyword">of</span> <span class="keyword">records</span> </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>update ... select ...</code> 插入大量数据时候，通常打开 <code>autocommit</code> 并且设置 <code>phoenix.mutate.batchSize</code></p>
+</li>
+<li><p>删除大量数据时候，通常打开 <code>autoCommit</code>，这样region server直接删除，而不需要返回row key到客户端</p>
+</li>
+<li><p>对于应用来说，快速失败比让客户端等待要好得多，可以设置更改等待时间<code>phoenix.query.timeoutMs</code>，配置设置参考 <code>http://phoenix.apache.org/tuning.html</code></p>
+</li>
+</ul>
+<h4 id="CsvBulkLoadTool"><a href="#CsvBulkLoadTool" class="headerlink" title="CsvBulkLoadTool"></a>CsvBulkLoadTool</h4><ul>
+<li><p>参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-a,--array-delimiter &lt;arg&gt;   数组元素分隔符，默认冒号</span><br><span class="line">-b,--binaryEncoding &lt;arg&gt;    Specifies binary encoding</span><br><span class="line">-c,--import-columns &lt;arg&gt;    导入的列，逗号分割</span><br><span class="line">-d,--delimiter &lt;arg&gt;         字段分隔符，默认逗号</span><br><span class="line">-e,--escape &lt;arg&gt;            转移字符，默认反斜线</span><br><span class="line">-g,--ignore-errors           Ignore input errors</span><br><span class="line">-h,--help                    Show this help and quit</span><br><span class="line">-i,--input &lt;arg&gt;             输入路径，逗号分割</span><br><span class="line">-it,--index-table &lt;arg&gt;      当导入索引时，指定索引表</span><br><span class="line">-o,--output &lt;arg&gt;            输出临时HFile路径</span><br><span class="line">-q,--quote &lt;arg&gt;             自定义短语分隔符，默认双引号</span><br><span class="line">-s,--schema &lt;arg&gt;            Phoenix schema name (optional)</span><br><span class="line">-t,--table &lt;arg&gt;             Phoenix table name (mandatory)</span><br><span class="line">-z,--zookeeper &lt;arg&gt;         zookeeper连接信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本命令形式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -u hbase HADOOP_CLASSPATH=$(hbase mapredcp):/usr/hdp/current/hbase-client/conf hadoop jar /usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-client.jar org.apache.phoenix.mapreduce.CsvBulkLoadTool</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>字段分隔符设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-d $‘\t’</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小写表名转义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--table \&quot;\&quot;t\&quot;\&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意，还有一个工具可以完成表导入工具 <code>psql.py</code>, 并且它是使用单线程phoenix客户端的方式，每秒2-5万条数据</p>
+<ul>
+<li>首先使用 <code>psql.py create_table.sql</code></li>
+<li>再使用 <code>psql.py load_data.cvs</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="JsonBulkLoadTool"><a href="#JsonBulkLoadTool" class="headerlink" title="JsonBulkLoadTool"></a>JsonBulkLoadTool</h4><h4 id="IndexToolUtil"><a href="#IndexToolUtil" class="headerlink" title="IndexToolUtil"></a>IndexToolUtil</h4><h4 id="IndexScrutinyTool"><a href="#IndexScrutinyTool" class="headerlink" title="IndexScrutinyTool"></a>IndexScrutinyTool</h4><h4 id="映射hbase表到phoenix"><a href="#映射hbase表到phoenix" class="headerlink" title="映射hbase表到phoenix"></a>映射hbase表到phoenix</h4>
       
     </div>
     <div>
@@ -519,8 +585,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -539,7 +614,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -550,7 +625,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -561,7 +636,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -591,6 +666,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#phoenix-读写考虑"><span class="nav-number">1.</span> <span class="nav-text">phoenix 读写考虑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CsvBulkLoadTool"><span class="nav-number">2.</span> <span class="nav-text">CsvBulkLoadTool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JsonBulkLoadTool"><span class="nav-number">3.</span> <span class="nav-text">JsonBulkLoadTool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IndexToolUtil"><span class="nav-number">4.</span> <span class="nav-text">IndexToolUtil</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IndexScrutinyTool"><span class="nav-number">5.</span> <span class="nav-text">IndexScrutinyTool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#映射hbase表到phoenix"><span class="nav-number">6.</span> <span class="nav-text">映射hbase表到phoenix</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
