@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-08-06T07:44:17.012Z</updated>
+  <updated>2019-09-23T10:28:48.778Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>mongo spark partitioner 详解</title>
+    <link href="http://yoursite.com/2019/09/23/mongo-spark-partitioner/"/>
+    <id>http://yoursite.com/2019/09/23/mongo-spark-partitioner/</id>
+    <published>2019-09-23T08:06:21.000Z</published>
+    <updated>2019-09-23T10:28:48.778Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;DefaultMongoPartitioner&lt;/code&gt; 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以&lt;/p&gt;
+&lt;figure cla
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
+    
+  </entry>
   
   <entry>
     <title>hbase 常用管理命令</title>
@@ -492,30 +517,6 @@
       
       
         &lt;h4 id=&quot;shell属于弱类型语言-其默认的变量类型为字符串类型&quot;&gt;&lt;a href=&quot;#shell属于弱类型语言-其默认的变量类型为字符串类型&quot; class=&quot;headerlink&quot; title=&quot;shell属于弱类型语言, 其默认的变量类型为字符串类型&quot;&gt;&lt;/a&gt;shel
-      
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux 信息</title>
-    <link href="http://yoursite.com/2019/01/03/linux-info/"/>
-    <id>http://yoursite.com/2019/01/03/linux-info/</id>
-    <published>2019-01-03T10:15:37.000Z</published>
-    <updated>2019-08-09T02:19:38.637Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;系统&quot;&gt;&lt;a href=&quot;#系统&quot; class=&quot;headerlink&quot; title=&quot;系统&quot;&gt;&lt;/a&gt;系统&lt;/h4&gt;&lt;p&gt;​    uname -a                   # 查看内核/操作系统/CPU信息&lt;/p&gt;
-&lt;p&gt;​    head -n 
       
     
     </summary>

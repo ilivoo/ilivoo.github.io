@@ -298,6 +298,179 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/02/mysql-partitions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/02/mysql-partitions/" itemprop="url">mysql分区</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-02T19:44:59+08:00">
+                2019-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  899
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+修改已经存在的表为其添加分区
+
+1234567891011121314151617ALTER TABLE `device_model_report_copy1` PARTITION BY RANGE (to_days(time)) (PARTITION p201811 VALUES LESS TH
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/01/02/mysql-partitions/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    <div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/kafka-shell-command/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1428,7 +1601,7 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,154
+                  1,194
                 </span>
               
 
@@ -1456,8 +1629,7 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
         
           
           proxychain
-安装proxychain， 也可以直接使用apt安装
- 123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;&amp; make in
+安装proxychain， 也可以直接使用apt安装 123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;&amp; make ins
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1534,7 +1706,7 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/28/linux-ubuntu-setup/" itemprop="url">linux安装配置</a></h1>
+                <a class="post-title-link" href="/2018/04/28/linux-ubuntu-setup/" itemprop="url">未命名</a></h1>
         
 
         <div class="post-meta">
@@ -1600,7 +1772,7 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,582
+                  5,113
                 </span>
               
 
@@ -1629,8 +1801,9 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
           
           联想r720安装ubuntu
 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动
-安装完成后更改显卡驱动为最新的
- 123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:
+
+安装完成后更改显卡驱动为最新的(不推荐)
+ 123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repositor
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1858,178 +2031,6 @@ MapReduce是一个简单的计算处理框架, 它能够在一个廉价的大型
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/26/docker-dockerfile/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ilivoo">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my-icon.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ilivoo`s blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/26/docker-dockerfile/" itemprop="url">Dockerfile</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-26T11:32:01+08:00">
-                2018-04-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/docker/" itemprop="url" rel="index">
-                    <span itemprop="name">docker</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  2,787
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          原理
-docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像
-当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerig
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/26/docker-dockerfile/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    <div>
-        
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2084,7 +2085,7 @@ docker 每一条命令都会创建一层， 并且会使用上一层的镜像运
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

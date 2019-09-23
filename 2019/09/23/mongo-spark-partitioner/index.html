@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="mysql," />
 
 
 
@@ -81,16 +81,18 @@
 
 
 
-<meta name="description" content="我，在這裡，享受等你的時光。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ilivoo`s blog">
-<meta property="og:url" content="http://yoursite.com/tags/phoenix/index.html">
+<meta name="description" content="DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以 123partitionKey 分区键partitionSizeMB 每个分区大小（没有太多实质性的意义,所以并不准）samplesPerPartition 每个分区抽样个数  第一步通过 coll">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mongo spark partitioner 详解">
+<meta property="og:url" content="http://yoursite.com/2019/09/23/mongo-spark-partitioner/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="我，在這裡，享受等你的時光。">
+<meta property="og:description" content="DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以 123partitionKey 分区键partitionSizeMB 每个分区大小（没有太多实质性的意义,所以并不准）samplesPerPartition 每个分区抽样个数  第一步通过 coll">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-23T10:28:48.778Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ilivoo`s blog">
-<meta name="twitter:description" content="我，在這裡，享受等你的時光。">
+<meta name="twitter:title" content="mongo spark partitioner 详解">
+<meta name="twitter:description" content="DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以 123partitionKey 分区键partitionSizeMB 每个分区大小（没有太多实质性的意义,所以并不准）samplesPerPartition 每个分区抽样个数  第一步通过 coll">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/phoenix/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/09/23/mongo-spark-partitioner/"/>
 
 
 
 
 
-  <title>标签: phoenix | Ilivoo`s blog</title>
+  <title>mongo spark partitioner 详解 | Ilivoo`s blog</title>
   
 
 
@@ -145,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -283,54 +285,222 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>phoenix<small>标签</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/23/mongo-spark-partitioner/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/08/01/hadoop-phoenix/" itemprop="url">
-              
-                <span itemprop="name">hadoop-phoenix</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">mongo spark partitioner 详解</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-08-01T10:45:13+08:00"
-              content="2019-08-01" >
-          08-01
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-23T16:06:21+08:00">
+                2019-09-23
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  660
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ol>
+<li><p><code>DefaultMongoPartitioner</code> 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小（没有太多实质性的意义,所以并不准）</span><br><span class="line">samplesPerPartition 每个分区抽样个数</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一步通过 <code>collStats</code> 聚合命令获取集合的统计信息</li>
+<li>如果有 <code>match</code> 聚合操作就使用 <code>countDocuments(match)</code> 方法获取集合的数量</li>
+<li>抽样获取集合分区键，并对集合进行分区</li>
+</ul>
+</li>
+<li><p><code>MongoSplitVectorPartitioner</code>  通过 <code>SplitVector</code>命令来进行分区，需要 <code>ClusterManager</code> 权限， 这个命令的最初意图是对集合进行split，也就是对集群生成chunk分裂计划，所以mongo spark就借鉴这个命令进行分区划分， 主要对单节点或者复制集群使用</p>
+<p>注意：适合 <code>match</code> 聚合中只使用 <code>$gt</code> 和 <code>$lt</code> 类型的比较符, 如果不是的那么它使用最小和最大键作为分区，这样分区之后由于它不会使用 <code>match</code> 所以可能导致分区并不是特别合适</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小（比较准确的值）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoShardedPartitioner</code> 直接对sharded集合进行分区，因为sharded集合本身就是分区的，所以mongo spark直接使用 <code>chunk</code> 大小作为分区大小，只能对shard集群使用，并且它还会给出 <code>chunk</code> 的具体位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shardKey shard键</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoPaginateByCountPartitioner</code> 通过分页数量来对分区，由于需要多次执行分页操作，而且越到大的分区其实是越慢的，所以没什么用，可以对任何部署方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">numberOfPartitions 每个分区数量</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoPaginateBySizePartitioner</code> 通过分页集合大小来进行分区，和上面道理差不错多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从上面的集中分区方式可以，<code>DefaultMongoPartitioner</code> 之所以被当着默认的是因为它满足分和部署方式，并且性能一般也还可以。但是对于平时使用的过程中建议还是根据集群的部署方式以及 <code>match</code> 条件进行选择合适的 <code>partitioner</code> </p>
+<ul>
+<li>如果集群是单机或这复制集群，并且 <code>match</code> 中只有使用 <code>$gt</code> 和 <code>$lt</code> 类型的比较符， 那么推荐使用 <code>MongoSplitVectorPartitioner</code></li>
+<li>如果是shard机器，那么直接使用 <code>MongoShardedPartitioner</code> ，并推荐看看 <code>chunk</code> 的具体位置怎么使用, 在现在mongo spark中并没有使用到这个参数</li>
+<li>如果不是上面两种情况，那么直接使用使用 <code>DefaultMongoPartitioner</code> 就好了</li>
+</ul>
+</li>
+</ol>
 
       
     </div>
+    <div>
+        
+            <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+        
+    </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mysql/" rel="tag"># mysql</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/08/05/hadoop-hbase-admin/" rel="next" title="hbase 常用管理命令">
+                <i class="fa fa-chevron-left"></i> hbase 常用管理命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -338,6 +508,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -566,6 +740,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

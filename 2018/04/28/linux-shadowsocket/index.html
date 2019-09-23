@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
+<meta name="description" content="proxychain 安装proxychain， 也可以直接使用apt安装 123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.con">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Shadowsocks代理">
 <meta property="og:url" content="http://yoursite.com/2018/04/28/linux-shadowsocket/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
+<meta property="og:description" content="proxychain 安装proxychain， 也可以直接使用apt安装 123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.con">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-29T09:58:43.475Z">
+<meta property="og:updated_time" content="2019-09-15T15:54:15.491Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Shadowsocks代理">
-<meta name="twitter:description" content="proxychain 安装proxychain， 也可以直接使用apt安装  123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.co">
+<meta name="twitter:description" content="proxychain 安装proxychain， 也可以直接使用apt安装 123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;amp;&amp;amp; make installcp ./src/proxychains.conf /etc/proxychains.con">
 
 
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,154
+                  1,194
                 </span>
               
 
@@ -408,15 +408,20 @@
 
       
         <h4 id="proxychain"><a href="#proxychain" class="headerlink" title="proxychain"></a>proxychain</h4><ol>
-<li><p>安装proxychain， 也可以直接使用apt安装</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line">cd proxychains-ng</span><br><span class="line">./configure</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">cp ./src/proxychains.conf /etc/proxychains.conf</span><br><span class="line">cd .. &amp;&amp; rm -rf proxychains-ng</span><br></pre></td></tr></table></figure>
+<li>安装proxychain， 也可以直接使用apt安装 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line">cd proxychains-ng</span><br><span class="line">./configure</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">cp ./src/proxychains.conf /etc/proxychains.conf</span><br><span class="line">cd .. &amp;&amp; rm -rf proxychains-ng</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>配置proxychain</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/proxychains.conf</span><br><span class="line"># 将socks4 127.0.0.1 9095改为</span><br><span class="line">socks5 127.0.0.1 1080 //1080改为你自己的端口</span><br></pre></td></tr></table></figure>
+</ol>
+<ol start="2">
+<li>配置proxychain <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/proxychains.conf</span><br><span class="line"># 将socks4 127.0.0.1 9095改为</span><br><span class="line">socks5 127.0.0.1 1080 //1080改为你自己的端口</span><br></pre></td></tr></table></figure>
 </li>
+</ol>
+<ol start="3">
 <li><p>使用proxychain</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains chrome #在需要进行代理的程序前加proxychains</span><br></pre></td></tr></table></figure>
 <p> 确保本地的代理已经打开</p>
+</li>
+<li><p>如果proxychains不能启动某个程序，可以使用下面方式使得程序使用sockets代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chromium-browser --proxy-server=&quot;socks5://127.0.0.1:1080&quot;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <h4 id="shadowsocks-客户端"><a href="#shadowsocks-客户端" class="headerlink" title="shadowsocks 客户端"></a>shadowsocks 客户端</h4><ol>
@@ -530,8 +535,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/28/linux-ubuntu-setup/" rel="next" title="linux安装配置">
-                <i class="fa fa-chevron-left"></i> linux安装配置
+              <a href="/2018/04/28/linux-ubuntu-setup/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -623,7 +628,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
