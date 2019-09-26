@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell命令类型 type命令判断一个命令是否是shell的内置命令 type -a  command 打印出command的执行优先级, 因为shell命令可能被 alise 重新命名, function添加名称, 或者是外部命令取相同的名称, 所以必须要一个执行顺序,  顺序如： alias –&amp;gt; function –&amp;gt; b">
+<meta name="description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$ 			进程PID shell内建命令 可以使用 man bash-builtins 查看搜有的内建">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shell详解">
 <meta property="og:url" content="http://yoursite.com/2019/01/03/linux-shell/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell命令类型 type命令判断一个命令是否是shell的内置命令 type -a  command 打印出command的执行优先级, 因为shell命令可能被 alise 重新命名, function添加名称, 或者是外部命令取相同的名称, 所以必须要一个执行顺序,  顺序如： alias –&amp;gt; function –&amp;gt; b">
+<meta property="og:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$ 			进程PID shell内建命令 可以使用 man bash-builtins 查看搜有的内建">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-03T10:51:57.982Z">
+<meta property="og:updated_time" content="2019-09-26T09:08:58.093Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shell详解">
-<meta name="twitter:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell命令类型 type命令判断一个命令是否是shell的内置命令 type -a  command 打印出command的执行优先级, 因为shell命令可能被 alise 重新命名, function添加名称, 或者是外部命令取相同的名称, 所以必须要一个执行顺序,  顺序如： alias –&amp;gt; function –&amp;gt; b">
+<meta name="twitter:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$ 			进程PID shell内建命令 可以使用 man bash-builtins 查看搜有的内建">
 
 
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,957
+                  2,155
                 </span>
               
 
@@ -407,21 +407,28 @@
       
 
       
-        <h4 id="shell属于弱类型语言-其默认的变量类型为字符串类型"><a href="#shell属于弱类型语言-其默认的变量类型为字符串类型" class="headerlink" title="shell属于弱类型语言, 其默认的变量类型为字符串类型"></a>shell属于弱类型语言, 其默认的变量类型为字符串类型</h4><h4 id="shell命令类型"><a href="#shell命令类型" class="headerlink" title="shell命令类型"></a>shell命令类型</h4><ul>
+        <h4 id="shell属于弱类型语言-其默认的变量类型为字符串类型"><a href="#shell属于弱类型语言-其默认的变量类型为字符串类型" class="headerlink" title="shell属于弱类型语言, 其默认的变量类型为字符串类型"></a>shell属于弱类型语言, 其默认的变量类型为字符串类型</h4><h4 id="shell-中符号使用"><a href="#shell-中符号使用" class="headerlink" title="shell 中符号使用"></a>shell 中符号使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(),``		命令替换用，变成一个完整的命令并执行</span><br><span class="line">$[],$(())   简单的数学计算，支持+ - * / %</span><br><span class="line">$&#123;&#125;,$ 		参数替换</span><br><span class="line">$*,$@,$n	位置参</span><br><span class="line">$? 			进程退出状态</span><br><span class="line">$$ 			进程PID</span><br></pre></td></tr></table></figure>
+<h4 id="shell内建命令"><a href="#shell内建命令" class="headerlink" title="shell内建命令"></a>shell内建命令</h4><ul>
+<li>可以使用 <code>man bash-builtins</code> 查看搜有的内建命令及其使用</li>
+</ul>
+<h4 id="shell命令类型"><a href="#shell命令类型" class="headerlink" title="shell命令类型"></a>shell命令类型</h4><ul>
 <li><p>type命令判断一个命令是否是shell的内置命令</p>
 <p>type -a  command 打印出command的执行优先级, 因为shell命令可能被 alise 重新命名, function添加名称, 或者是外部命令取相同的名称, 所以必须要一个执行顺序,  顺序如： alias –&gt; function –&gt; builtin –&gt; program   后</p>
 </li>
-<li><p>which查看命令所在的位置, 如果内置命令不显示位置, whereis也可以用来显示位置, 默认过滤内部命令直接外部去找</p>
+<li><p>which查看命令所在的位置, 如果内置命令不显示位置, whereis也可以用来显示位置, 默认过滤内部命令直接外部去找, command 命令可以查看命令的具体位置，如： command -v java</p>
 </li>
 <li>shell中有一些命令可能与外部命令有相同的名称, 默认shell会调用内置的命令, 因为这可以避免fork/exec</li>
-<li>shell执行某个命令后, 如果是内部命令(其实就像是内置的方法一样), shell程序直接调用自己的一段方法就可以了, 如果是外部命令, 那么shell首先fork出一个进程, 再使用exec家族中的方法来执行外部命令, exec家族命令中可以选择是否讲父进程中的环境变量传递给子进程.</li>
+<li>shell执行某个命令后, 如果是内部命令(其实就像是内置的方法一样), shell程序直接调用自己的一段方法就可以了, 如果是外部命令, 那么shell首先fork出一个进程, 再使用exec家族中的方法来执行外部命令, exec家族命令中可以选择是否将父进程中的环境变量传递给子进程.</li>
 </ul>
-<h4 id="启动顺序"><a href="#启动顺序" class="headerlink" title="启动顺序"></a>启动顺序</h4><ul>
-<li>引导程序</li>
-<li>init进程(初始化操作系统 fork exec)</li>
-<li>login进程(用于校验用户信息, 并执行exec)</li>
-<li>bash进程(解释用户输入,并执行fork和exec)</li>
-<li>用户进程, 整个启动顺序</li>
+<h4 id="shell中不同的执行方式"><a href="#shell中不同的执行方式" class="headerlink" title="shell中不同的执行方式"></a>shell中不同的执行方式</h4><ul>
+<li>sh/bash: 表示另起一个shell， 也就是首先fork一个子进程, 再在子进程中exec子进程代码后(父进程停止)， 再运行父进程的代码</li>
+<li>exec: 不会fork出子进程， 而是使用新的命令代替当前进程中所有的代码开始执行， 也就是exec后面的代码都是不会执行的, 注意exec后面是完整的执行命令， 而不仅仅只是一个执行文件(exec bash file.sh)</li>
+<li>source/.:  不会fork出子进程，直接停止当前进程，运行source后面的命令，当source后面的命令执行完成之后，再启动父进程，继续执行</li>
+<li>注意：<ul>
+<li>用export会把父进程中的变量向子进程中继承，但是反过来却不行，在子进程中，不管环境如果改变，均不会影响父进程，所以如果想要环境变量可以传递不能使用sh/bash</li>
+<li>同一个进程中变量的传递是可以直接传递的，不需要使用export成环境变量， 也就是说使用 source/. 和 exec 可以直接从上下文中获取，也就是source/.和exec中执行的代码可以获取前面的变量， 而source/.和exec后面的代码也可以获取到source/.和exec中定义的变量</li>
+</ul>
+</li>
 </ul>
 <h4 id="命令返回值"><a href="#命令返回值" class="headerlink" title="命令返回值"></a>命令返回值</h4><ul>
 <li>所有的命令输出或者echo命令的输出, 都可以赋值给一个具体的变量, 这样非常有用</li>
@@ -438,11 +445,13 @@
 <li>shell的条件判断 [ -n “$1” ] &amp;&amp; echo “exist” || echo “none”</li>
 </ul>
 <h4 id="shell-语言"><a href="#shell-语言" class="headerlink" title="shell 语言"></a>shell 语言</h4><ul>
-<li><p>shell中使用#表示注释， 首行#!/bin/bash表示当shell fork一个字进程并且使用exec系统调用来替换这段代码时使用什么shell来执行</p>
+<li><p>shell中使用#表示注释， 首行 <code>#!/bin/bash</code>  或者 <code>#!/usr/bin/env bash</code> </p>
 </li>
 <li><p>shell中使用\表示转义， 表示后面字符使用其真实含义， 如：用在行为表示另外启动一行， 也就是\n本身的含义保留， 所以换行才可以使用\</p>
 </li>
-<li><p>[ 实际上是一个命令， [ -d /etc ] 实际上-d /etc ]都是这个测试命令的参数， 并且它要求最后一个参数必须是 ], 如果测试结果为真，则该命令的Exit Status为0，如果测试结果为假，则命令的Exit Status为1（注意与C语言的逻辑表示正好相反），通过$?获取退出码， 并且可以使用man [ 开查看帮助信息,  它与test命令没有任何区别</p>
+<li><p>[ 实际上是一个命令， [ -d /etc ] 实际上-d /etc ]都是这个测试命令的参数， 并且它要求最后一个参数必须是 ], 如果测试结果为真，则该命令的Exit Status为0，如果测试结果为假，则命令的Exit Status为1（注意与C语言的逻辑表示正好相反）， 并且可以使用man [ 开查看帮助信息,  它与test命令没有任何区别</p>
+</li>
+<li><p>通过$?获取退出码</p>
 </li>
 <li><p>算数计算 $(()), $(())中只能用+-*/和()运算符，并且只能做整数运算。</p>
 </li>
@@ -459,25 +468,24 @@
 <li>每次遍历完成之后， 其实变量 i 并没有销毁，此时变量i保存着最后循环值， 这也表明shell script并非使用传统的局部变量的编译形式。可以手动进行取消 unset i</li>
 </ul>
 </li>
-<li><p>case语句</p>
+<li><p>while/until 循环</p>
+<p>while [[ -f file.txt ]]; do </p>
+<p>…</p>
+<p>done</p>
+<p>until [[ ! -f file.txt ]]; do</p>
+<p>…</p>
+<p>done</p>
+<p>while表示条件满足就执行， until表示条件满足就退出</p>
 </li>
-<li><p>重定向（在终端下如果，没有指明标准输入、标准输出、标准错误， 那么默认都是屏幕）</p>
-<p>标准输入 0， 标准输出 1， 标准错误 2， &gt; 替换， &gt;&gt; 追加</p>
-<p>&lt; 将标准出入更改为某个文件</p>
-<p>> 默认将标准输入重定向， 和 1&gt; 完全等价</p>
-<p>2&gt; 将标准错误重定向</p>
-<p>&amp; 表示获取到某种类型管道（如果没有数字表示获取所有管道）， 如 &amp;1表示获取到标准输出</p>
+<li><p>case语句</p>
 </li>
 <li><p>在shell script中可以使用tip</p>
 <p>return 返回当前脚本或者代码块</p>
 <p>exit 退出</p>
 <p>printf 格式化打印</p>
 </li>
-<li><p>脚本中bash和source/.的执行区别</p>
-<p>bash是另起一个子进程执行， 原来的父亲进程睡眠， 等待子进程执行完毕再执行后面的操作source/.是在一个进程中执行, 因为source是bash的内建命令， 可以使用man bash-builtins查看所有的bash内建命令</p>
-<p>注意： 所以这就就需要我们判断进程的执行区别了，如使用source .bashrc执行已经更改的.bashrc是可以生效的， 而是用bash .bashrc不会生效， 因为子进程更改的环境变量并不会体现到父进程当中。</p>
-</li>
 <li><p>shell中的变量</p>
+<p>方法局部变量： 使用local 定义</p>
 <p>局部变量： 只能在当前脚本中使用</p>
 <p>环境变量： 所有的脚本中都可以使用</p>
 <p>shell变量： shell中特定的变量</p>
@@ -488,6 +496,9 @@
 </li>
 </ul>
 <h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><ul>
+<li><p>命令判断：</p>
+<p>command    command -v java</p>
+</li>
 <li><p>选取： </p>
 <p>cut        cut /etc/passwd -d “:” -f 3,5</p>
 <p>grep    ps -ef | grep -Ei “mysql|syslog” | grep -v ‘grep’ | grep -B 1 “root”</p>
@@ -518,11 +529,19 @@
 </li>
 <li><p>文件定位：</p>
 <p>locate    基于数据库， 需要手动维护数据库， 快速</p>
-<p>find 时实查找， 相对慢</p>
+<p>find 时实查找， 相对慢, 可以查找并删除</p>
 </li>
 <li><p>文件内容搜索</p>
 <p>grep     强大的正则表达式</p>
 <p>ag     比grep更加快速</p>
+</li>
+<li><p>文件创建</p>
+<p>mkdir</p>
+<p>mktemp         -p 指定创建父目录，-d 创建文件夹，-u不创建文件只是生成随机字符串</p>
+</li>
+<li><p>数学操作</p>
+<p>seq     生成序列</p>
+<p>RANDOM    环境变量, 产生从 0 到 32767 的随机数</p>
 </li>
 </ul>
 <h4 id="多个命令同时执行"><a href="#多个命令同时执行" class="headerlink" title="多个命令同时执行"></a>多个命令同时执行</h4><ul>
@@ -569,8 +588,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/03/linux-info/" rel="next" title="linux 信息">
-                <i class="fa fa-chevron-left"></i> linux 信息
+              <a href="/2019/01/03/linux-info/" rel="next" title="linux基本信息查看">
+                <i class="fa fa-chevron-left"></i> linux基本信息查看
               </a>
             
           </div>
@@ -662,7 +681,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -724,7 +743,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#shell属于弱类型语言-其默认的变量类型为字符串类型"><span class="nav-number">1.</span> <span class="nav-text">shell属于弱类型语言, 其默认的变量类型为字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell命令类型"><span class="nav-number">2.</span> <span class="nav-text">shell命令类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#启动顺序"><span class="nav-number">3.</span> <span class="nav-text">启动顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令返回值"><span class="nav-number">4.</span> <span class="nav-text">命令返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试命令"><span class="nav-number">5.</span> <span class="nav-text">测试命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-语言"><span class="nav-number">6.</span> <span class="nav-text">shell 语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-number">7.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个命令同时执行"><span class="nav-number">8.</span> <span class="nav-text">多个命令同时执行</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#shell属于弱类型语言-其默认的变量类型为字符串类型"><span class="nav-number">1.</span> <span class="nav-text">shell属于弱类型语言, 其默认的变量类型为字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-中符号使用"><span class="nav-number">2.</span> <span class="nav-text">shell 中符号使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell内建命令"><span class="nav-number">3.</span> <span class="nav-text">shell内建命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell命令类型"><span class="nav-number">4.</span> <span class="nav-text">shell命令类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中不同的执行方式"><span class="nav-number">5.</span> <span class="nav-text">shell中不同的执行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令返回值"><span class="nav-number">6.</span> <span class="nav-text">命令返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试命令"><span class="nav-number">7.</span> <span class="nav-text">测试命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-语言"><span class="nav-number">8.</span> <span class="nav-text">shell 语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-number">9.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个命令同时执行"><span class="nav-number">10.</span> <span class="nav-text">多个命令同时执行</span></a></li></ol></div>
             
 
           </div>

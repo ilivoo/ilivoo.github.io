@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  安装完成后更改显卡驱动为最新的(不推荐)  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get upd">
+<meta name="description" content="基本安装 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  显卡安装 完全卸载nvida显卡 1sudo apt-get remove --purge nvidia*  禁止加载 /etc/modprobe.d/blacklist-nouveau.conf 12blacklist nouveauoptions nouveau modeset=0  官网选择合适的cuda版本">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ilivoo`s blog">
 <meta property="og:url" content="http://yoursite.com/2018/04/28/linux-ubuntu-setup/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  安装完成后更改显卡驱动为最新的(不推荐)  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get upd">
+<meta property="og:description" content="基本安装 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  显卡安装 完全卸载nvida显卡 1sudo apt-get remove --purge nvidia*  禁止加载 /etc/modprobe.d/blacklist-nouveau.conf 12blacklist nouveauoptions nouveau modeset=0  官网选择合适的cuda版本">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-21T05:46:29.791Z">
+<meta property="og:updated_time" content="2019-09-26T10:02:38.695Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ilivoo`s blog">
-<meta name="twitter:description" content="联想r720安装ubuntu 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  安装完成后更改显卡驱动为最新的(不推荐)  123sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源sudo apt-get upd">
+<meta name="twitter:description" content="基本安装 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  显卡安装 完全卸载nvida显卡 1sudo apt-get remove --purge nvidia*  禁止加载 /etc/modprobe.d/blacklist-nouveau.conf 12blacklist nouveauoptions nouveau modeset=0  官网选择合适的cuda版本">
 
 
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  5,113
+                  1,472
                 </span>
               
 
@@ -407,49 +407,17 @@
       
 
       
-        <h4 id="联想r720安装ubuntu"><a href="#联想r720安装ubuntu" class="headerlink" title="联想r720安装ubuntu"></a>联想r720安装ubuntu</h4><ol>
-<li><p>安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动</p>
-</li>
-<li><p>安装完成后更改显卡驱动为最新的(不推荐)</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:xorg-edgers/ppa #添加ppa源</span><br><span class="line">sudo add-apt-repository ppa:graphics-drivers/ppa #添加ppa源</span><br><span class="line">sudo apt-get update #更新apt-get</span><br></pre></td></tr></table></figure>
-<p> 然后进入：系统设置-&gt;软件和更新-&gt;附件驱动，选择更新的显卡驱动。</p>
-</li>
-<li><p>安装bumblebee自动管理集显和独显（不推荐）</p>
-<ol>
-<li>设置nvidia-settings-&gt;PRIME Profiles-&gt;Intel(Power Save Mode)</li>
-<li><p>安装bumblebee 和 bbswitch电源管理</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:bumblebee/testing</span><br><span class="line">sudo apt update</span><br><span class="line">sudo apt install bumblebee-nvidia bumblebee primus</span><br><span class="line">sudo apt-get install acpidump iasl dmidecode</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置/etc/bumblebee/bumblebee.conf</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Driver=nvidia</span><br><span class="line">KernelDriver=nvidia-396</span><br><span class="line">LibraryPath=/usr/lib/nvidia-396:/usr/lib32/nvidia-396</span><br><span class="line">XorgModulePath=/usr/lib/nvidia-396/xorg,/usr/lib/xorg/modules</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>检测安装</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optirun --status</span><br></pre></td></tr></table></figure>
-<p> 显示<code>Bumblebee status: Ready (3.2.1). X inactive. Discrete video card is off.</code>就没什么问题</p>
-</li>
-<li><p>打开nvidia设置</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">optirun -b none nvidia-settings -c :8</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>测试GPU性能</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install phoronix-test-suite</span><br><span class="line">phoronix-test-suite benchmark pts/gputest</span><br><span class="line">optirun phoronix-test-suite benchmark pts/gputest</span><br></pre></td></tr></table></figure>
-<p> 测试发现使用GPU和不使用的区别就表示完全通过测试</p>
-</li>
-<li>设置desktop文件<br>帮助网站<a href="https://wiki.ubuntu.com/Bumblebee#Installation" target="_blank" rel="noopener">bumlebee</a>、<a href="https://blog.csdn.net/geange/article/details/79284727" target="_blank" rel="noopener">csdn</a>、<a href="https://wiki.archlinux.org/index.php/Bumblebee_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87" target="_blank" rel="noopener">arch</a>)、<a href="https://github.com/Bumblebee-Project/Bumblebee/wiki/FAQ" target="_blank" rel="noopener">FAQ</a></li>
-</ol>
-</li>
-<li><p>最新安装显卡方式，建议使用</p>
-<ul>
+        <h4 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h4><ul>
+<li>安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动</li>
+</ul>
+<h4 id="显卡安装"><a href="#显卡安装" class="headerlink" title="显卡安装"></a>显卡安装</h4><ul>
 <li><p>完全卸载nvida显卡</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove --purge nvidia*</span><br></pre></td></tr></table></figure>
 </li>
-</ul>
+<li><p>禁止加载 <code>/etc/modprobe.d/blacklist-nouveau.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset=0</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<pre><code>- 禁止加载 `/etc/modprobe.d/blacklist-nouveau.conf`
-
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">  blacklist nouveau</span><br><span class="line">options nouveau modeset=0</span><br></pre></td></tr></table></figure>
-</code></pre><ul>
-<li><p>安装cuda，安装完成后会默认安装最适合的nvida显卡驱动</p>
+<li><p>官网选择合适的cuda版本，安装完成后会默认安装最适合的nvida显卡驱动</p>
 <ul>
 <li><p>查看 <code>/lib/modprobe.d/blacklist-nvidia.conf</code>是否存在，如果存在就注释其中的内容</p>
 </li>
@@ -461,185 +429,63 @@
 </ul>
 </li>
 </ul>
-<ol start="5">
-<li><p>安装软件使用依赖管理工具,  安装软件更加简单</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdebi</span><br><span class="line">sudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb</span><br></pre></td></tr></table></figure>
-<p> 也可以使用dpkg安装软件</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 使用dpkg安装.deb格式文件，这里会提示缺少依赖文件</span><br><span class="line">sudo dpkg -i name.deb</span><br><span class="line"></span><br><span class="line"># 这里使用 apt-get install -f 安装上面一条指令的的依赖文件</span><br><span class="line">sudo apt-get install -f</span><br><span class="line"></span><br><span class="line"># 依赖文件已经安装好了，重新安装一遍</span><br><span class="line">sudo dpkg -i name.deb</span><br><span class="line"></span><br><span class="line"># 如果卸载 -P=--purge, -r=--removee</span><br><span class="line">sudo dpkg -P/-r  name</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装ubuntu-restricted-extras 获取字体</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ubuntu-restricted-extras ubuntu-restricted-addons</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置快捷键</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install compizconfig-settings-manager</span><br><span class="line">settings -&gt; keyboard -&gt; shortcuts</span><br><span class="line">#仅仅配置shortcuts有时候可能不生效，需要使用compizconfig来修改</span><br></pre></td></tr></table></figure>
-<p> 最终快捷键， 保留几个常用的</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + t        打开终端</span><br><span class="line">Ctrl + Super + up     放大应用</span><br><span class="line">Ctrl + Super + down   缩小应用</span><br><span class="line">Super + d             关闭/显示桌面</span><br><span class="line">Super + l             锁住桌面</span><br><span class="line">Super + w             显示打开的应用</span><br><span class="line">Super                 显示左边栏并打开搜索</span><br><span class="line">Super + Tab           显示左边栏并上下切换打开应用</span><br><span class="line">Alt [+ SHift] +       [向前]向后切换应用</span><br><span class="line">Alt + F4              关闭应用</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="oh-my-zsh"><a href="#oh-my-zsh" class="headerlink" title="oh-my-zsh"></a>oh-my-zsh</h4><ol>
-<li><p>安装zsh</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install zsh    #安装zsh</span><br><span class="line">chsh -s /bin/zsh            #不需要sudo，重启</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装oh-my-zsh</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/robbyrussell/oh-my-zsh</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装zsh插件</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi-mode</span><br><span class="line">autojump 				        需要安装软件</span><br><span class="line">zsh-autosuggestions 	  https://github.com/zsh-users/zsh-autosuggestions</span><br><span class="line">last-working-dir        </span><br><span class="line">d						            在终端输入d 显示最近频繁进入的路径，然后输入路径前对应的序号可快速进入对应路径</span><br><span class="line">history					        用法：在终端输入h即可</span><br><span class="line">zsh-syntax-highlighting	https://github.com/zsh-users/zsh-syntax-highlighting</span><br><span class="line">web-search				      如：google StackOverflow， 指定搜搜引擎就可以了</span><br><span class="line">sublime					        需要安装软件， [s]st [|文件|文件夹] [管理员]打开 [当前目录|文件|文件夹]</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="vim"><a href="#vim" class="headerlink" title="vim"></a>vim</h4><ol>
-<li>更新vim到最新版本 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:jonathonf/vim</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol start="2">
-<li>安装vim <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/amix/vimrc</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol start="3">
-<li><p>添加自动更新到crontab中</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 */6 * * * cd /home/feng/.vim_runtime &amp;&amp; git pull --rebase &gt; /dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol start="4">
-<li><p>插件快捷键讲解</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ack.vim         内容搜索      &lt;leader&gt; + g</span><br><span class="line">ctrlp.vim       文件搜索      &lt;leader&gt; + j</span><br><span class="line">bufexplorer.zip 缓存查看      &lt;leader&gt; + o</span><br><span class="line">mru.vim         最近文件      &lt;leader&gt; + f</span><br><span class="line">NERD Tree       文件目录      &lt;leader&gt; + nn</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="neovim-vim的替代品"><a href="#neovim-vim的替代品" class="headerlink" title="neovim(vim的替代品)"></a>neovim(vim的替代品)</h4><ol>
+<h4 id="安装fusuma控制触摸板"><a href="#安装fusuma控制触摸板" class="headerlink" title="安装fusuma控制触摸板"></a>安装fusuma控制触摸板</h4><ul>
 <li><p>安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install software-properties-common</span><br><span class="line">sudo add-apt-repository ppa:neovim-ppa/stable</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install neovim</span><br><span class="line">sudo apt-get install python-dev python-pip python3-dev python3-pip</span><br><span class="line">sudo update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60</span><br><span class="line">sudo update-alternatives --config vi</span><br><span class="line">sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60</span><br><span class="line">sudo update-alternatives --config vim</span><br><span class="line">sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60</span><br><span class="line">sudo update-alternatives --config editor</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line">call plug#begin(&apos;~/.local/share/nvim/plugged&apos;)                </span><br><span class="line">Plug &apos;vim-airline/vim-airline&apos;                                </span><br><span class="line">Plug &apos;majutsushi/tagbar&apos;                                      </span><br><span class="line">Plug &apos;kien/ctrlp.vim&apos;                                         </span><br><span class="line">Plug &apos;tacahiroy/ctrlp-funky&apos;</span><br><span class="line">Plug &apos;mileszs/ack.vim&apos;</span><br><span class="line">Plug &apos;yegappan/mru&apos;        </span><br><span class="line">Plug &apos;ianva/vim-youdao-translater&apos;</span><br><span class="line">Plug &apos;yonchu/accelerated-smooth-scroll&apos;</span><br><span class="line">Plug &apos;jlanzarotta/bufexplorer&apos;</span><br><span class="line">Plug &apos;mhinz/vim-startify&apos;</span><br><span class="line">Plug &apos;scrooloose/nerdtree&apos;, &#123; &apos;on&apos;:  &apos;NERDTreeToggle&apos; &#125;</span><br><span class="line">Plug &apos;easymotion/vim-easymotion&apos;</span><br><span class="line">Plug &apos;Valloric/YouCompleteMe&apos;</span><br><span class="line">call plug#end()</span><br><span class="line">                               </span><br><span class="line">set nobackup                       </span><br><span class="line">set nowb                                                              </span><br><span class="line">set noswapfile                             </span><br><span class="line">nnoremap &lt;F5&gt; :set nonumber!&lt;CR&gt;:set foldcolumn=0&lt;CR&gt;  &lt;Paste&gt;     </span><br><span class="line">set hlsearch                         </span><br><span class="line">set ignorecase                                   </span><br><span class="line">set incsearch                                  </span><br><span class="line">set smartcase                                         </span><br><span class="line">filetype plugin indent on          </span><br><span class="line"></span><br><span class="line">&quot;快捷键的映射，通过不同的前缀定义快捷键在那种模式下启动</span><br><span class="line">&quot;nore前缀       非递归</span><br><span class="line">&quot;n前缀          普通实施生效 </span><br><span class="line">&quot;v前缀          可视模式生效     </span><br><span class="line">&quot;i前缀          插入模式生效                                        </span><br><span class="line">&quot;c前缀          在EX命令模式生效         </span><br><span class="line">                                                                 </span><br><span class="line">&quot;定义前缀键                        </span><br><span class="line">:let mapleader=&quot;;&quot;                             </span><br><span class="line">                                             </span><br><span class="line">&quot;定义NERDTree出发快捷键                             </span><br><span class="line">map &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;     </span><br><span class="line">autocmd bufenter * if (winnr(&quot;$&quot;) == 1 &amp;&amp; exists(&quot;b:NERDTree&quot;) &amp;&amp; b:NERDTree.isTabTree()) | q | endif</span><br><span class="line">              </span><br><span class="line">&quot;定义文件结构快捷键</span><br><span class="line">nmap &lt;F3&gt; :TagbarToggle&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;定义文件搜索相关</span><br><span class="line">&quot;let g:ctrlp_map = &apos;&lt;c-p&gt;&apos;</span><br><span class="line">let g:ctrlp_map = &apos;&lt;F8&gt;&apos;</span><br><span class="line">let g:ctrlp_cmd = &apos;CtrlP&apos;</span><br><span class="line">let g:ctrlp_working_path_mode = &apos;ra&apos;</span><br><span class="line">set wildignore+=*/tmp/*,*.so,*.swp,*.zip</span><br><span class="line">let g:ctrlp_custom_ignore = &#123;</span><br><span class="line">  \ &apos;dir&apos;:  &apos;\v[\/]\.(git|hg|svn)$&apos;,</span><br><span class="line">  \ &apos;file&apos;: &apos;\v\.(exe|so|dll)$&apos;,</span><br><span class="line">  \ &apos;link&apos;: &apos;some_bad_symbolic_links&apos;,</span><br><span class="line">  \ &#125;</span><br><span class="line">let g:ctrlp_user_command = [&apos;.git&apos;, &apos;cd %s &amp;&amp; git ls-files -co --exclude-standard&apos;]</span><br><span class="line">let g:ctrlp_working_path_mode=0</span><br><span class="line">let g:ctrlp_match_window_bottom=1</span><br><span class="line">let g:ctrlp_max_height=15</span><br><span class="line">let g:ctrlp_match_window_reversed=0</span><br><span class="line">let g:ctrlp_mruf_max=500</span><br><span class="line">let g:ctrlp_follow_symlinks=1</span><br><span class="line">&quot;ctrl + j/k 进行上下选择</span><br><span class="line">&quot;ctrl + x 在当前窗口水平分屏打开文件</span><br><span class="line">&quot;ctrl + v 同上, 垂直分屏</span><br><span class="line">&quot;ctrl + t 在tab中打开</span><br><span class="line"></span><br><span class="line">&quot;定义文件中搜索函数</span><br><span class="line">nnoremap &lt;Leader&gt;f :CtrlPFunky&lt;Cr&gt;</span><br><span class="line">nnoremap &lt;Leader&gt;fu :execute &apos;CtrlPFunky &apos; . expand(&apos;&lt;cword&gt;&apos;)&lt;Cr&gt;</span><br><span class="line">let g:ctrlp_funky_syntax_highlight = 1</span><br><span class="line">let g:ctrlp_extensions = [&apos;funky&apos;]</span><br><span class="line"></span><br><span class="line">&quot;定义内容搜索快捷键</span><br><span class="line">let g:ackprg = &apos;ag --nogroup --nocolor --column&apos;</span><br><span class="line">map &lt;F7&gt; :Ack&lt;space&gt;</span><br><span class="line">if executable(&apos;ag&apos;)</span><br><span class="line">  &quot; Use Ag over Grep</span><br><span class="line">  set grepprg=ag\ --nogroup\ --nocolor</span><br><span class="line"></span><br><span class="line">  &quot; Use ag in CtrlP for listing files. Lightning fast and respects .gitignore</span><br><span class="line">  let g:ctrlp_user_command = &apos;ag %s -l --nocolor -g &quot;&quot;&apos;</span><br><span class="line"></span><br><span class="line">  &quot; ag is fast enough that CtrlP doesn&apos;t need to cache</span><br><span class="line">  let g:ctrlp_use_caching = 0</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">&quot;定义缓冲文件快捷键</span><br><span class="line">nnoremap &lt;silent&gt; &lt;F9&gt; :BufExplorer&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;定义最近文件快捷键</span><br><span class="line">nnoremap &lt;silent&gt; &lt;F10&gt; :MRU&lt;CR&gt;</span><br><span class="line">let MRU_Window_Height = 10</span><br><span class="line">&quot;jk          # 在历史记录列表中上下移动</span><br><span class="line">&quot;Enter       # 进入相应文件</span><br><span class="line">&quot;o           # 水平方向打开</span><br><span class="line">&quot;t           # 在新标签中打开历史文件</span><br><span class="line">&quot;u           # 更新文件列表</span><br><span class="line">&quot;q           # 退出MRU历史记录</span><br><span class="line">&quot;v           # 以只读模式打开</span><br><span class="line">&quot;/           # 在MRU列表中快速查找</span><br><span class="line"></span><br><span class="line">&quot;定义有道翻译快捷键</span><br><span class="line">vnoremap &lt;silent&gt; &lt;C-T&gt; :&lt;C-u&gt;Ydv&lt;CR&gt;</span><br><span class="line">nnoremap &lt;silent&gt; &lt;C-T&gt; :&lt;C-u&gt;Ydc&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;定义跳转快捷键</span><br><span class="line">map  &lt;Leader&gt;w &lt;Plug&gt;(easymotion-bd-w)</span><br><span class="line">nmap &lt;Leader&gt;w &lt;Plug&gt;(easymotion-overwin-w)</span><br><span class="line"></span><br><span class="line">&quot;YouCompleteMe快捷键</span><br><span class="line">nnoremap &lt;leader&gt;gl :YcmCompleter GoToDeclaration&lt;CR&gt;</span><br><span class="line">nnoremap &lt;leader&gt;gf :YcmCompleter GoToDefinition&lt;CR&gt;</span><br><span class="line">nnoremap &lt;leader&gt;gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="sublime"><a href="#sublime" class="headerlink" title="sublime"></a>sublime</h4><ol>
-<li><p>安装直接网上搜索，并对其破解</p>
-</li>
-<li><p>插件安装</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. ConvertToUTF8 和 GBK Support</span><br><span class="line">2. Pretty Json</span><br><span class="line">3. SideBarEnhancements</span><br><span class="line">4. vim</span><br><span class="line">5. MarkdownPreview</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>快捷键</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、使用Ctrl + `：打开或者关闭Sublime Text控制台。SublimeText控制台就是一个python的命令窗口。</span><br><span class="line">2、Ctrl+Shift+P：打开或者关闭命令行模式。</span><br><span class="line">3、Alt+Shift+2：分屏显示。( Alt+Shift+数字 )表示分几屏。默认即1，最大貌似是5。</span><br><span class="line">4、Sublime Text的一大亮点是支持多重选择——同时选择多个区域，然后同时进行编辑。Ctrl + D选择当前光标所在的词并高亮该词所有出现的位置，再次Ctrl + D选择该词出现的下一个位置。</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="tmux"><a href="#tmux" class="headerlink" title="tmux"></a>tmux</h4><ol>
-<li><p>安装tmux</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gpakosz/.tmux</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置tmux</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set-option -g allow-rename off</span><br><span class="line">每一次窗口执行不同的命令窗口的名字就会发生变化， 此处是关闭自动命名</span><br><span class="line">set-window-option -g pane-base-index 1</span><br><span class="line">设置窗口pane的下标从1开始</span><br><span class="line"># on Linux, this requires xsel or xclip</span><br><span class="line">tmux_conf_copy_to_os_clipboard=true</span><br><span class="line">设置tmux剪切板与系统剪切板同步</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用tmux</p>
-<ol>
-<li>tmux使用来管理回话并提供分屏等功能的软件， 当tmux开启时， 就会启动一个tmux-server的程序，用来管理上面所有的session会话， 每个session会话中可以存在多个windows（窗口）， 每个窗口又存在多个panel（面板）</li>
-<li><p>tmux命令</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tmux + tab				列出所有tmux可以使用的命令</span><br><span class="line">tmux new-session -s name		创建session</span><br><span class="line">tmux list-session			查看session</span><br><span class="line">tmux attach-session name	attach到某个session</span><br><span class="line">tmux kill-session name		杀死某个session</span><br><span class="line">tmux info 				查看session, window, pane, 运行的进程号</span><br><span class="line">tmux list-keys 				列出所有可以的快捷键和其运行的 tmux 命令</span><br><span class="line">tmux list-commands 		列出所有的 tmux 命令及其参数</span><br><span class="line">tmux kill-server 关闭所有 session</span><br></pre></td></tr></table></figure>
-<p> <em>注意</em> 所有的上面这些命令在没进入某个session之前直接使用tmux command args来调用， 当进如了tmux之后直接在任何的panel中通过 <code>&lt;pre&gt; + : +command args</code>来激活命令行操作， 此时所有的命令只需要使用 command args就可以调用了</p>
-</li>
-<li><p>tmux 基本操作</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">? 列出所有快捷键；按q返回</span><br><span class="line">d 脱离当前会话,可暂时返回Shell界面</span><br><span class="line">s 选择并切换会话；在同时开启了多个会话时使用</span><br><span class="line">: 进入命令行模式；此时可输入支持的命令，例如 kill-server 关闭所有tmux会话, rename 重命名当前session</span><br><span class="line">[ 复制模式，光标移动到复制内容位置，空格键开始，方向键选择复制，回车确认，q/Esc退出， 可以设置vi模式复制</span><br><span class="line">] 进入粘贴模式，粘贴之前复制的内容，按q/Esc退出</span><br><span class="line">t 显示当前的时间</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>tmux 窗口操作</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">c 创建新窗口</span><br><span class="line">&amp; 关闭当前窗口</span><br><span class="line">[0-9] 数字键切换到指定窗口</span><br><span class="line">ctrl + h/l 左右切换窗口（安装ctrl， 并快速的按h/l）</span><br><span class="line">w 通过窗口列表切换窗口</span><br><span class="line">, 重命名当前窗口，便于识别</span><br><span class="line">. 修改当前窗口编号，相当于重新排序</span><br><span class="line">f 在所有窗口中查找关键词，便于窗口多了切换</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>tmux 面板操作</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&quot;/- 将当前面板上下分屏</span><br><span class="line">%/_ 将当前面板左右分屏</span><br><span class="line">x 关闭当前分屏</span><br><span class="line">! 将当前面板置于新窗口,即新建一个窗口,其中仅包含当前面板</span><br><span class="line">z 最大化当前所在面板</span><br><span class="line">ctrl+方向键 以1个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">alt+方向键 以5个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">H/J/K/L 以1个单元格移动边缘以调整当前面板大小</span><br><span class="line">q 显示面板编号</span><br><span class="line">o 选择当前窗口中下一个面板</span><br><span class="line">方向键/h/j/k/l 移动光标选择对应面板</span><br><span class="line">&#123; 向前置换当前面板</span><br><span class="line">&#125; 向后置换当前面板</span><br><span class="line">alt+o 逆时针旋转当前窗口的面板</span><br><span class="line">ctrl+o 顺时针旋转当前窗口的面板</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>tmux 滚屏操作，由于tmux接管如果输出大量的数据无法看到上面屏幕的字， 如果此时鼠标操作关闭，那么当使用鼠标滑轮的时候显示的执行过命令的显示， 而不能屏幕翻页， 要想达到这个目的有两个办法：</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">打开鼠标操作， 使用滑轮上下翻页 &lt;pre&gt; + m</span><br><span class="line">打开复制模式， 使用vi的翻滚策略来操作， 此时又会碰到一个问题， 如果前缀是ctrl + b那么不好往下整页翻滚， 建议使用半屏翻滚 ctrl + u / d(f)</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-</ol>
-<h4 id="tmuxinator"><a href="#tmuxinator" class="headerlink" title="tmuxinator"></a>tmuxinator</h4><ol>
-<li><p>安装tmuxinator</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/tmuxinator/tmuxinator</span><br><span class="line">sudo apt-get install ruby-full</span><br><span class="line">sudo gem install tmuxinator</span><br><span class="line">设置编辑器， 由于tmuxinator编辑项目</span><br><span class="line">$EDITOR = vim</span><br><span class="line">tmuxinator默认的存放项目位置</span><br><span class="line">~/.config/tmuxinator</span><br><span class="line">配置zsh命令简写和自动完成 TAB键</span><br><span class="line">a. 在.zshrc中添加</span><br><span class="line">source ~/.bin/tmuxinator.zsh</span><br><span class="line">b. 拷贝自动完成脚本</span><br><span class="line">cp ~/.bin/tmuxinator.fish ~/.config/fish/completions/</span><br><span class="line">注意：如果不存在~/.bin目录，那么自己下载到这个文件夹</span><br><span class="line">文件路径 https://github.com/tmuxinator/tmuxinator/tree/master/completion/</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>基本命令</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator new/edit/open project		创建/编辑/打开项目， 可以使用n/e/o简洁表示</span><br><span class="line">tmuxinator start [PROJECT] [ARGS]	启动一个项目</span><br><span class="line">tmuxinator stop [PROJECT]			停止一个项目</span><br><span class="line">tmuxinator list						显示所有项目</span><br><span class="line">tmuxinator delete [PROJECT1] [PROJECT2]	删除一个或者多个项目</span><br><span class="line">tmuxinator copy [EXISTING] [NEW]		复制一个项目</span><br><span class="line">tmuxinator debug [PROJECT] [ARGS]	debug一个项目</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>示例</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># 项目名称</span><br><span class="line">name: sample</span><br><span class="line"># 项目主目录</span><br><span class="line">root: ~/</span><br><span class="line"># 所有的窗口创建之前执行的命令</span><br><span class="line">pre_window: echo &quot;hello world&quot;</span><br><span class="line"></span><br><span class="line"># 所有的windows</span><br><span class="line">windows:</span><br><span class="line">    # windows 1 editor, 指定名字为myeditor</span><br><span class="line">    - editor: myeditor</span><br><span class="line">        # 指定当前window的主目录</span><br><span class="line">        root: ~/projects/editor</span><br><span class="line">        # layout 指定当前window的排版方式， 默认有5种</span><br><span class="line">        # 也可以自己定制， 方法在下面</span><br><span class="line">        layout: main-vertical</span><br><span class="line">        # 当前windows下所有的panes， 使用layout指定的排版方式排版</span><br><span class="line">        panes:</span><br><span class="line">            # 面板一， 此面板只有命令vim， 所以这样写就可以了</span><br><span class="line">            - vim</span><br><span class="line">            # 面板二， 此面板存在多一个命令， 将多个命令回车添加</span><br><span class="line">            # 必须上一个命令执行成功才会执行下一个命令</span><br><span class="line">            - logs:</span><br><span class="line">                - ssh logs@example.com</span><br><span class="line">                - cd /var/logs</span><br><span class="line">                - tail -f development.log</span><br><span class="line">    # window 2， 可以看到单个窗口一个命令， 直接写就可以了</span><br><span class="line">    - server: bundle exec rails s</span><br><span class="line">    # window 3， 同上</span><br><span class="line">    - logs: tail -f log/development.log</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用环境变量</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root: &lt;%= ENV[&quot;MY_CUSTOM_DIR&quot;] %&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用参数传递</p>
-<ol>
-<li><p>位置参数</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator start project foo</span><br><span class="line"># 此处的args[0]就是foo</span><br><span class="line">root: ~/&lt;%= @args[0] %&gt;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>命名参数</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator start project workspace=workspace/todo</span><br><span class="line"># 此处的workspace 就是上面设置的值workspace/todo</span><br><span class="line">root: ~/&lt;%= @settings[&quot;workspace&quot;] %&gt;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-<li><p>tmux默认5中layout</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">even-horizontal</span><br><span class="line">even-vertical</span><br><span class="line">main-horizontal</span><br><span class="line">main-vertical</span><br><span class="line">tiled</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>tmux自定义layout</p>
-<ol>
-<li><p>打印layout</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ tmux list-windows</span><br><span class="line">1: bash* (4 panes) [211x47] [layout 9a0a,211x47,0,0&#123;110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24&#123;49x23,111,24,14,50x23,161,24,15&#125;]&#125;] @3 (active)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>截取layout</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">9a0a,211x47,0,0&#123;110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24&#123;49x23,111,24,14,50x23,161,24,15&#125;]&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置layout</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">layout:9a0a,211x47,0,0&#123;110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24&#123;49x23,111,24,14,50x23,161,24,15&#125;]&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-</ol>
-<h4 id="安装fusuma控制触摸板"><a href="#安装fusuma控制触摸板" class="headerlink" title="安装fusuma控制触摸板"></a>安装fusuma控制触摸板</h4><ol>
-<li><p>安装</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo gpasswd -a $USER input #需要管理员权限执行，配置开机启动也可以不用</span><br><span class="line">sudo apt-get install libinput-tools</span><br><span class="line">sudo apt-get install xdotool</span><br><span class="line">gem install fusuma #使用ruby安装</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo gpasswd -a $USER input #需要管理员权限执行，配置开机启动也可以不用</span><br><span class="line">sudo apt-get install libinput-tools</span><br><span class="line">sudo apt-get install xdotool</span><br><span class="line">gem install fusuma #使用ruby安装</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#确保开启多点触控</span><br><span class="line">gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled</span><br><span class="line">#创建配置文件</span><br><span class="line">mkdir -p ~/config/fusum &amp;&amp; touch ~/.config/fusuma/config.yml</span><br><span class="line">#vi ~/.config/fusuma/config.yml</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">swipe:</span><br><span class="line">  3:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key alt+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key alt+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key ctrl+t&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key ctrl+w&apos;</span><br><span class="line">  4:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key super+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key super+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key super+a&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key super+s&apos;</span><br><span class="line">pinch:</span><br><span class="line">  in:</span><br><span class="line">    command: &apos;xdotool key ctrl+plus&apos;</span><br><span class="line">  out:</span><br><span class="line">    command: &apos;xdotool key ctrl+minus&apos;</span><br><span class="line"></span><br><span class="line">threshold:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br><span class="line"></span><br><span class="line">interval:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#确保开启多点触控</span><br><span class="line">gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled</span><br><span class="line">#创建配置文件</span><br><span class="line">mkdir -p ~/config/fusum &amp;&amp; touch ~/.config/fusuma/config.yml</span><br><span class="line">#vi ~/.config/fusuma/config.yml</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">swipe:</span><br><span class="line">  3:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key alt+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key alt+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key ctrl+t&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key ctrl+w&apos;</span><br><span class="line">  4:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key super+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key super+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key super+a&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key super+s&apos;</span><br><span class="line">pinch:</span><br><span class="line">  in:</span><br><span class="line">    command: &apos;xdotool key ctrl+plus&apos;</span><br><span class="line">  out:</span><br><span class="line">    command: &apos;xdotool key ctrl+minus&apos;</span><br><span class="line"></span><br><span class="line">threshold:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br><span class="line"></span><br><span class="line">interval:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置开机启动， 参考下面的shadowsocks配置</p>
-<h4 id="安装网易云音乐"><a href="#安装网易云音乐" class="headerlink" title="安装网易云音乐"></a>安装网易云音乐</h4></li>
-<li><p>安装</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdebi</span><br><span class="line">sudo gdebi netease-cloudmusic_1.0.0_amd64_ubuntu16.04.deb</span><br><span class="line">sudo apt-get install sqlite3</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>配置</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">netease-cloud-music.desktop</span><br><span class="line">Exec=netease-cloud-music --no-sandbox %U		中在%U 前面添加--no-sandbox 即可解决</span><br><span class="line">cd ~/.cache &amp;&amp; sudo chmod -R 777 netease-cloud-music</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="wifi驱动安装后无法启动"><a href="#wifi驱动安装后无法启动" class="headerlink" title="wifi驱动安装后无法启动"></a>wifi驱动安装后无法启动</h4><ol>
+</ul>
+<h4 id="wifi驱动安装后无法启动"><a href="#wifi驱动安装后无法启动" class="headerlink" title="wifi驱动安装后无法启动"></a>wifi驱动安装后无法启动</h4><ul>
+<li><p>方式一</p>
+<ul>
 <li><p>查看网络信息</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ rfkill list</span><br><span class="line">  0:ideapad_wlan: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:yes				表示硬件阻塞没有开启</span><br><span class="line">  1:ideapad_bluetooth: Bluetooth</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked: yes</span><br><span class="line">  2:phy0: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:no</span><br><span class="line">  3:hci0: Bluetooth</span><br><span class="line">  Soft blocked: yes				表示软件阻塞没有安装驱动</span><br><span class="line">  Hard blocked: no</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ rfkill list</span><br><span class="line">  0:ideapad_wlan: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:yes				表示硬件阻塞没有开启</span><br><span class="line">  1:ideapad_bluetooth: Bluetooth</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked: yes</span><br><span class="line">  2:phy0: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:no</span><br><span class="line">  3:hci0: Bluetooth</span><br><span class="line">  Soft blocked: yes				表示软件阻塞没有安装驱动</span><br><span class="line">  Hard blocked: no</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>移除ideapad模块， 后后面的没有阻塞的模块可以启动</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ modprobe -r ideapad_laptop</span><br><span class="line">$ rfkill list</span><br><span class="line">  2:phy0: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:no</span><br><span class="line">  3:hci0: Bluetooth</span><br><span class="line">  Soft blocked: yes</span><br><span class="line">  Hard blocke</span><br></pre></td></tr></table></figure>
+<li><p>移除ideapad模块， 后面的没有阻塞的模块可以启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ modprobe -r ideapad_laptop</span><br><span class="line">$ rfkill list</span><br><span class="line">  2:phy0: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:no</span><br><span class="line">  3:hci0: Bluetooth</span><br><span class="line">  Soft blocked: yes</span><br><span class="line">  Hard blocke</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置开机启动禁止ideapad模块</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">创建/etc/modprobe.d/my_blacklist.conf文件block掉ideapad模块，这样没有重启就不用手动block</span><br><span class="line">blacklist ideapad_laptop</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">创建/etc/modprobe.d/my_blacklist.conf文件block掉ideapad模块，这样没有重启就不用手动block</span><br><span class="line">blacklist ideapad_laptop</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>也可以不使用第2和第3步骤，直接添加ideap_wlan的模块到内核当中</p>
+</ul>
+</li>
+<li><p>方法二</p>
+<ul>
+<li><p>直接添加ideap_wlan的模块到内核当中</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install git dkms build-essential</span><br><span class="line">git clone https://github.com/jeremyb31/ideapad-laptop.git</span><br><span class="line">sudo dkms add ./ideapad-laptop</span><br><span class="line">sudo dkms install ideapad-laptop/1.0</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>安装iwlwifi驱动</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install build-essential git</span><br><span class="line">git clone https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi.git</span><br><span class="line">cd backport-iwlwifi</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line">sudo -i</span><br><span class="line">echo &quot;options iwlwifi disable_msix=1&quot;  &gt;&gt;  /etc/modprobe.d/iwlwifi.conf</span><br><span class="line">exit</span><br><span class="line">如果需要升级kernel需要重新安装</span><br><span class="line">cd backport-iwlwifi</span><br><span class="line">sudo make clean</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 </li>
-</ol>
-<h4 id="开机自动启动"><a href="#开机自动启动" class="headerlink" title="开机自动启动"></a>开机自动启动</h4><h5 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h5><ol>
+</ul>
+</li>
+</ul>
+<h4 id="开机自动启动"><a href="#开机自动启动" class="headerlink" title="开机自动启动"></a>开机自动启动</h4><ul>
+<li><p>方式一</p>
+<ul>
 <li><p>以systemctl创建shadowsockets开机启动为例子</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>编写文件类容</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Client Service</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/bin/sslocal -c /home/xx/Software/ShadowsocksConfig/shadowsocks.json</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-<p> 把/home/xx/Software/ShadowsocksConfig/shadowsocks.json修改为你的shadowsocks.json路径，如：/etc/shadowsocks.json</p>
+<li><p>sudo vim /etc/systemd/system/shadowsocks.service</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Client Service</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">ExecStart=/usr/bin/sslocal -c /home/xx/Software/ShadowsocksConfig/shadowsocks.json</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 </li>
-<li>生效配置 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure>
+<li><p>把/home/xx/Software/ShadowsocksConfig/shadowsocks.json修改为你的shadowsocks.json路径，如：/etc/shadowsocks.json</p>
 </li>
-</ol>
-<h5 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h5><ol>
+<li><p>生效配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>方式二</p>
+<ul>
 <li>直接启动Startup Applications程序， 填写需要执行的命令和参数</li>
-</ol>
+</ul>
+</li>
+</ul>
 <h4 id="系统问题修复"><a href="#系统问题修复" class="headerlink" title="系统问题修复"></a>系统问题修复</h4><ol>
 <li><p>查看dmesg日志， 并且google错误信息</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmesg	查看系统日志</span><br></pre></td></tr></table></figure>
@@ -648,10 +494,14 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + F1 ~ F6    进入tty1 ~ tty6模式</span><br><span class="line">Ctrl + Alt + F7         恢复到桌面模式</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<h4 id="idea快捷键冲突问题"><a href="#idea快捷键冲突问题" class="headerlink" title="idea快捷键冲突问题"></a>idea快捷键冲突问题</h4><ol>
-<li>设置fcitx 网易云音乐</li>
-<li>更改系统快捷键， 不常用的建议都去掉</li>
-<li>安装compizconfig-settings-manager继续修改快捷键</li>
+<h4 id="快捷键冲突问题"><a href="#快捷键冲突问题" class="headerlink" title="快捷键冲突问题"></a>快捷键冲突问题</h4><ol>
+<li><p>设置fcitx 网易云音乐</p>
+</li>
+<li><p>更改系统快捷键， 不常用的建议都去掉，保留下列即可</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + t        打开终端</span><br><span class="line">Ctrl + Super + up     放大应用</span><br><span class="line">Ctrl + Super + down   缩小应用</span><br><span class="line">Super + d             关闭/显示桌面</span><br><span class="line">Super + l             锁住桌面</span><br><span class="line">Super + w             显示打开的应用</span><br><span class="line">Super                 显示左边栏并打开搜索</span><br><span class="line">Super + Tab           显示左边栏并上下切换打开应用</span><br><span class="line">Alt [+ SHift] +       [向前]向后切换应用</span><br><span class="line">Alt + F4              关闭应用</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装compizconfig-settings-manager继续修改快捷键(可选)</p>
+</li>
 <li><p>关闭关闭tty防止ctrl + alt + F1-12的影响</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># sudo vi /usr/share/X11/xorg.conf.d/50-novtswitch.conf</span><br><span class="line">Section &quot;ServerFlags&quot;</span><br><span class="line">  Option &quot;DontVTSwitch&quot; &quot;true&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
 </li>
@@ -659,12 +509,18 @@
 </li>
 </ol>
 <h4 id="其它可选选项"><a href="#其它可选选项" class="headerlink" title="其它可选选项"></a>其它可选选项</h4><ol>
-<li><p>安装字体</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.7_all.deb -P ~/Downloads</span><br><span class="line">sudo gdebi ~/Downloads/ttf-mscorefonts-installer_3.7_all.deb</span><br><span class="line">sudo mkfontscale （创建雅黑字体的fonts.scale文件，它用来控制字体旋转缩放）</span><br><span class="line">sudo mkfontdir （创建雅黑字体的fonts.dir文件，它用来控制字体粗斜体产生）</span><br><span class="line">sudo fc-cache -fv （建立字体缓存信息，也就是让系统认识雅黑）</span><br></pre></td></tr></table></figure>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/fangwentong/dotfiles/raw/master/ubuntu-gui/fonts/Monaco.ttf</span><br><span class="line">sudo mkdir -p /usr/share/fonts/custom</span><br><span class="line">sudo mv Monaco.ttf /usr/share/fonts/custom</span><br><span class="line">sudo chmod 744 /usr/share/fonts/custom/Monaco.ttf</span><br><span class="line"></span><br><span class="line">sudo mkfontscale  #生成核心字体信息</span><br><span class="line">sudo mkfontdir</span><br><span class="line">sudo fc-cache -fv</span><br></pre></td></tr></table></figure>
+<li><p>安装限制程序</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt-get install ubuntu-restricted-extras ubuntu-restricted-addons</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <ol start="2">
+<li><p>安装字体</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install ttf-mscorefonts-installer</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.7_all.deb -P ~/Downloads</span><br><span class="line">sudo gdebi ~/Downloads/ttf-mscorefonts-installer_3.7_all.deb</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/fangwentong/dotfiles/raw/master/ubuntu-gui/fonts/Monaco.ttf</span><br><span class="line">sudo mkdir -p /usr/share/fonts/custom</span><br><span class="line">sudo mv Monaco.ttf /usr/share/fonts/custom</span><br><span class="line">sudo chmod 744 /usr/share/fonts/custom/Monaco.ttf</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/share/fonts/WindowsFonts</span><br><span class="line">cp /Windowsdrive/Windows/Fonts/* /usr/share/fonts/WindowsFonts 复制windows中的字体</span><br><span class="line">chmod 755 /usr/share/fonts/WindowsFonts/*</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfontscale  #生成核心字体信息</span><br><span class="line">sudo mkfontdir</span><br><span class="line">sudo fc-cache -f -v</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>修改 <code>sudoer</code> 的环境变量 PATH， 在 <code>.bashrc</code> 中添加方法</p>
 <ul>
 <li><p>使用其它命令代替sudo命令</p>
@@ -682,7 +538,7 @@
 <li>sudo sensors-detect</li>
 <li>sensors（查看硬件实时温度）</li>
 <li>sudo apt-get install psensor</li>
-<li>安装成功后，打开psensor，在Sensor Preferences中选择需要的硬件勾选<strong>Display sensor in the label</strong></li>
+<li>安装成功后，打开psensor，在Sensor Preferences中选择需要的硬件勾选Display sensor in the label</li>
 </ol>
 </li>
 </ol>
@@ -814,7 +670,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -876,7 +732,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#联想r720安装ubuntu"><span class="nav-number">1.</span> <span class="nav-text">联想r720安装ubuntu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#oh-my-zsh"><span class="nav-number">2.</span> <span class="nav-text">oh-my-zsh</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#vim"><span class="nav-number">3.</span> <span class="nav-text">vim</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#neovim-vim的替代品"><span class="nav-number">4.</span> <span class="nav-text">neovim(vim的替代品)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sublime"><span class="nav-number">5.</span> <span class="nav-text">sublime</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmux"><span class="nav-number">6.</span> <span class="nav-text">tmux</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tmuxinator"><span class="nav-number">7.</span> <span class="nav-text">tmuxinator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装fusuma控制触摸板"><span class="nav-number">8.</span> <span class="nav-text">安装fusuma控制触摸板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装网易云音乐"><span class="nav-number">9.</span> <span class="nav-text">安装网易云音乐</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wifi驱动安装后无法启动"><span class="nav-number">10.</span> <span class="nav-text">wifi驱动安装后无法启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自动启动"><span class="nav-number">11.</span> <span class="nav-text">开机自动启动</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方式一"><span class="nav-number">11.1.</span> <span class="nav-text">方式一</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方式二"><span class="nav-number">11.2.</span> <span class="nav-text">方式二</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统问题修复"><span class="nav-number">12.</span> <span class="nav-text">系统问题修复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idea快捷键冲突问题"><span class="nav-number">13.</span> <span class="nav-text">idea快捷键冲突问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其它可选选项"><span class="nav-number">14.</span> <span class="nav-text">其它可选选项</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本安装"><span class="nav-number">1.</span> <span class="nav-text">基本安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#显卡安装"><span class="nav-number">2.</span> <span class="nav-text">显卡安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装fusuma控制触摸板"><span class="nav-number">3.</span> <span class="nav-text">安装fusuma控制触摸板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wifi驱动安装后无法启动"><span class="nav-number">4.</span> <span class="nav-text">wifi驱动安装后无法启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开机自动启动"><span class="nav-number">5.</span> <span class="nav-text">开机自动启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统问题修复"><span class="nav-number">6.</span> <span class="nav-text">系统问题修复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#快捷键冲突问题"><span class="nav-number">7.</span> <span class="nav-text">快捷键冲突问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其它可选选项"><span class="nav-number">8.</span> <span class="nav-text">其它可选选项</span></a></li></ol></div>
             
 
           </div>

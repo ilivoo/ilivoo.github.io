@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="openvpn服务端安装 安装openvpn 12345yum install -y epel-release yum update -yyum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expectyum install -y easy-rsayum install -y openvpn  配置easy-rsa 12">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-20T07:34:29.553Z">
+<meta property="og:updated_time" content="2019-09-26T06:17:45.549Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux-openvpn">
 <meta name="twitter:description" content="openvpn服务端安装 安装openvpn 12345yum install -y epel-release yum update -yyum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expectyum install -y easy-rsayum install -y openvpn  配置easy-rsa 12">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,467
+                  1,515
                 </span>
               
 
@@ -483,6 +483,12 @@
 <li><p>配置openvpn, 从server上将生成的<code>ca.crt</code>、<code>client.crt</code>、<code>client.key</code>、<code>ta.key</code>文件下载到客户端，并添加配置文件<code>client.ovpn</code>, 内容如下: </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">client</span><br><span class="line">proto tcp-client</span><br><span class="line">dev tap</span><br><span class="line">auth-user-pass</span><br><span class="line">remote 127.0.0.1 9997</span><br><span class="line">ca ca.crt</span><br><span class="line">cert client.crt</span><br><span class="line">key client.key</span><br><span class="line">tls-auth ta.key 1</span><br><span class="line">remote-cert-tls server</span><br><span class="line">auth-nocache</span><br><span class="line">persist-tun</span><br><span class="line">persist-key</span><br><span class="line">comp-lzo</span><br><span class="line">verb 4</span><br><span class="line">mute 10</span><br></pre></td></tr></table></figure>
 <p><strong>注意 : </strong> 此处的remote并没有设置为openvpn的服务端地址, 而是设置为obfsproxy客户端监听的地址, 这样openvpn就先把数据发送给obfsproxy客户端, obfsproxy客户端再发送给obfsproxy服务端, obfsproxy服务端再发送给openvpn服务端.</p>
+</li>
+</ol>
+<h4 id="openvpn经常会出现闪断"><a href="#openvpn经常会出现闪断" class="headerlink" title="openvpn经常会出现闪断"></a>openvpn经常会出现闪断</h4><ol>
+<li><p>为openvpn客户端和服务端都创建启动脚本，并加入到crontab中，这样就不怕断开连接</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/ilivoo/tools-openvpn</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 
@@ -613,7 +619,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -675,7 +681,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn服务端安装"><span class="nav-number">1.</span> <span class="nav-text">openvpn服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy服务端安装"><span class="nav-number">2.</span> <span class="nav-text">obfsproxy服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy客户端安装"><span class="nav-number">3.</span> <span class="nav-text">obfsproxy客户端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn客户端安装"><span class="nav-number">4.</span> <span class="nav-text">openvpn客户端安装</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn服务端安装"><span class="nav-number">1.</span> <span class="nav-text">openvpn服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy服务端安装"><span class="nav-number">2.</span> <span class="nav-text">obfsproxy服务端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#obfsproxy客户端安装"><span class="nav-number">3.</span> <span class="nav-text">obfsproxy客户端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn客户端安装"><span class="nav-number">4.</span> <span class="nav-text">openvpn客户端安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#openvpn经常会出现闪断"><span class="nav-number">5.</span> <span class="nav-text">openvpn经常会出现闪断</span></a></li></ol></div>
             
 
           </div>

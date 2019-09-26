@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-09-23T10:28:48.778Z</updated>
+  <updated>2019-09-26T09:41:19.502Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,145 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>tools-tmuxinator</title>
+    <link href="http://yoursite.com/2019/09/26/tools-tmuxinator/"/>
+    <id>http://yoursite.com/2019/09/26/tools-tmuxinator/</id>
+    <published>2019-09-26T09:39:17.000Z</published>
+    <updated>2019-09-26T09:41:19.502Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;安装tmuxinator&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/s
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>tools-tmux</title>
+    <link href="http://yoursite.com/2019/09/26/tools-tmux/"/>
+    <id>http://yoursite.com/2019/09/26/tools-tmux/</id>
+    <published>2019-09-26T09:36:25.000Z</published>
+    <updated>2019-09-26T09:38:48.546Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;安装tmux&lt;/p&gt;
+ &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td cla
+      
+    
+    </summary>
+    
+      <category term="tools" scheme="http://yoursite.com/categories/tools/"/>
+    
+    
+      <category term="tools" scheme="http://yoursite.com/tags/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>tools-zsh</title>
+    <link href="http://yoursite.com/2019/09/26/tools-zsh/"/>
+    <id>http://yoursite.com/2019/09/26/tools-zsh/</id>
+    <published>2019-09-26T09:34:15.000Z</published>
+    <updated>2019-09-26T09:35:05.868Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;安装zsh&lt;/p&gt;
+ &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>tools-sublime</title>
+    <link href="http://yoursite.com/2019/09/26/tools-sublime/"/>
+    <id>http://yoursite.com/2019/09/26/tools-sublime/</id>
+    <published>2019-09-26T09:32:08.000Z</published>
+    <updated>2019-09-26T09:33:51.856Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ol&gt;
+&lt;li&gt;&lt;p&gt;安装直接网上搜索，并对其破解&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;插件安装&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1
+      
+    
+    </summary>
+    
+      <category term="tools" scheme="http://yoursite.com/categories/tools/"/>
+    
+    
+      <category term="tools" scheme="http://yoursite.com/tags/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vim 安装和使用技巧</title>
+    <link href="http://yoursite.com/2019/09/26/tools-vim/"/>
+    <id>http://yoursite.com/2019/09/26/tools-vim/</id>
+    <published>2019-09-26T09:25:06.000Z</published>
+    <updated>2019-09-26T09:35:22.072Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;使用原生vim&quot;&gt;&lt;a href=&quot;#使用原生vim&quot; class=&quot;headerlink&quot; title=&quot;使用原生vim&quot;&gt;&lt;/a&gt;使用原生vim&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;更新vim到最新版本 &lt;figure class=&quot;highlight plain&quot;&gt;&lt;
+      
+    
+    </summary>
+    
+      <category term="tools" scheme="http://yoursite.com/categories/tools/"/>
+    
+    
+      <category term="tools" scheme="http://yoursite.com/tags/tools/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>终端使用技巧</title>
+    <link href="http://yoursite.com/2019/09/26/linux-terminal/"/>
+    <id>http://yoursite.com/2019/09/26/linux-terminal/</id>
+    <published>2019-09-26T08:09:09.000Z</published>
+    <updated>2019-09-26T08:40:34.349Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;操作系统启动顺序&quot;&gt;&lt;a href=&quot;#操作系统启动顺序&quot; class=&quot;headerlink&quot; title=&quot;操作系统启动顺序&quot;&gt;&lt;/a&gt;操作系统启动顺序&lt;/h4&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td cl
+      
+    
+    </summary>
+    
+      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
+    
+    
+      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+  </entry>
   
   <entry>
     <title>mongo spark partitioner 详解</title>
@@ -283,7 +422,7 @@
     <link href="http://yoursite.com/2019/03/15/linux-openvpn/"/>
     <id>http://yoursite.com/2019/03/15/linux-openvpn/</id>
     <published>2019-03-15T09:41:45.000Z</published>
-    <updated>2019-05-20T07:34:29.553Z</updated>
+    <updated>2019-09-26T06:17:45.549Z</updated>
     
     <summary type="html">
     
@@ -382,149 +521,6 @@
       <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
     
       <category term="kerberos" scheme="http://yoursite.com/tags/kerberos/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>docker-network</title>
-    <link href="http://yoursite.com/2019/01/12/docker-network/"/>
-    <id>http://yoursite.com/2019/01/12/docker-network/</id>
-    <published>2019-01-12T13:38:23.000Z</published>
-    <updated>2019-01-13T03:15:31.785Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;docker四种网络类型&quot;&gt;&lt;a href=&quot;#docker四种网络类型&quot; class=&quot;headerlink&quot; title=&quot;docker四种网络类型&quot;&gt;&lt;/a&gt;docker四种网络类型&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;host模式，容器将不会获得一个独立的Netwo
-      
-    
-    </summary>
-    
-      <category term="docker" scheme="http://yoursite.com/categories/docker/"/>
-    
-    
-      <category term="docker" scheme="http://yoursite.com/tags/docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql 存储程序</title>
-    <link href="http://yoursite.com/2019/01/04/mysql-procedure/"/>
-    <id>http://yoursite.com/2019/01/04/mysql-procedure/</id>
-    <published>2019-01-04T02:52:55.000Z</published>
-    <updated>2019-01-04T10:37:10.981Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;存储程序”&quot;&gt;&lt;a href=&quot;#存储程序”&quot; class=&quot;headerlink&quot; title=&quot;存储程序”&quot;&gt;&lt;/a&gt;存储程序”&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;MySQL允许通过触发器、存储过程、函数的形式来存储代码， 并且可以在定时任务中存放代码，这个定时
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql exists与in的区别</title>
-    <link href="http://yoursite.com/2019/01/03/mysql-exist-in/"/>
-    <id>http://yoursite.com/2019/01/03/mysql-exist-in/</id>
-    <published>2019-01-03T12:08:08.000Z</published>
-    <updated>2019-01-04T02:27:34.431Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;exists&quot;&gt;&lt;a href=&quot;#exists&quot; class=&quot;headerlink&quot; title=&quot;exists&quot;&gt;&lt;/a&gt;exists&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exis
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql 查询顺序</title>
-    <link href="http://yoursite.com/2019/01/03/mysql-select/"/>
-    <id>http://yoursite.com/2019/01/03/mysql-select/</id>
-    <published>2019-01-03T10:54:27.000Z</published>
-    <updated>2019-01-03T11:00:53.874Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;笛卡尔乘积&quot;&gt;&lt;a href=&quot;#笛卡尔乘积&quot; class=&quot;headerlink&quot; title=&quot;笛卡尔乘积&quot;&gt;&lt;/a&gt;笛卡尔乘积&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;使用join执行笛卡尔乘积， 并且使用on来对笛卡尔乘积之前进行过滤操作, 这也称作显示的连接操作&lt;/l
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>linux awk</title>
-    <link href="http://yoursite.com/2019/01/03/linux-awk/"/>
-    <id>http://yoursite.com/2019/01/03/linux-awk/</id>
-    <published>2019-01-03T10:40:16.000Z</published>
-    <updated>2019-01-03T10:50:29.898Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;awk的基本语法&quot;&gt;&lt;a href=&quot;#awk的基本语法&quot; class=&quot;headerlink&quot; title=&quot;awk的基本语法&quot;&gt;&lt;/a&gt;awk的基本语法&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;awk -F&amp;#39; &amp;#39; &amp;#39;BEGAIN {
-      
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>shell详解</title>
-    <link href="http://yoursite.com/2019/01/03/linux-shell/"/>
-    <id>http://yoursite.com/2019/01/03/linux-shell/</id>
-    <published>2019-01-03T10:22:43.000Z</published>
-    <updated>2019-01-03T10:51:57.982Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;shell属于弱类型语言-其默认的变量类型为字符串类型&quot;&gt;&lt;a href=&quot;#shell属于弱类型语言-其默认的变量类型为字符串类型&quot; class=&quot;headerlink&quot; title=&quot;shell属于弱类型语言, 其默认的变量类型为字符串类型&quot;&gt;&lt;/a&gt;shel
-      
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
     
   </entry>
   
