@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="linux," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Ilivoo`s blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用12345678910$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$n			位置参数$*,$@		所有的参数，只有在引号时候才有差别$#			参数个数$? 			上一个进程的退出状态$$ 			shell本身">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="shell详解">
+<meta property="og:url" content="http://yoursite.com/2018/01/03/linux-shell/index.html">
+<meta property="og:site_name" content="Ilivoo`s blog">
+<meta property="og:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用12345678910$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$n			位置参数$*,$@		所有的参数，只有在引号时候才有差别$#			参数个数$? 			上一个进程的退出状态$$ 			shell本身">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-18T07:40:35.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="shell详解">
+<meta name="twitter:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用12345678910$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$n			位置参数$*,$@		所有的参数，只有在引号时候才有差别$#			参数个数$? 			上一个进程的退出状态$$ 			shell本身">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/03/linux-shell/"/>
+
+
+
+
+
+  <title>shell详解 | Ilivoo`s blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ilivoo`s blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/linux-shell/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">shell详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T18:22:43+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,516
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="shell属于弱类型语言-其默认的变量类型为字符串类型"><a href="#shell属于弱类型语言-其默认的变量类型为字符串类型" class="headerlink" title="shell属于弱类型语言, 其默认的变量类型为字符串类型"></a>shell属于弱类型语言, 其默认的变量类型为字符串类型</h4><h4 id="shell-中符号使用"><a href="#shell-中符号使用" class="headerlink" title="shell 中符号使用"></a>shell 中符号使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(),``		命令替换用，变成一个完整的命令并执行</span><br><span class="line">$[],$(())   简单的数学计算，支持+ - * / %</span><br><span class="line">$&#123;&#125;,$ 		参数替换</span><br><span class="line">$n			位置参数</span><br><span class="line">$*,$@		所有的参数，只有在引号时候才有差别</span><br><span class="line">$#			参数个数</span><br><span class="line">$? 			上一个进程的退出状态</span><br><span class="line">$$ 			shell本身进程PID</span><br><span class="line">$!			shell最后运行的后台Process的PID</span><br><span class="line">$-			使用Set命令设定的Flag一览</span><br></pre></td></tr></table></figure>
+<h4 id="set命令"><a href="#set命令" class="headerlink" title="set命令"></a>set命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set -o		显示所有的set命令Flag表，显示开启或者关闭</span><br><span class="line">set +o		显示所有的set命令Flag表，相当与set命令Flag的备份模式显示</span><br><span class="line">set -e or -o errexit	命令执行失败时，shell会立即退出</span><br><span class="line">set -n or -o noexec		不执行命令，相当与语法检查</span><br><span class="line">set -u or -o unset		引用为定义的变量的时候，会推出程序并打印错误</span><br><span class="line">set -x or -o xtrace		跟踪代码执行trace</span><br><span class="line">set -o pipefail			默认情况下，一个管道的返回值是最后一个命令的返回值，比如cmda | cmdb | cmdc这个管道，返回值是由cmdc命令的返回值决定的。如果指定了pipefail选项，那么管道的返回值就会由最后一个失败的命令决定，意思就是有命令失败就会返回非0值。如果所有命令都成功，则返回成功。</span><br><span class="line">set -a or -o allexport	所有的变量都会export到环境变量中</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong>set命令主要使用来开关shell的扩展的，在set命令中，选项前面跟着<strong>-</strong>号表示开启这个选项，<strong>+</strong>表示关闭这个选项。shopt命令也是扩展shell的功能。</p>
+<h4 id="shell内建命令"><a href="#shell内建命令" class="headerlink" title="shell内建命令"></a>shell内建命令</h4><ul>
+<li>可以使用 <code>man bash-builtins</code> 查看搜有的内建命令及其使用</li>
+</ul>
+<h4 id="shell命令类型"><a href="#shell命令类型" class="headerlink" title="shell命令类型"></a>shell命令类型</h4><ul>
+<li><p>type命令判断一个命令是否是shell的内置命令</p>
+<p>type -a  command 打印出command的执行优先级, 因为shell命令可能被 alise 重新命名, function添加名称, 或者是外部命令取相同的名称, 所以必须要一个执行顺序,  顺序如： alias –&gt; function –&gt; builtin –&gt; program   后</p>
+</li>
+<li><p>which查看命令所在的位置, 如果内置命令不显示位置, whereis也可以用来显示位置, 默认过滤内部命令直接外部去找, command 命令可以查看命令的具体位置，如： command -v java</p>
+</li>
+<li>shell中有一些命令可能与外部命令有相同的名称, 默认shell会调用内置的命令, 因为这可以避免fork/exec</li>
+<li>shell执行某个命令后, 如果是内部命令(其实就像是内置的方法一样), shell程序直接调用自己的一段方法就可以了, 如果是外部命令, 那么shell首先fork出一个进程, 再使用exec家族中的方法来执行外部命令, exec家族命令中可以选择是否将父进程中的环境变量传递给子进程.</li>
+</ul>
+<h4 id="shell中不同的执行方式"><a href="#shell中不同的执行方式" class="headerlink" title="shell中不同的执行方式"></a>shell中不同的执行方式</h4><ul>
+<li>sh/bash: 表示另起一个shell， 也就是首先fork一个子进程, 再在子进程中exec子进程代码后(父进程停止)， 再运行父进程的代码</li>
+<li>exec: 不会fork出子进程， 而是使用新的命令代替当前进程中所有的代码开始执行， 也就是exec后面的代码都是不会执行的, 注意exec后面是完整的执行命令， 而不仅仅只是一个执行文件(exec bash file.sh)</li>
+<li>source/.:  不会fork出子进程，直接停止当前进程，运行source后面的命令，当source后面的命令执行完成之后，再启动父进程，继续执行</li>
+<li>注意：<ul>
+<li>用export会把父进程中的变量向子进程中继承，但是反过来却不行，在子进程中，不管环境如果改变，均不会影响父进程，所以如果想要环境变量可以传递不能使用sh/bash</li>
+<li>同一个进程中变量的传递是可以直接传递的，不需要使用export成环境变量， 也就是说使用 source/. 和 exec 可以直接从上下文中获取，也就是source/.和exec中执行的代码可以获取前面的变量， 而source/.和exec后面的代码也可以获取到source/.和exec中定义的变量</li>
+</ul>
+</li>
+</ul>
+<h4 id="命令返回值"><a href="#命令返回值" class="headerlink" title="命令返回值"></a>命令返回值</h4><ul>
+<li>所有的命令输出或者echo命令的输出, 都可以赋值给一个具体的变量, 这样非常有用</li>
+<li>a=<code>[ 3 -ge 2 ] &amp;&amp; echo &quot;large&quot; || echo &quot;small&quot;</code> 或者使用$(command)</li>
+</ul>
+<h4 id="测试命令"><a href="#测试命令" class="headerlink" title="测试命令"></a>测试命令</h4><ul>
+<li><p>test/[ 命令的与或非 与 bash命令中的  &amp;&amp; || !的区别</p>
+<p>test 1 &gt; 2 -a 2 &lt; 3                test 1 &gt; 2 -o 2 &lt; 3                test !1 &gt; 2</p>
+<p>test 1 &gt; 2 &amp;&amp; test 2 &lt; 3        test 1 &gt; 2 || test 2 &lt; 3            ! test 1 &gt; 2</p>
+<p>从上面命令可以看到test命令提供的与或非是在test命令中实现的, 也就是test遇到这样的命令它会默认将其解析成两个命令执行, 而 &amp;&amp; || !则是将其当两个命令来执行的, 先执行前面的命令, 再看是否需要执行后面的命令, 所以这样就可以拼凑出, 三元表达式如:[ 3 -ge 2 ] &amp;&amp; echo “large” || echo “small</p>
+</li>
+<li><p>shell中不存在布尔值的概论, 即使执行test或false命令, 也仅仅只是返回给程序执行结果一个标示, 标示命令是否执行成功, $?, 所以对于shell而言, 所谓的bool值就是命令执行的结果是否成功, $?=0表示程序执行成功, 而非零则表示执行失败</p>
+</li>
+<li>shell的条件判断 [ -n “$1” ] &amp;&amp; echo “exist” || echo “none”</li>
+</ul>
+<h4 id="shell-语言"><a href="#shell-语言" class="headerlink" title="shell 语言"></a>shell 语言</h4><ul>
+<li><p>shell中使用#表示注释， 首行 <code>#!/bin/bash</code>  或者 <code>#!/usr/bin/env bash</code> </p>
+</li>
+<li><p>shell中使用\表示转义， 表示后面字符使用其真实含义， 如：用在行为表示另外启动一行， 也就是\n本身的含义保留， 所以换行才可以使用\</p>
+</li>
+<li><p>[ 实际上是一个命令， [ -d /etc ] 实际上-d /etc ]都是这个测试命令的参数， 并且它要求最后一个参数必须是 ], 如果测试结果为真，则该命令的Exit Status为0，如果测试结果为假，则命令的Exit Status为1（注意与C语言的逻辑表示正好相反）， 并且可以使用man [ 开查看帮助信息,  它与test命令没有任何区别</p>
+</li>
+<li><p>通过$?获取退出码</p>
+</li>
+<li><p>算数计算 $(()), $(())中只能用+-*/和()运算符，并且只能做整数运算。</p>
+</li>
+<li><p>for循环可以直接在命令行输入： </p>
+<p>for i in $(jps | grep -v ‘Jps’| awk ‘{print $1}’); do echo $i; done</p>
+<p>for i in $(ls); do echo $i; done</p>
+<p>for i in `ls`; do echo $i; done</p>
+<p>for i in hello world welcome; do echo $i; done</p>
+<p>for i in *; do echo $i; done  表示将当前文件夹下所有的文件都打印出来</p>
+<p><strong>注意：</strong></p>
+<ul>
+<li>in后面的参数是以空格和分行符来确定的， 并且如果参数为一个路径， 或者路径的正则表达式形式， 那么模式是使用    ls 参数    的形式来进行操作的。</li>
+<li>in后面的参数都是以字符串的形式表示的， 所以对于bash而言没有数据类型的说法， 一切皆为字符串</li>
+<li>每次遍历完成之后， 其实变量 i 并没有销毁，此时变量i保存着最后循环值， 这也表明shell script并非使用传统的局部变量的编译形式。可以手动进行取消 unset i</li>
+</ul>
+</li>
+<li><p>while/until 循环</p>
+<p>while [[ -f file.txt ]]; do </p>
+<p>…</p>
+<p>done</p>
+<p>until [[ ! -f file.txt ]]; do</p>
+<p>…</p>
+<p>done</p>
+<p>while表示条件满足就执行， until表示条件满足就退出</p>
+</li>
+<li><p>case语句</p>
+</li>
+<li><p>在shell script中可以使用tip</p>
+<p>return 返回当前脚本或者代码块</p>
+<p>exit 退出</p>
+<p>printf 格式化打印</p>
+</li>
+<li><p>shell中的变量</p>
+<p>方法局部变量： 使用local 定义</p>
+<p>局部变量： 只能在当前脚本中使用</p>
+<p>环境变量： 所有的脚本中都可以使用</p>
+<p>shell变量： shell中特定的变量</p>
+</li>
+<li><p>字符串， 字符串的定义比较宽松， 单引号、双引号、不用引号</p>
+<p>单引号： 单引号中的数据会原封输出， 单引号中变量无效，且不能再存在单引号，不存在转义</p>
+<p>双引号： 双引号中可以存在变量， 且可以转义</p>
+</li>
+</ul>
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><ul>
+<li><p>命令判断：</p>
+<p>command    command -v java</p>
+</li>
+<li><p>选取： </p>
+<p>cut        cut /etc/passwd -d “:” -f 3,5</p>
+<p>grep    ps -ef | grep -Ei “mysql|syslog” | grep -v ‘grep’ | grep -B 1 “root”</p>
+<p>awk        less /etc/passwd | awk -F’:’ ‘BEGIN {print “begin”}{print $3} END {print “after”}’</p>
+</li>
+<li><p>排序统计：</p>
+<p>sort        less /etc/passwd | cut -d “:” -f 3,7| sort -t : -k 1 -n -r</p>
+<p>wc        less /etc/passwd | wc -l -w -c</p>
+<p>uniq    less /etc/passwd | cut -d : -f 7 | sort | uniq -c -u/d</p>
+</li>
+<li><p>多重定向：</p>
+<p>tee        less /etc/passwd | tee hello world     将输出重定向到 中端、hello和world的文件当中</p>
+</li>
+<li><p>字符转换命令：</p>
+<p>tr        删除、替换、压缩</p>
+<p>sed</p>
+<p>paste    paste -d : /etc/passwd /etc/group     案行合并文件</p>
+<p>join        按文件相关性合并文件， 类似excel中的lookup函数</p>
+</li>
+<li><p>字符显示：</p>
+<p>printf</p>
+</li>
+<li><p>文件查看：</p>
+<p>cat(tac, rev)、 more、 less、 head、 tail、 nl、grep、hexdump、 od、 xxd</p>
+</li>
+<li><p>文件路径：</p>
+<p>dirname、basename、rename</p>
+</li>
+<li><p>文件定位：</p>
+<p>locate    基于数据库， 需要手动维护数据库， 快速</p>
+<p>find 时实查找， 相对慢, 可以查找并删除</p>
+</li>
+<li><p>文件内容搜索</p>
+<p>grep     强大的正则表达式</p>
+<p>ag     比grep更加快速</p>
+</li>
+<li><p>文件创建</p>
+<p>mkdir</p>
+<p>mktemp         -p 指定创建父目录，-d 创建文件夹，-u不创建文件只是生成随机字符串</p>
+</li>
+<li><p>数学操作</p>
+<p>seq     生成序列</p>
+<p>RANDOM    环境变量, 产生从 0 到 32767 的随机数</p>
+</li>
+</ul>
+<h4 id="多个命令同时执行"><a href="#多个命令同时执行" class="headerlink" title="多个命令同时执行"></a>多个命令同时执行</h4><ul>
+<li>所有的命令必须执行成功, 第一个命令执行完成后才会执行下一个命令， 如果中间命令执行出错则会打断后续命令执行， &amp;&amp;</li>
+</ul>
+<p>​    如： less … &gt; a.txt &amp;&amp; less … &gt; b.txt &amp;&amp; less a.txt b.txt | sort | uniq -u</p>
+<ul>
+<li><p>所有的命令至少有一个执行成功, 前面的命令执行错误不会打断命令继续执行， ||</p>
+<p>如： hello || cat a.txt, 此时第一条命令打印错误信息， 第二条命令执行完成</p>
+</li>
+</ul>
+
+      
+    </div>
+    <div>
+        
+            <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/03/linux-info/" rel="next" title="linux基本信息查看">
+                <i class="fa fa-chevron-left"></i> linux基本信息查看
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/03/linux-awk/" rel="prev" title="awk使用教程">
+                awk使用教程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/my-icon.jpeg"
+                alt="ilivoo" />
+            
+              <p class="site-author-name" itemprop="name">ilivoo</p>
+              <p class="site-description motion-element" itemprop="description">我，在這裡，享受等你的時光。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#shell属于弱类型语言-其默认的变量类型为字符串类型"><span class="nav-number">1.</span> <span class="nav-text">shell属于弱类型语言, 其默认的变量类型为字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-中符号使用"><span class="nav-number">2.</span> <span class="nav-text">shell 中符号使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set命令"><span class="nav-number">3.</span> <span class="nav-text">set命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell内建命令"><span class="nav-number">4.</span> <span class="nav-text">shell内建命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell命令类型"><span class="nav-number">5.</span> <span class="nav-text">shell命令类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中不同的执行方式"><span class="nav-number">6.</span> <span class="nav-text">shell中不同的执行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令返回值"><span class="nav-number">7.</span> <span class="nav-text">命令返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试命令"><span class="nav-number">8.</span> <span class="nav-text">测试命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-语言"><span class="nav-number">9.</span> <span class="nav-text">shell 语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-number">10.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个命令同时执行"><span class="nav-number">11.</span> <span class="nav-text">多个命令同时执行</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ilivoo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+</body>
+</html>

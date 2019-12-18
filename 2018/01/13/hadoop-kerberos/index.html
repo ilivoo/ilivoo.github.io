@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hadoop,kerberos," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Ilivoo`s blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
+<meta name="keywords" content="hadoop,kerberos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kerberos的使用以及各种权限说明">
+<meta property="og:url" content="http://yoursite.com/2018/01/13/hadoop-kerberos/index.html">
+<meta property="og:site_name" content="Ilivoo`s blog">
+<meta property="og:description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-18T07:39:23.841Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kerberos的使用以及各种权限说明">
+<meta name="twitter:description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/13/hadoop-kerberos/"/>
+
+
+
+
+
+  <title>kerberos的使用以及各种权限说明 | Ilivoo`s blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ilivoo`s blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/13/hadoop-kerberos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kerberos的使用以及各种权限说明</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-13T19:06:14+08:00">
+                2018-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/kerberos/" itemprop="url" rel="index">
+                    <span itemprop="name">kerberos</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,386
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="kerberos客户端配置"><a href="#kerberos客户端配置" class="headerlink" title="kerberos客户端配置"></a>kerberos客户端配置</h4><ul>
+<li><p>krb5.conf配置选项参考： <code>https://linux.die.net/man/5/krb5.conf</code></p>
+</li>
+<li><p>配置kerberos多用户ticket缓存名字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#vi /etc/profile</span><br><span class="line">default_ccache_name = DIR:/tmp/kerberos</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>也可以设置环境变量达到相同的效果<code>export KRB5CCNAME=DIR:/tmp/kerberos</code></li>
+<li>kerberos客户端在任意时刻只能有一个票证可用， 所以不管如何配置都不可能达到一次配置一次认证就可以了，而是认证之后可以进行多次切换不同的认证</li>
+</ul>
+</li>
+<li><p>多个kerberos的krb5.conf合并</p>
+<ul>
+<li><p>通常情况每个kerberos服务器有一个krb5.conf文件， 如果有多个kerberos服务器需要认证那么通常会比较麻烦，需要拷贝配置文件，所以通常情况下我们可以讲这些文件合并一个文件。通常情况下只需要合并<code>realms</code> 就可以了，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[realms]</span><br><span class="line">  ILIVOO.COM = &#123;</span><br><span class="line">    admin_server = sandbox-hdp.hortonworks.com</span><br><span class="line">    kdc = sandbox-hdp.hortonworks.com</span><br><span class="line">  &#125;</span><br><span class="line">  EXAMPLE.COM = &#123;</span><br><span class="line">    admin_server = dev1</span><br><span class="line">    kdc = dev1</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>多个keytab文件合并</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#ktutil</span><br><span class="line">ktutil:  rkt /etc/security/keytabs/hdfs.keytab</span><br><span class="line">ktutil:  rkt /etc/security/keytabs/hbase.keytab </span><br><span class="line">ktutil:  wkt /etc/krb5.keytab</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="kerberos客户端工具使用"><a href="#kerberos客户端工具使用" class="headerlink" title="kerberos客户端工具使用"></a>kerberos客户端工具使用</h4><ul>
+<li><p>查看keytab文件中用户</p>
+<p><code>klist -kt /etc/krb5.keytab</code></p>
+</li>
+<li><p>认证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kinit -k admin/admin@ILIVOO.COM</span><br><span class="line">kinit -k admin/admin@EXAMPLE.COM</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示认证</p>
+<ul>
+<li><p>显示当前认证</p>
+<p><code>klist</code></p>
+</li>
+<li><p>显示所以认证</p>
+<p><code>klist -A</code></p>
+</li>
+</ul>
+</li>
+<li><p>切换认证</p>
+<p><code>kswitch -p admin/admin@ILIVOO.COM</code></p>
+</li>
+<li><p>销毁认证</p>
+<ul>
+<li><p>销毁当前认证</p>
+<p><code>kdestroy</code></p>
+<p>注意销毁当前认证， 并不会自动选择一个当前认证</p>
+</li>
+<li><p>销毁所有认证</p>
+<p><code>kdestroy -A</code></p>
+</li>
+</ul>
+</li>
+<li><p>更新认证</p>
+<p><code>kinit -R</code></p>
+</li>
+</ul>
+<h4 id="kerberos服务端工具使用"><a href="#kerberos服务端工具使用" class="headerlink" title="kerberos服务端工具使用"></a>kerberos服务端工具使用</h4><p>说明： </p>
+<ol>
+<li>headless keytab与没有headless的keytab的区别， 主要是headless keytab可以在任何机器上使用，而没有headless的keytab只能在特定的服务器使用， 也就是说它们是服务器绑定的， 如： headless keytab 名称是 <a href="mailto:`hdfs-ilivoo@ILIVOO.COM" target="_blank" rel="noopener">`hdfs-ilivoo@ILIVOO.COM</a><code>， 而没有headless keytab是</code><a href="mailto:nn/hdp1.ilivoo.com@ILIVOO.COM" target="_blank" rel="noopener">nn/hdp1.ilivoo.com@ILIVOO.COM</a>`</li>
+<li>kerberos管理员账户： <a href="mailto:`*/admin@ILIVOO.COM" target="_blank" rel="noopener">`*/admin@ILIVOO.COM</a><code>(可以通过</code><em>/var/kerberos/krb5kdc/kadm5.acl</em> `指定)</li>
+</ol>
+<ul>
+<li><p>添加Principal</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local</span><br><span class="line">addprinc -randkey admin-ilivoo@ILIVOO.COM</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导出keytab文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/security/keytab</span><br><span class="line">kadmin.local</span><br><span class="line">ktadd/xst -k admin.headless.keytab admin-ilivoo</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong>如果keytab是随机密码的, 那么直接使用上面就可以了, 但是如果上面的keytab不是使用randkey, 那么此时必须使用 <code>-norandkey</code> 参数导出来才不会有错. 例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ktadd/xst -norandkey -k admin.admin.keytab admin/admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>合并keytab文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/security/keytab</span><br><span class="line">ktutil</span><br><span class="line">rkt admin.headless.keytab</span><br><span class="line">rkt hdfs.headless.keytab</span><br><span class="line">wkt all.headless.keytab</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="ambari、kerberos、service、host-权限"><a href="#ambari、kerberos、service、host-权限" class="headerlink" title="ambari、kerberos、service、host 权限"></a>ambari、kerberos、service、host 权限</h4><ul>
+<li><p>对于ambari来说它是一个集群的管理着， 它有自己权限管理， 通常分为集群管理者、集群使用者、服务管理者、服务操作者、服务开发者等等。 并且它的权限用户通常也是可以和host的权限进行对应上的。如：在主机上创建了 admin 用户， 并且在ambari中创建了admin用户， 并且把admin用户配置成为集群管理者。</p>
+</li>
+<li><p>kerberos主要是用来验证某个人就是自己所声称的那个人， 所以通常情况下也是和主机的用户对于的， 也就是说根据需要是否在kerberos中创建主机用户的principal。通常情况下， service使用principal验证能够访问自己的用户， 那么对应用户访问的时候就必须为自己获取票证。</p>
+</li>
+<li><p>通常来说service是为了验证的话才需要为自己开启权限验证， 并且指定只有某种用户才能访问自己， 如果其它的服务或者客户端需要访问自己， 那么就必须获得票证。并且通常来说service有自己权限验证，可以将其授权给某个用户， 也就是说想要访问service必须先证明你就是自己声称的那个人， 这样就表示通过了service的kerberos验证， 再就是service有自己的权限验证(acl)， service必须为这个用户授权之后这个用户才能访问这个服务。通常情况下服务与服务之间的kerberos验证是非常严格的， 如： DataNode想要连接到NameNode那么必须有 <a href="mailto:`nn/host@ILIVOO.COM" target="_blank" rel="noopener">`nn/host@ILIVOO.COM</a><code>, 而服务的使用者却比较宽泛点， 如hdfs用户想要访问集群， 那么通常只需要</code><a href="mailto:hdfs-ilivoo@ILIVOO.COM" target="_blank" rel="noopener">hdfs-ilivoo@ILIVOO.COM</a>`， 甚至其它的用户也可以创建文件等等， 只是hdfs用户通常被指定为管理用户，其它用户需要hdfs用户为其授权。</p>
+</li>
+<li><p>host权限主要是用来控制对主机的访问权限， 但是通常情况下来说host权限也与其它的权限对应上， 方便服务的开发与管理。</p>
+</li>
+<li><p>通过上面的分析， 通常情况下我们使用这些复杂的权限的时候会非常小心， 并且规划好权限对于我们的开发至关重要。如下案例：</p>
+<ol>
+<li><p>运维人员， 通常都是需要对集群进行管理， 并监控集群的状态， 通常情况可以简单分为两种运维人员， 集群管理员， 集群监测员，创建权限如下：</p>
+<p>集群管理员： host中创建 cluster admin 用户(cadmin), ambari中创建用户(cadmin)用户，并为其设置为集群管理员角色。</p>
+<p>集群监测源： host中创建 cluster view 用户(cview), ambari中创建(cview)用户， 并为其设置为集群操作员角色。</p>
+</li>
+<li><p>开发人员， 通常对服务进行启动停止， 配置修改， 对某些服务进行访问， 通常不同的开发人员有不用的权限。如下案例：</p>
+<p>spark开发人员： host中创建开发用户(feng), ambari中创建(feng)，并为其设置集群服务操作员角色， 在kerberos中添加票证， 并导出keytab文件给用户。 为用户配置hdfs权限， yarn权限， spark权限，hbase权限， kafka权限， hive权限等等。</p>
+<p>注意： hdfs、yarn、spark、hbase、kafka、hive等为feng添加权限的时候， 通常需要先使用kinit登录到自己的权限， 再讲权限设置给feng用户。 如： hbase 为feng用户添加权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kinit -kt /var/kerberos/keytab/hbase.headless.keytab hbase-ilivoo@ILIVOO.COM</span><br><span class="line">hbase shell</span><br><span class="line">grant  &apos;feng&apos;, &apos;RWCA&apos;   #授权feng用户有rwca权限</span><br></pre></td></tr></table></figure>
+<p>当然： 现在情况有所变化， hdfs、yarn、hbase、kafka、hive等都可以使用ranger为其配置权限， 所以如果这些组件使用了ranger插件， 那么就必须使用ranger为其配置。</p>
+</li>
+<li><p>建议能够使用hdfs自己的权限位， 就不要使用ranger来管理。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="kafka安装kerberos"><a href="#kafka安装kerberos" class="headerlink" title="kafka安装kerberos"></a>kafka安装kerberos</h4><ul>
+<li><p>参考 <code>https://www.cnblogs.com/dongxiao-yang/p/7131626.html</code></p>
+</li>
+<li><p>服务端修改基本配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listeners=SASL_PLAINTEXT://:6667      --修改listeners</span><br><span class="line">sasl.kerberos.service.name=kafka      --添加kerberos.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用kerberos后，部分kafka管理脚本需要增加额外的参数才能使用, 建立 <code>client.properties</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">security.protocol=SASL_PLAINTEXT</span><br></pre></td></tr></table></figure>
+<p>新命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">所以新命令的使用方式为</span><br><span class="line">/usr/hdp/3.1.0.0-78/kafka/bin/kafka-topics.sh --create --zookeeper hdp1.ilivoo.com:2181 --replication-factor 3 --partitions 12 --topic test</span><br><span class="line"></span><br><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hdp1.ilivoo.com:6667 --list --command-config client.properties</span><br><span class="line"></span><br><span class="line">bin/kafka-console-producer.sh --broker-list hdp1.ilivoo.com:6667 --topic dxTT --producer.config client.properties</span><br><span class="line">过期，需要重新申请或者renew Ticket</span><br><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hdp1.ilivoo.com:6667 --topic dxTT --consumer.config client.properties --from-beginning</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="kerberos遇到的问题"><a href="#kerberos遇到的问题" class="headerlink" title="kerberos遇到的问题"></a>kerberos遇到的问题</h4><ul>
+<li><p><code>kinit -R</code> 无法续约，这是因为kerberos的每个principal都可以指定超过此时间则ticket就会过期，需要重新申请或者renew有效时间和刷新时间， 默认添加principal的时候并没有指定它的刷新时间和有效时间，所以就使用了服务器默认配置的时间</p>
+<p><code>kerberos Server上的/var/kerberos/krb5kdbc/kdc.conf中的max_life kadmin.local</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">modprinc -maxlife &quot;1 week&quot; feng@ILIVOO.COM</span><br><span class="line">modprinc -maxrenewlife &quot;1 week&quot; feng@ILIVOO.COM</span><br><span class="line">modprinc -maxlife &quot;1 week&quot; krbtgt/ILIVOO.COM@ILIVOO.COM</span><br><span class="line">modprinc -maxrenewlife &quot;1 week&quot; krbtgt/ILIVOO.COM@ILIVOO.COM</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>krbtgt表示服务端的tgt必须设置， 设置完成需要重新<code>kinit</code></p>
+</li>
+<li><p>kerberos 的票据的生命周期由lifetime和renewlifetime决定， 当生命周期超过lifetime则ticket就会过期，需要重新申请或者renew，如果重新申请非常容易理解， 直接重新申请就可以了。如果需要renew则首先要开启renew功能， 由上一个问题解决。通常情况下来说，renewlifetime会大于lifetime，如：lifetime=2d，renewlifetime=7d。而这两个时间由五个基本的时间决定：</p>
+<ul>
+<li><p>最基本由kerberos Server上的/var/kerberos/krb5kdbc/kdc.conf中的max_life 和 max_renewable_life决定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[realms]</span><br><span class="line"> ILIVOO.COM = &#123;</span><br><span class="line">  max_life = 2d</span><br><span class="line">  max_renewable_life = 7d</span><br><span class="line">  ...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内置principal krbtgt的maxmum ticket life 和 renew life,可在kadmin命令下执行getprinc命令查看</p>
+</li>
+<li><p>使用的principal的maximum tiket life 和 renew life，可在kadmin命令下用getprinc命令查看</p>
+</li>
+<li><p>再就是kerberos client上/etc/krb5.conf的ticket_lifetime 和 renew_lifetime</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[libdefaults]</span><br><span class="line">  ticket_lifetime = 2d</span><br><span class="line">  renew_lifetime = 7d</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kinit 参数后面指定的时间, 如： <code>kinit -l 2d -r 7d my_principal</code></p>
+</li>
+</ul>
+<p><strong>注意：</strong>上面五个生命周期依次往上逐渐取最小</p>
+</li>
+<li><p>kerberos spark集群连接hbase、kafka， 由于spark以及处理了kerberos认证问题，在spark的Driver启动的时候spark获取kerberos认证， 并将认证打包成代理Token存放在HDFS上， 当启动Executor的时候会带上这个Token用于Executor上的验证。当Token快要失效的时候Spark Driver会再次去刷新认证， 并讲认证信息告诉Executor，从而保证整个过程中长时间运行。</p>
+<p><strong>注意：</strong>hbase的classpath是一个麻烦的事情， 因为通常情况下如果简单指定hbase-client会导致hbase 在Executor中没有认证的现象，所以必须讲hbase-server依赖带上。</p>
+</li>
+</ul>
+
+      
+    </div>
+    <div>
+        
+            <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/kerberos/" rel="tag"># kerberos</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/04/mysql-procedure/" rel="next" title="mysql 存储程序">
+                <i class="fa fa-chevron-left"></i> mysql 存储程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/23/hadoop-yarn/" rel="prev" title="yarn 动态资源分配">
+                yarn 动态资源分配 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/my-icon.jpeg"
+                alt="ilivoo" />
+            
+              <p class="site-author-name" itemprop="name">ilivoo</p>
+              <p class="site-description motion-element" itemprop="description">我，在這裡，享受等你的時光。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#kerberos客户端配置"><span class="nav-number">1.</span> <span class="nav-text">kerberos客户端配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kerberos客户端工具使用"><span class="nav-number">2.</span> <span class="nav-text">kerberos客户端工具使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kerberos服务端工具使用"><span class="nav-number">3.</span> <span class="nav-text">kerberos服务端工具使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ambari、kerberos、service、host-权限"><span class="nav-number">4.</span> <span class="nav-text">ambari、kerberos、service、host 权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kafka安装kerberos"><span class="nav-number">5.</span> <span class="nav-text">kafka安装kerberos</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kerberos遇到的问题"><span class="nav-number">6.</span> <span class="nav-text">kerberos遇到的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ilivoo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+</body>
+</html>
