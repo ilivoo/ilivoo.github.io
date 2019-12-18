@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="原理 docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像 当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerignore文件标识的文件除外), 第二步启动FROM image指定的镜像的容器， 并执行下面一条命令">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-27T09:33:10.097Z">
+<meta property="og:updated_time" content="2019-11-07T05:02:20.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dockerfile">
 <meta name="twitter:description" content="原理 docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像 当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerignore文件标识的文件除外), 第二步启动FROM image指定的镜像的容器， 并执行下面一条命令">
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -415,7 +415,7 @@
 <h5 id="设置基础镜像"><a href="#设置基础镜像" class="headerlink" title="设置基础镜像"></a>设置基础镜像</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu</span><br></pre></td></tr></table></figure>
 <h5 id="设置LABEL"><a href="#设置LABEL" class="headerlink" title="设置LABEL"></a>设置LABEL</h5><p>LABEL用来标示当前镜像， 作为一种元数据存在与镜像当中， 作为一种描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LABEL com.ilivoo.game=&quot;fengxiang&quot; \</span><br><span class="line">      version=&quot;1.0&quot; \</span><br><span class="line">      description=&quot;this is my first game!&quot;</span><br></pre></td></tr></table></figure></p>
 <h5 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h5><p>设置docker容器运行时的环境变量， 并且可以在构建的过程中使用这些命令， 其实道理很简单， 以后的构建过程中都是使用上一个镜像层作为基础， 而运行的时候启动容器这个<br>环境变量就已经生成了， 所以后面的RUN 等命令当然也是可以获取到这个环境变量的， 所以脚本引用方式与正查的脚本完全一样, 可以看到巧妙的设计环境变量可以使得构建过程<br>非常灵活， 并且运行时容器也非常灵活<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENV VERSION=1.0 \</span><br><span class="line">    DEBUG=on</span><br></pre></td></tr></table></figure></p>
-<h5 id="设置ARG参数"><a href="#设置ARG参数" class="headerlink" title="设置ARG参数"></a>设置ARG参数</h5><p>ARG命令也是用来设置环境变量的， 但是ARG设置的环境变量不会保留到最终容器运行的层当中, 其实实现也非常简单当运行容器的时候设置环境变量， 并且在容器退出的时候就将<br>环境变量删除就可以达到此目的了, 并且此参数可以通过–build-arg参数在构建的时候进行覆盖，这样就可以达到非常灵活的效果了<br>虽然ARG环境变量不会保存到运行是环境变量， 当时也不能使用铭感数据， 因为使用history会查看到其值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ARG REDIS_VERSION=3.2.10</span><br></pre></td></tr></table></figure></p>
+<h5 id="设置ARG参数"><a href="#设置ARG参数" class="headerlink" title="设置ARG参数"></a>设置ARG参数</h5><p>ARG命令也是用来设置环境变量的， 但是ARG设置的环境变量不会保留到最终容器运行的层当中, 其实实现也非常简单当运行容器的时候设置环境变量， 并且在容器退出的时候就将环境变量删除就可以达到此目的了, 并且此参数可以通过–build-arg参数在构建的时候进行覆盖，这样就可以达到非常灵活的效果了虽然ARG环境变量不会保存到运行是环境变量， 但是也不能使用敏感数据， 因为使用history会查看到其值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ARG REDIS_VERSION=3.2.10</span><br></pre></td></tr></table></figure></p>
 <h5 id="环境变量与ARG参数结合使用"><a href="#环境变量与ARG参数结合使用" class="headerlink" title="环境变量与ARG参数结合使用"></a>环境变量与ARG参数结合使用</h5><ol>
 <li><p>通过在构建的时候覆盖当前–build-arg NAME=FENGXIANG此时后面设置的环境变量FENG就变成了FENGXIANG, 可以看到虽然环境变量不能通过参数的形式进行改变但是这里确提供了灵活的方式<br>来达到环境变量的不同， 所以通过脚本来构建就可以达到非常灵活的效果， 所以在我们的代码当中需要进行灵活变化的变量应该使用环境变量来进行设置， 这样就可以达到任何<br>代码都不需要更改确有一个灵活的生产 测试 线上环境， 这个非常重要</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ARG NAME=XIANG</span><br><span class="line">ENV FENG=$&#123;NAME&#125;</span><br></pre></td></tr></table></figure>
@@ -561,7 +561,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -756,13 +756,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>

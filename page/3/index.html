@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -98,7 +98,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -410,16 +410,59 @@
       
         
           
-          docker四种网络类型
-host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口，Docker Container可以和宿主机一样，使用宿主机的eth0
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/12/docker-network/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="docker四种网络类型"><a href="#docker四种网络类型" class="headerlink" title="docker四种网络类型"></a>docker四种网络类型</h4><ul>
+<li>host模式，容器将不会获得一个独立的Network Namespace，而是和宿主机共用一个Network Namespace。容器将不会虚拟出自己的网卡，配置自己的IP等，而是使用宿主机的IP和端口，Docker Container可以和宿主机一样，使用宿主机的eth0，实现和外界的通信。换言之，Docker Container的IP地址即为宿主机eth0的IP地址， 不需要NET转换，使用–net =bridge指定。</li>
+<li>bridge模式是Docker默认的网络设置，此模式会为每一个容器分配Network Namespace、设置IP等，并将一个主机上的Docker容器连接到一个虚拟网桥上。Brdige桥接模式为Docker Container创建独立的网络栈，保证容器内的进程组使用独立的网络环境，实现容器间、容器与宿主机之间的网络栈隔离。另外，Docker通过宿主机上的网桥(docker0)来连通容器内部的网络栈与宿主机的网络栈，实现容器与宿主机乃至外界的网络通信，使用–net =host指定。</li>
+<li>在none模式下，Docker容器拥有自己的Network Namespace，但是，并不为Docker容器进行任何网络配置。也就是说，这个Docker容器没有网卡、IP、路由等信息。需要我们自己为Docker容器添加网卡、配置IP等，使用–net =none模式启动容器</li>
+<li>这个模式指定新创建的容器和已经存在的一个容器共享一个Network Namespace，而不是和宿主机共享。新创建的容器不会创建自己的网卡，配置自己的IP，而是和一个指定的容器共享IP、端口范围等。同样，两个容器除了网络方面，其他的如文件系统、进程列表等还是隔离的。两个容器的进程可以通过lo网卡设备通信，使用–net =container模式启动容器：</li>
+</ul>
+<h4 id="更换默认网桥"><a href="#更换默认网桥" class="headerlink" title="更换默认网桥"></a>更换默认网桥</h4><ul>
+<li><p>安装网桥管理工具</p>
+<p><code>sudo apt install bridge-utils</code></p>
+</li>
+<li><p>添加网桥</p>
+<p><code>sudo brctl addbr br0</code></p>
+</li>
+<li><p>修改网桥IP地址</p>
+<p><code>sudo ifconfig br0 172.37.0.1 netmask 255.255.0.0</code></p>
+</li>
+<li><p>更改docker守护进程配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>vim /lib/systemd/system/docker.service</span><br><span class="line">ExecStart=/usr/bin/dockerd --b dr0 -H unix://</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>还可以直接更改<code>docker0</code>的<code>IP</code>地址， 如果没有文件直接创建</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo cat /etc/docker/daemon.json </span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"bip"</span>: <span class="string">"172.37.0.1/16"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>也可以直接在docker运行的时候直接加上参数指定网络设备</p>
+<p><code>docker run -itd --name test --network br0 --ip 172.37.0.2 centos:latest`</code>/bin/bash`</p>
+</li>
+</ul>
+<h4 id="跨主机访问"><a href="#跨主机访问" class="headerlink" title="跨主机访问"></a>跨主机访问</h4><ul>
+<li><p>环境，两台独立主机</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">host1: 192.168.0.100 netmask 255.255.255.0</span><br><span class="line">host2: 192.168.0.101 netmask 255.255.255.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>网桥方式</p>
+<ul>
+<li><p>原理，将主机的物理网卡当做一个网桥工具（更像是一个路由器），对外暴露物理网卡分配IP地址，对内建立局域网络环境， 物理网卡通过NET进行网络转换， 这样也就达到了只有两台物理主机可以进行访问，那么整个网络就是连通的。但是存在一个缺陷， 那就是必须有效的控制网络中的IP地址段。</p>
+</li>
+<li><p>创建网桥</p>
+<p><code>sudo brctl addbr br0</code></p>
+</li>
+<li><p>由于使用网桥管理工具添加网桥后，配置IP地址会在下次启动的时候自动失效， 所以我们需要将网络配置信息写入到文件当中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#vi /etc/network/interfaces</span><br><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto br0</span><br><span class="line">iface br0 inet static #也可以直接使用动态地址 </span><br><span class="line">address 192.168.0.100</span><br><span class="line">netmask 255.255.255.0</span><br><span class="line">gateway 192.168.0.1</span><br><span class="line">bridge_ports eth0 #将主机网卡绑定到网桥上面</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置docker启动参数, 限定docker网络可以分配的ip地址段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#vim /lib/systemd/system/docker.service</span><br><span class="line">ExecStart=/usr/bin/dockerd --b dr0 --fixed-cidr 192.168.0.128/26  -H unix://</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>两台机器使用相同配置， 但是控制不同的IP段</p>
+</li>
+</ul>
+</li>
+<li><p>weave方式</p>
+<p>参考：极客学院课程</p>
+</li>
+</ul>
+
+          
         
       
     </div>
@@ -581,22 +624,92 @@ host模式，容器将不会获得一个独立的Network Namespace，而是和�
       
         
           
-          存储程序”
-MySQL允许通过触发器、存储过程、函数的形式来存储代码， 并且可以在定时任务中存放代码，这个定时任务也被成为”事件”。
+            <h4 id="存储程序”"><a href="#存储程序”" class="headerlink" title="存储程序”"></a>存储程序”</h4><ul>
+<li><p>MySQL允许通过触发器、存储过程、函数的形式来存储代码， 并且可以在定时任务中存放代码，这个定时任务也被成为”事件”。</p>
+</li>
+<li><p>一般来说，存储代码是一种很高的共享和复用代码的方法。</p>
+</li>
+<li><p>存储代码的优点：</p>
+<p>a. 在服务器内部运行，离数据最近，另外在服务器上执行还可以节省带宽和网络延迟。</p>
+<p>b. 代码重用。</p>
+<p>c. 可以简化代码的维护和版本更新。 </p>
+<p>d. 可以帮助提升安全，例如提供更细粒度的权限控制。如银行资金转移。</p>
+<p>f. 服务器可以换成存储过程的执行计划。</p>
+<p>g. 因为是在服务器端部署的，所以备份、维护都可以在服务器端完成。</p>
+<p>h. 它可以在应用程序和数据库开发人员之间更好的分工。</p>
+</li>
+<li><p>存储代码的缺点：</p>
+<p>a. MySQL本身没有提供好用的开发和调试工具。</p>
+<p>b. 较之应用程序的代码，存储代码效率要稍微差些。 例如：函数有限，无法编写复杂字符串维护功能。</p>
+<p>c. 存储代码可能会给应用程序代码的部署带来额外的复杂性。</p>
+<p>d. 可能有安全隐患，最好加密。</p>
+<p>e. 存储过程会给数据库服务器增加额外的压力，而数据库服务器的扩展性相比应用服务器要差很多。</p>
+<p>f. MySQL不能控制存储过程的资源消耗，所以在存储过程中的一个小错误，可能直接把服务器拖死。</p>
+<p>g. 调试MySQL的存储过程是一件很困难的事情。</p>
+</li>
+</ul>
+<h4 id="存储过程和函数"><a href="#存储过程和函数" class="headerlink" title="存储过程和函数"></a>存储过程和函数</h4><ul>
+<li>我们通常会希望程序越小、越简单越好。希望将更复杂的处理逻辑交给上层的应用实现，通常这样会使代码更易读、易维护，也会更灵活。这样做也会让你拥有更多的计算资源，潜在的还会让你拥有更多的缓存资源。 不过，对于某些操作，存储过程比其他的实现要快的多–特别是一个存储过程调用可以代替很多小查询的时候。如果查询很小，相比这个查询执行的成本，解析和网络开销就变得非常明显。</li>
+<li>存储过程优点<ul>
+<li>存储代码，节省很多网络开销，如循环insert</li>
+<li>封装核心业务</li>
+<li>存储过程可以回传值，并可以接受参数。</li>
+</ul>
+</li>
+<li><p>存储过程缺点</p>
+<ul>
+<li><p>存储过程无法使用 SELECT 指令来运行，因为它是子程序，与查看表，数据表或用户定义函数不同。</p>
+</li>
+<li><p>存储过程，往往定制化于特定的数据库上，因为支持的编程语言不同。当切换到其他厂商的数据库系统时，需要重写原有的存储过程。</p>
+</li>
+<li><p>存储过程的调试比较麻烦， 并且出错后对系统影响较大</p>
+</li>
+<li><p>基于语句的复制通常情况下来说需要在复制库中执行</p>
+<p>　</p>
+</li>
+</ul>
+</li>
+<li><p>存储过程与函数的区别</p>
+<ul>
+<li>本质上没区别，执行的本质都一样。 </li>
+<li>函数只能返回一个变量的限制，而存储过程可以返回多个。　　 </li>
+<li>函数是可以嵌入在sql中使用的,可以在select中调用，而存储过程要让sql的query 可以执行， 需要把 mysql_real_connect 的最后一个参数设置为CLIENT_MULTI_STATEMENTS。 </li>
+<li>函数限制比较多，比如不能用临时表，只能用表变量．还有一些函数都不可用等等．而存储过程的限制相对就比较少。 </li>
+<li>一般来说，存储过程实现的功能要复杂一点，而函数的实现的功能针对性比较强。存储过程，功能强大，可以执行包括修改表等一系列数据库操作；用户定义函数不能用于执行一组修改全局数据库状态的操作。 </li>
+<li>对于存储过程来说可以返回参数，如记录集，而函数只能返回值或者表对象。函数只能返回一个变量；而存储过程可以返回多个。存储过程的参数可以有IN,OUT,INOUT三种类型，而函数只能有IN类，存储过程声明时不需要返回类型，而函数声明时需要描述返回类型，且函数体中必须包含一个有效的RETURN语句。</li>
+<li>存储过程，可以使用非确定函数，不允许在用户定义函数主体中内置非确定函数。</li>
+<li>存储过程一般是作为一个独立的部分来执行（ EXECUTE 语句执行），而函数可以作为查询语句的一个部分来调用（SELECT调用），由于函数可以返回一个表对象，因此它可以在查询语句中位于FROM关键字的后面。 SQL语句中不可用存储过程，而可以使用函数。 </li>
+<li>当存储过程和函数被执行的时候，SQL Manager会到procedure cache中去取相应的查询语句，如果在procedure cache里没有相应的查询语句，SQL Manager就会对存储过程和函数进行编译。 Procedure cache中保存的是执行计划 (execution plan) ，当编译好之后就执行procedure cache中的execution plan，之后SQL SERVER会根据每个execution plan的实际情况来考虑是否要在cache中保存这个plan，评判的标准一个是这个execution plan可能被使用的频率；其次是生成这个plan的代价，也就是编译的耗时。保存在cache中的plan在下次执行时就不用再编译了。</li>
+</ul>
+</li>
+</ul>
+<h4 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h4><ul>
+<li><p>触发器可以让你在执行INSERT、UPDATE或者DELETE的时候，执行一些特定的操作。可以在MySQL中指定是在SQL语句执行前触发还是在执行后触发。触发器本身没有返回值，不过它们可以读取或者改变触发SQL语句所影响的数据。所以，可以使用触发器实现一些强制限制，或者而某些业务逻辑，否则，就需要在应用程序中实现这些逻辑。</p>
+</li>
+<li><p>因为使用触发器可以减少客户端和服务器之间的通信，所以触发器可以简化应用逻辑，还可以提高性能。另外，还可以用于自动更新反范式化数据或者汇总表数据。</p>
+</li>
+<li><p>MySQL触发器实现非常简单，所以功能也有限。特别需要注意一下几点：</p>
+<p>a. 对应每一个表的每一个事件，最多只能定义一个触发器(换句话说，不能在AFTER INSERT上定义两个触发器)</p>
+<p>b. MySQL只支持”基于行的触发” – 也就是说，触发器始终是针对一条记录的，而不是针对整个SQL语句的。如果变更的数据集非常大的话，效率会很低。</p>
+</li>
+<li><p>触发器本身的限制：</p>
+<p>a. 触发器可以掩盖服务器背后的工作。例如SQL影响的记录数翻一倍。</p>
+<p>b. 触发器的问题很难排除</p>
+<p>c. 触发器可能导致死锁或所等待。</p>
+</li>
+<li><p>在InnoDB表上的触发器是在同一个事务中完成的，所以它们执行的操作是原子的，原子操作和触发器操作会同时失败或者成功。不过，如果在InnoDB表上的触发器去检查数据的一致性，需要特别小心MVCC，稍不小心，可能会获得错误的结果。</p>
+</li>
+<li>可以使用触发器记录数据变更日志。</li>
+</ul>
+<h4 id="定时任务"><a href="#定时任务" class="headerlink" title="定时任务"></a>定时任务</h4><ul>
+<li>定时任务类似于Linux的定时任务，不过是完全在MySQL内部实现的。你可以创建事件，执行MySQL在某个时候执行一段SQL代码，或者每隔一段时间执行一段SQL代码。通常，我们会把复杂的SQL都封装到一个存储过程中，这样事件在执行的时候只需要做一个简单的CALL调用。</li>
+<li>如果一个定时事件执行需要很长的时间，那么有可能会出现这样的情况，即前面一个事件还未执行完成，下一个时间点的事件又开始了。MySQL本身不会防止这种并发，所以需要用户在自己编写这种情况下防并发代码。你可以使用函数GET_LOCK()来确保当前总是有一个事件在被执行。</li>
+<li>虽然事件的执行是和连接无关的，但是它仍然是线程级别的。MySQL中有一个事件调度线程，必须在MySQL配置文件中设置，或者使用下面的命令来设置。SET GLOBAL event_scheduler :=1</li>
+<li>在存储过程中保留注释：/<em>! xxxxxxxxxxxxxxxxxxxx </em>/</li>
+<li>MySQL在服务器端提供只读的、单向的游标，而且只能在存储过程或者更底层的客户端API中使用。因为MySQL游标中指向的对象都是存储在临时表中而不是实际查询到的数据，所以MySQL游标总是只读的。它可以逐行指向查询结果，然后让程序做进一步处理。</li>
+</ul>
 
-一般来说，存储代码是一种很高的共享和复用代码的方法。
-
-存储代码的优点：
-a. 在服务器内部运行，离数据最近，另外在服务器上执行还可以节省带宽和网络延迟。
-b. 代
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/04/mysql-procedure/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -758,16 +871,89 @@ b. 代
       
         
           
-          exists
-exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exists里的条件语句能够返回记录行时(无论记录行是的多少，只要能返回)，条件就为真，返回当前loop到的这条记录，反之如果exists里的条 件语句不能返回记录行，则当前loop到的这条记录被丢弃，e
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/mysql-exist-in/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="exists"><a href="#exists" class="headerlink" title="exists"></a>exists</h4><ul>
+<li><p>exists对外表用loop逐条查询，每次查询都会查看exists的条件语句，当 exists里的条件语句能够返回记录行时(无论记录行是的多少，只要能返回)，条件就为真，返回当前loop到的这条记录，反之如果exists里的条 件语句不能返回记录行，则当前loop到的这条记录被丢弃，exists的条件就像一个bool条件，当能返回结果集则为true，不能返回结果集则为 false，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user where exists (select 1);</span><br></pre></td></tr></table></figure>
+<p>对user表的记录逐条取出，由于子条件中的select 1永远能返回记录行，那么user表的所有记录都将被加入结果集，所以与 select * from user;是一样的，又如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from user where exists (select * from user where userId = 0);</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li><p>可以知道对user表进行loop时，检查条件语句(select * from user where userId = 0),由于userId永远不为0，所以条件语句永远返回空集，条件永远为false，那么user表的所有记录都将被丢弃</p>
+</li>
+<li><p>not exists与exists相反，也就是当exists条件有结果集返回时，loop到的记录将被丢弃，否则将loop到的记录加入结果集</p>
+</li>
+<li><p>总的来说，如果A表有n条记录，那么exists查询就是将这n条记录逐条取出，然后判断n遍exists条件 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="in"><a href="#in" class="headerlink" title="in"></a>in</h4><ul>
+<li><p>in查询相当于多个or条件的叠加，这个比较好理解，比如下面的查询</p>
+<p>select * from user where userId in (1, 2, 3);</p>
+<p>等效于</p>
+<p>select * from user where userId = 1 or userId = 2 or userId = 3;</p>
+</li>
+<li><p>not in与in相反，如下</p>
+<p>select * from user where userId not in (1, 2, 3);</p>
+<p>等效于</p>
+<p>select * from user where userId != 1 and userId != 2 and userId != 3;</p>
+</li>
+<li><p>总的来说，in查询就是先将子查询条件的记录全都查出来，假设结果集为B，共有m条记录，然后在将子查询条件的结果集分解成m个，再进行m次查询</p>
+</li>
+</ul>
+<ul>
+<li><p>值得一提的是，in查询的子条件返回结果必须只有一个字段，例如</p>
+<p>select * from user where userId in (select id from B);</p>
+<p>而不能是</p>
+<p>select * from user where userId in (select id, age from B);</p>
+<p>而exists就没有这个限制</p>
+</li>
+</ul>
+<h4 id="exists和in的性能"><a href="#exists和in的性能" class="headerlink" title="exists和in的性能"></a>exists和in的性能</h4><ul>
+<li><p>考虑如下SQL语句</p>
+<p>1: select <em> from A where exists (select </em> from B where B.id = A.id);</p>
+<p>2: select * from A where A.id in (select id from B);</p>
+<p>查询1.可以转化以下伪代码，便于理解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">for ($i = 0; $i &lt; count(A); $i++) &#123;</span><br><span class="line">　　$a = get_record(A, $i); #从A表逐条获取记录</span><br><span class="line">　　if (B.id = $a[id]) #如果子条件成立</span><br><span class="line">　　　　$result[] = $a;</span><br><span class="line">&#125;</span><br><span class="line">return $result;</span><br></pre></td></tr></table></figure>
+<p>大概就是这么个意思，其实可以看到,查询1主要是用到了B表的索引，A表如何对查询的效率影响应该不大</p>
+<p>假设B表的所有id为1,2,3,查询2可以转换为</p>
+<p>select * from A where A.id = 1 or A.id = 2 or A.id = 3;</p>
+<p>这个好理解了，这里主要是用到了A的索引，B表如何对查询影响不大</p>
+</li>
+</ul>
+<ul>
+<li><p>再看not exists 和 not in</p>
+<p>1: select <em> from A where not exists (select </em> from B where B.id = A.id);</p>
+<p>2: select * from A where A.id not in (select id from B);</p>
+<p>看查询1，还是和上面一样，用了B的索引, 而对于查询2，可以转化成如下语句</p>
+<p>select * from A where A.id != 1 and A.id != 2 and A.id != 3;</p>
+<p>可以知道not in是个范围查询，这种!=的范围查询无法使用任何索引,等于说A表的每条记录，都要在B表里遍历一次，查看B表里是否存在这条记录故not exists比not in效率高 </p>
+</li>
+<li><p>mysql中的in语句是把外表和内表作hash 连接，而exists语句是对外表作loop循环，每次loop循环再对内表进行查询。一直大家都认为exists比in语句的效率要高，这种说法其实是不准确的。这个是要区分环境的。</p>
+</li>
+</ul>
+<ul>
+<li><p>如果查询的两个表大小相当，那么用in和exists差别不大。 </p>
+<p>如果两个表中一个较小，一个是大表，则子查询表大的用exists，子查询表小的用in： </p>
+<p>例如：表A（小表），表B（大表）</p>
+<p>1: select * from A where cc in (select cc from B) 效率低，用到了A表上cc列的索引；</p>
+<p> select * from A where exists(select cc from B where cc=A.cc) 效率高，用到了B表上cc列的索引。 </p>
+<p>相反的</p>
+<p>2: select * from B where cc in (select cc from A) 效率高，用到了B表上cc列的索引；</p>
+</li>
+</ul>
+<p>​    select * from B where exists(select cc from A where cc=B.cc) 效率低，用到了A表上cc列的索引。</p>
+<h4 id="not-in-和not-exists"><a href="#not-in-和not-exists" class="headerlink" title="not in 和not exists"></a>not in 和not exists</h4><ul>
+<li><p>如果查询语句使用了not in 那么内外表都进行全表扫描，没有用到索引；而not extsts 的子查询依然能用到表上的索引。所以无论那个表大，用not exists都比not in要快。 </p>
+</li>
+<li><p>in 与 =的区别 </p>
+<p>select name from student where name in (‘zhang’,’wang’,’li’,’zhao’); </p>
+<p>与 </p>
+<p>select name from student where name=’zhang’ or name=’li’ or name=’wang’ or name=’zhao’ </p>
+</li>
+</ul>
+
+          
         
       
     </div>
@@ -929,20 +1115,42 @@ exists对外表用loop逐条查询，每次查询都会查看exists的条件语�
       
         
           
-          笛卡尔乘积
-使用join执行笛卡尔乘积， 并且使用on来对笛卡尔乘积之前进行过滤操作, 这也称作显示的连接操作
-使用from连接多个表执行笛卡尔乘积， 并且使用where进行过滤， 但是由于先执行笛卡尔乘积再过滤， 所以有效率问题， 这也称作隐式的连接操作
+            <h4 id="笛卡尔乘积"><a href="#笛卡尔乘积" class="headerlink" title="笛卡尔乘积"></a>笛卡尔乘积</h4><ul>
+<li>使用join执行笛卡尔乘积， 并且使用on来对笛卡尔乘积之前进行过滤操作, 这也称作显示的连接操作</li>
+<li>使用from连接多个表执行笛卡尔乘积， 并且使用where进行过滤， 但是由于先执行笛卡尔乘积再过滤， 所以有效率问题， 这也称作隐式的连接操作</li>
+</ul>
+<h4 id="定义变化的表"><a href="#定义变化的表" class="headerlink" title="定义变化的表"></a>定义变化的表</h4><ul>
+<li>可以使用(select @rank := 0) as ranker 来定义一张只有一个字段@rank的表ranker， 并且@rank字段也会作为用户自定义字段而存在， 所以相当于对@rank进行初始化。</li>
+</ul>
+<h4 id="笛卡尔乘积给一个表添加一个字段，-并且该字段自增"><a href="#笛卡尔乘积给一个表添加一个字段，-并且该字段自增" class="headerlink" title="笛卡尔乘积给一个表添加一个字段， 并且该字段自增"></a>笛卡尔乘积给一个表添加一个字段， 并且该字段自增</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select p.id, p.name, @rank := @rank + 1 as rank from person as p join (select @rank := 0) as ranker;</span><br></pre></td></tr></table></figure>
+<h4 id="查询步骤"><a href="#查询步骤" class="headerlink" title="查询步骤"></a>查询步骤</h4><ul>
+<li><p>查询操作是关系数据库中使用最为频繁的操作，也是构成其他SQL语句（如DELETE、UPDATE）的基础。查询处理的顺序如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(7) SELECT (8) DISTINCT </span><br><span class="line">(1) FROM </span><br><span class="line">(3) JOIN </span><br><span class="line">(2) ON </span><br><span class="line">(4) WHERE </span><br><span class="line">(5) GROUP BY </span><br><span class="line">(6) HAVING </span><br><span class="line">(9) ORDER BY </span><br><span class="line">(10) LIMIT</span><br></pre></td></tr></table></figure>
+<ul>
+<li>1）FROM：对FROM子句中的所有的表一次左右执行笛卡儿积（Cartesian product），产生虚拟表VT1。 </li>
+<li>2，3）JOIN和ON应该是一个整体作为一个连接操作： 如果存在ON就先对VT1和JOIN后面的表进行过滤， 并且执行连接操作,  如果还有JOIN和ON继续接着进行连接， 如果此时又出现表则表示FROM后还有表进行笛卡尔乘积， 定义所有的这一连串操作产生VT3mysql不支持全连接， 并且它的连接与外连接是等价的， 跨连接与内连接是等价的</li>
+<li>4）WHERE：对虚拟表VT3应用WHERE过滤条件，只有符合的记录才被插入虚拟表VT4中。此时数据还没有分组，所以不能在where中出现对统计的过滤 where: &lt;，&lt;=，=，!=或者&lt;&gt;，&gt; ，&gt;=， like (% 通配任意字符, _通配一个字符),exist(判空), beteeen(在某范围内)，any/som(集合中任意元素), all(集合中所有的元素), in(在某集合内), not !  逻辑非, or ||  逻辑或, and &amp;&amp;  逻辑与</li>
+<li>5）GROUP BY：根据GROUP BY子句中的列，对VT4中的记录进行分组操作，产生VT5。在GROUP BY阶段，数据库认为两个NULL值是相等的，因此会将NULL值分到同一个分组中。</li>
+<li>6）CUBE|ROLLUP：对表VT5进行CUBE或ROLLUP操作，产生表VT6。 </li>
+<li>7）HAVING：对虚拟表VT6应用HAVING过滤器，只有符合的记录才被插入虚拟表VT7中。count(expr) 会返回expr不为NULL的行数，count(1)、count(*)会返回包括NULL值在内的所有数量 </li>
+<li>8）SELECT：执行SELECT操作，选择指定的列，插入到虚拟表VT8中。 </li>
+<li>9）DISTINCT：去除重复数据，产生虚拟表VT9。 </li>
+<li>10）ORDER BY：将虚拟表VT9中的记录按照进行排序操作，产生虚拟表VT10。如果不指定排序，数据并非总是按照主键顺序进行排序的。NULL被视为最小值 </li>
+<li>11）LIMIT：取出指定行的记录，产生虚拟表VT11，并返回给查询用户。LIMIT n, m的效率是十分低的,一般可以通过在where条件中指定范围来优化 where id&gt; ? limit 10</li>
+<li>12)  UNION [ALL] (联合两个查询的结果), INTERSECT(交集)， EXCEPT(差集)</li>
+</ul>
+</li>
+<li><p>注意：</p>
+<ul>
+<li>从上面的执行流程可以看出， 上面有很多过滤操作， 如： on where having distinct limit, 而每一个过滤操作都依赖前面的执行结果， 所以我们在前面的结果中如果能够尽量过滤掉不需要的结果那么对于后面的结果操作会简单很多。</li>
+<li>所有的这些地方使用表的地方都可以使用子查询来建立新表， 如果数据量比较大尽量不适用子查询， 使用连接来优化。</li>
+<li>对于要查询的结果来说， 从上面可以看到， 到第八步才开始进行真正的投影的， 所以不用担心查询出来结果信息。</li>
+<li>可以看到limit是在最后执行的， 所以如果前期查询出大量结果， 再进行limit n,m可能会造成性能问题， 因为在limit之前以及进行了投影动作， 也就是所有的结果都以及查询出来了，如果此时我们只需要使用索引先搜索出满足limit的结果的主键id， 再通过主键id去查询结果， 那么此时会优化速度， 因为完全不用先查询出结果， 只需要最终去拿结果就可了。</li>
+</ul>
+</li>
+</ul>
 
-定义变化的表
-可以使用(select @
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/mysql-select/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -1104,17 +1312,50 @@ exists对外表用loop逐条查询，每次查询都会查看exists的条件语�
       
         
           
-          awk的基本语法
-awk -F&#39; &#39; &#39;BEGAIN {} {Pattern {Action} Pattern {Action} ...} END {}&#39;
-Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本比较
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/linux-awk/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="awk的基本语法"><a href="#awk的基本语法" class="headerlink" title="awk的基本语法"></a>awk的基本语法</h4><ul>
+<li><p><code>awk -F&#39; &#39; &#39;BEGAIN {} {Pattern {Action} Pattern {Action} ...} END {}&#39;</code></p>
+<p>Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本比较符号和 ~/!~ 正则匹配</p>
+<p>Action为一个动作， 如： print $1, $3</p>
+<p>BEGAIN {}  只会在程序执行前执行一次</p>
+<p>END {} 只会在程序执行后执行一次</p>
+<p> {Pattern {Action} Pattern {Action} …} 会在每一行都会去循环执行</p>
+</li>
+<li><p>注意： </p>
+<ul>
+<li>Pattern也可以加上if作为一个判断， 其实awk只是简化了而已， 并且不用写中间的对每一行进行循环</li>
+<li>awk存在内置常量， 不需要$来引用， NF字段的数量（列）， NR当前行数（awk读到第几行）， FILENAME正在处理的文件名字</li>
+</ul>
+</li>
+</ul>
+<h4 id="字符串处理"><a href="#字符串处理" class="headerlink" title="字符串处理"></a>字符串处理</h4><ul>
+<li>~/!~ 使用正则表达式匹配</li>
+<li>substr( $2,1,length($2)-3)   substr($2,length($2)-2)</li>
+<li>match(buffer,/[0-9]+.c/)</li>
+<li>split( “hello:world”, array, /[Pp]/)</li>
+</ul>
+<h4 id="分组统计"><a href="#分组统计" class="headerlink" title="分组统计"></a>分组统计</h4><p>​    分组统计分组个数， 分组总数， 分组平均， 分组最小， 分组最大</p>
+<ul>
+<li><p>按照协议进行分组统计</p>
+<p>如： 游戏协议处理时间或者sql语句查询时间， 格式： 时间 协议/查询 时间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">2012 1 1</span><br><span class="line">2012 2 2</span><br><span class="line">2013 4 4</span><br><span class="line">2014 3 0</span><br><span class="line">2014 3 5</span><br><span class="line">2015 2 2</span><br><span class="line">2016 3 3</span><br><span class="line">2017 2 1</span><br><span class="line">2018 1 4</span><br><span class="line">2018 4 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F' ' '&#123;num[$2]+=1; sum[$2]+=$3; if(min[$2]=="")&#123;min[$2]=$3;max[$2]=$3;&#125; if(min[$2]&gt;$3)&#123;min[$2]=$3;&#125; if($3&gt;max[$2])&#123;max[$2]=$3;&#125;&#125; END &#123;for(i in num) print i, sum[i], num[i], sum[i]/num[i], min[i], max[i]&#125;' log.log</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照时间进行分组统计，格式如上</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk -F' ' '&#123;num[$1]+=1; sum[$1]+=$3; if(min[$1]=="")&#123;min[$1]=$3;max[$1]=$3;&#125; if(min[$1]&gt;$3)&#123;min[$1]=$3;&#125; if($3&gt;max[$1])&#123;max[$1]=$3;&#125;&#125; END &#123;for(i in num) print i, sum[i], num[i], sum[i]/num[i], min[i], max[i]&#125;' log.log</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意：</p>
+<ul>
+<li>从这里可以看到awk中对于未定义的对象使用 UNDEFINE == “”</li>
+<li>awk允许使用字符串最为数组下标， 所以这里协议可以是字符串协议， 并且使用数组前不需要进行声明</li>
+<li>可以看到数组遍历非常简单， for(i in num) print num[i]</li>
+</ul>
+</li>
+<li><p>awk 添加参数， 如， 在每一行前面添加文件名字：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">file_name=hello.log</span><br><span class="line">awk -F'|' '&#123;print file_name, $1&#125;' file_name=“$file_name”</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="添加换行"><a href="#添加换行" class="headerlink" title="添加换行"></a>添加换行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo "a,b" | awk -F "," '&#123;for(i=1;i&lt;=NF;i++) &#123;print $i&#125;&#125;'</span><br></pre></td></tr></table></figure>
+          
         
       
     </div>
@@ -1249,7 +1490,7 @@ Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,155
+                  2,516
                 </span>
               
 
@@ -1276,15 +1517,156 @@ Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本�
       
         
           
-          shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&#123;&#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/linux-shell/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="shell属于弱类型语言-其默认的变量类型为字符串类型"><a href="#shell属于弱类型语言-其默认的变量类型为字符串类型" class="headerlink" title="shell属于弱类型语言, 其默认的变量类型为字符串类型"></a>shell属于弱类型语言, 其默认的变量类型为字符串类型</h4><h4 id="shell-中符号使用"><a href="#shell-中符号使用" class="headerlink" title="shell 中符号使用"></a>shell 中符号使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(),``		命令替换用，变成一个完整的命令并执行</span><br><span class="line">$[],$(())   简单的数学计算，支持+ - * / %</span><br><span class="line">$&#123;&#125;,$ 		参数替换</span><br><span class="line">$n			位置参数</span><br><span class="line">$*,$@		所有的参数，只有在引号时候才有差别</span><br><span class="line">$#			参数个数</span><br><span class="line">$? 			上一个进程的退出状态</span><br><span class="line">$$ 			shell本身进程PID</span><br><span class="line">$!			shell最后运行的后台Process的PID</span><br><span class="line">$-			使用Set命令设定的Flag一览</span><br></pre></td></tr></table></figure>
+<h4 id="set命令"><a href="#set命令" class="headerlink" title="set命令"></a>set命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set -o		显示所有的set命令Flag表，显示开启或者关闭</span><br><span class="line">set +o		显示所有的set命令Flag表，相当与set命令Flag的备份模式显示</span><br><span class="line">set -e or -o errexit	命令执行失败时，shell会立即退出</span><br><span class="line">set -n or -o noexec		不执行命令，相当与语法检查</span><br><span class="line">set -u or -o unset		引用为定义的变量的时候，会推出程序并打印错误</span><br><span class="line">set -x or -o xtrace		跟踪代码执行trace</span><br><span class="line">set -o pipefail			默认情况下，一个管道的返回值是最后一个命令的返回值，比如cmda | cmdb | cmdc这个管道，返回值是由cmdc命令的返回值决定的。如果指定了pipefail选项，那么管道的返回值就会由最后一个失败的命令决定，意思就是有命令失败就会返回非0值。如果所有命令都成功，则返回成功。</span><br><span class="line">set -a or -o allexport	所有的变量都会export到环境变量中</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong>set命令主要使用来开关shell的扩展的，在set命令中，选项前面跟着<strong>-</strong>号表示开启这个选项，<strong>+</strong>表示关闭这个选项。shopt命令也是扩展shell的功能。</p>
+<h4 id="shell内建命令"><a href="#shell内建命令" class="headerlink" title="shell内建命令"></a>shell内建命令</h4><ul>
+<li>可以使用 <code>man bash-builtins</code> 查看搜有的内建命令及其使用</li>
+</ul>
+<h4 id="shell命令类型"><a href="#shell命令类型" class="headerlink" title="shell命令类型"></a>shell命令类型</h4><ul>
+<li><p>type命令判断一个命令是否是shell的内置命令</p>
+<p>type -a  command 打印出command的执行优先级, 因为shell命令可能被 alise 重新命名, function添加名称, 或者是外部命令取相同的名称, 所以必须要一个执行顺序,  顺序如： alias –&gt; function –&gt; builtin –&gt; program   后</p>
+</li>
+<li><p>which查看命令所在的位置, 如果内置命令不显示位置, whereis也可以用来显示位置, 默认过滤内部命令直接外部去找, command 命令可以查看命令的具体位置，如： command -v java</p>
+</li>
+<li>shell中有一些命令可能与外部命令有相同的名称, 默认shell会调用内置的命令, 因为这可以避免fork/exec</li>
+<li>shell执行某个命令后, 如果是内部命令(其实就像是内置的方法一样), shell程序直接调用自己的一段方法就可以了, 如果是外部命令, 那么shell首先fork出一个进程, 再使用exec家族中的方法来执行外部命令, exec家族命令中可以选择是否将父进程中的环境变量传递给子进程.</li>
+</ul>
+<h4 id="shell中不同的执行方式"><a href="#shell中不同的执行方式" class="headerlink" title="shell中不同的执行方式"></a>shell中不同的执行方式</h4><ul>
+<li>sh/bash: 表示另起一个shell， 也就是首先fork一个子进程, 再在子进程中exec子进程代码后(父进程停止)， 再运行父进程的代码</li>
+<li>exec: 不会fork出子进程， 而是使用新的命令代替当前进程中所有的代码开始执行， 也就是exec后面的代码都是不会执行的, 注意exec后面是完整的执行命令， 而不仅仅只是一个执行文件(exec bash file.sh)</li>
+<li>source/.:  不会fork出子进程，直接停止当前进程，运行source后面的命令，当source后面的命令执行完成之后，再启动父进程，继续执行</li>
+<li>注意：<ul>
+<li>用export会把父进程中的变量向子进程中继承，但是反过来却不行，在子进程中，不管环境如果改变，均不会影响父进程，所以如果想要环境变量可以传递不能使用sh/bash</li>
+<li>同一个进程中变量的传递是可以直接传递的，不需要使用export成环境变量， 也就是说使用 source/. 和 exec 可以直接从上下文中获取，也就是source/.和exec中执行的代码可以获取前面的变量， 而source/.和exec后面的代码也可以获取到source/.和exec中定义的变量</li>
+</ul>
+</li>
+</ul>
+<h4 id="命令返回值"><a href="#命令返回值" class="headerlink" title="命令返回值"></a>命令返回值</h4><ul>
+<li>所有的命令输出或者echo命令的输出, 都可以赋值给一个具体的变量, 这样非常有用</li>
+<li>a=<code>[ 3 -ge 2 ] &amp;&amp; echo &quot;large&quot; || echo &quot;small&quot;</code> 或者使用$(command)</li>
+</ul>
+<h4 id="测试命令"><a href="#测试命令" class="headerlink" title="测试命令"></a>测试命令</h4><ul>
+<li><p>test/[ 命令的与或非 与 bash命令中的  &amp;&amp; || !的区别</p>
+<p>test 1 &gt; 2 -a 2 &lt; 3                test 1 &gt; 2 -o 2 &lt; 3                test !1 &gt; 2</p>
+<p>test 1 &gt; 2 &amp;&amp; test 2 &lt; 3        test 1 &gt; 2 || test 2 &lt; 3            ! test 1 &gt; 2</p>
+<p>从上面命令可以看到test命令提供的与或非是在test命令中实现的, 也就是test遇到这样的命令它会默认将其解析成两个命令执行, 而 &amp;&amp; || !则是将其当两个命令来执行的, 先执行前面的命令, 再看是否需要执行后面的命令, 所以这样就可以拼凑出, 三元表达式如:[ 3 -ge 2 ] &amp;&amp; echo “large” || echo “small</p>
+</li>
+<li><p>shell中不存在布尔值的概论, 即使执行test或false命令, 也仅仅只是返回给程序执行结果一个标示, 标示命令是否执行成功, $?, 所以对于shell而言, 所谓的bool值就是命令执行的结果是否成功, $?=0表示程序执行成功, 而非零则表示执行失败</p>
+</li>
+<li>shell的条件判断 [ -n “$1” ] &amp;&amp; echo “exist” || echo “none”</li>
+</ul>
+<h4 id="shell-语言"><a href="#shell-语言" class="headerlink" title="shell 语言"></a>shell 语言</h4><ul>
+<li><p>shell中使用#表示注释， 首行 <code>#!/bin/bash</code>  或者 <code>#!/usr/bin/env bash</code> </p>
+</li>
+<li><p>shell中使用\表示转义， 表示后面字符使用其真实含义， 如：用在行为表示另外启动一行， 也就是\n本身的含义保留， 所以换行才可以使用\</p>
+</li>
+<li><p>[ 实际上是一个命令， [ -d /etc ] 实际上-d /etc ]都是这个测试命令的参数， 并且它要求最后一个参数必须是 ], 如果测试结果为真，则该命令的Exit Status为0，如果测试结果为假，则命令的Exit Status为1（注意与C语言的逻辑表示正好相反）， 并且可以使用man [ 开查看帮助信息,  它与test命令没有任何区别</p>
+</li>
+<li><p>通过$?获取退出码</p>
+</li>
+<li><p>算数计算 $(()), $(())中只能用+-*/和()运算符，并且只能做整数运算。</p>
+</li>
+<li><p>for循环可以直接在命令行输入： </p>
+<p>for i in $(jps | grep -v ‘Jps’| awk ‘{print $1}’); do echo $i; done</p>
+<p>for i in $(ls); do echo $i; done</p>
+<p>for i in `ls`; do echo $i; done</p>
+<p>for i in hello world welcome; do echo $i; done</p>
+<p>for i in *; do echo $i; done  表示将当前文件夹下所有的文件都打印出来</p>
+<p><strong>注意：</strong></p>
+<ul>
+<li>in后面的参数是以空格和分行符来确定的， 并且如果参数为一个路径， 或者路径的正则表达式形式， 那么模式是使用    ls 参数    的形式来进行操作的。</li>
+<li>in后面的参数都是以字符串的形式表示的， 所以对于bash而言没有数据类型的说法， 一切皆为字符串</li>
+<li>每次遍历完成之后， 其实变量 i 并没有销毁，此时变量i保存着最后循环值， 这也表明shell script并非使用传统的局部变量的编译形式。可以手动进行取消 unset i</li>
+</ul>
+</li>
+<li><p>while/until 循环</p>
+<p>while [[ -f file.txt ]]; do </p>
+<p>…</p>
+<p>done</p>
+<p>until [[ ! -f file.txt ]]; do</p>
+<p>…</p>
+<p>done</p>
+<p>while表示条件满足就执行， until表示条件满足就退出</p>
+</li>
+<li><p>case语句</p>
+</li>
+<li><p>在shell script中可以使用tip</p>
+<p>return 返回当前脚本或者代码块</p>
+<p>exit 退出</p>
+<p>printf 格式化打印</p>
+</li>
+<li><p>shell中的变量</p>
+<p>方法局部变量： 使用local 定义</p>
+<p>局部变量： 只能在当前脚本中使用</p>
+<p>环境变量： 所有的脚本中都可以使用</p>
+<p>shell变量： shell中特定的变量</p>
+</li>
+<li><p>字符串， 字符串的定义比较宽松， 单引号、双引号、不用引号</p>
+<p>单引号： 单引号中的数据会原封输出， 单引号中变量无效，且不能再存在单引号，不存在转义</p>
+<p>双引号： 双引号中可以存在变量， 且可以转义</p>
+</li>
+</ul>
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><ul>
+<li><p>命令判断：</p>
+<p>command    command -v java</p>
+</li>
+<li><p>选取： </p>
+<p>cut        cut /etc/passwd -d “:” -f 3,5</p>
+<p>grep    ps -ef | grep -Ei “mysql|syslog” | grep -v ‘grep’ | grep -B 1 “root”</p>
+<p>awk        less /etc/passwd | awk -F’:’ ‘BEGIN {print “begin”}{print $3} END {print “after”}’</p>
+</li>
+<li><p>排序统计：</p>
+<p>sort        less /etc/passwd | cut -d “:” -f 3,7| sort -t : -k 1 -n -r</p>
+<p>wc        less /etc/passwd | wc -l -w -c</p>
+<p>uniq    less /etc/passwd | cut -d : -f 7 | sort | uniq -c -u/d</p>
+</li>
+<li><p>多重定向：</p>
+<p>tee        less /etc/passwd | tee hello world     将输出重定向到 中端、hello和world的文件当中</p>
+</li>
+<li><p>字符转换命令：</p>
+<p>tr        删除、替换、压缩</p>
+<p>sed</p>
+<p>paste    paste -d : /etc/passwd /etc/group     案行合并文件</p>
+<p>join        按文件相关性合并文件， 类似excel中的lookup函数</p>
+</li>
+<li><p>字符显示：</p>
+<p>printf</p>
+</li>
+<li><p>文件查看：</p>
+<p>cat(tac, rev)、 more、 less、 head、 tail、 nl、grep、hexdump、 od、 xxd</p>
+</li>
+<li><p>文件路径：</p>
+<p>dirname、basename、rename</p>
+</li>
+<li><p>文件定位：</p>
+<p>locate    基于数据库， 需要手动维护数据库， 快速</p>
+<p>find 时实查找， 相对慢, 可以查找并删除</p>
+</li>
+<li><p>文件内容搜索</p>
+<p>grep     强大的正则表达式</p>
+<p>ag     比grep更加快速</p>
+</li>
+<li><p>文件创建</p>
+<p>mkdir</p>
+<p>mktemp         -p 指定创建父目录，-d 创建文件夹，-u不创建文件只是生成随机字符串</p>
+</li>
+<li><p>数学操作</p>
+<p>seq     生成序列</p>
+<p>RANDOM    环境变量, 产生从 0 到 32767 的随机数</p>
+</li>
+</ul>
+<h4 id="多个命令同时执行"><a href="#多个命令同时执行" class="headerlink" title="多个命令同时执行"></a>多个命令同时执行</h4><ul>
+<li>所有的命令必须执行成功, 第一个命令执行完成后才会执行下一个命令， 如果中间命令执行出错则会打断后续命令执行， &amp;&amp;</li>
+</ul>
+<p>​    如： less … &gt; a.txt &amp;&amp; less … &gt; b.txt &amp;&amp; less a.txt b.txt | sort | uniq -u</p>
+<ul>
+<li><p>所有的命令至少有一个执行成功, 前面的命令执行错误不会打断命令继续执行， ||</p>
+<p>如： hello || cat a.txt, 此时第一条命令打印错误信息， 第二条命令执行完成</p>
+</li>
+</ul>
+
+          
         
       
     </div>
@@ -1419,7 +1801,7 @@ Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  460
+                  475
                 </span>
               
 
@@ -1446,18 +1828,50 @@ Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本�
       
         
           
-          系统​    uname -a                   # 查看内核/操作系统/CPU信息
-​    head -n 1 /etc/issue       # 查看操作系统版本
-​    cat /proc/cpuinfo          # 查看CPU信息
-​    cat /pro
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/linux-info/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h4><p>​    uname -a   / cat /proc/version                # 查看内核/操作系统/CPU信息</p>
+<p>​    head -n 1 /etc/issue       # 查看操作系统版本</p>
+<p>​    cat /etc/redhat-release  # 查看操作系统版本</p>
+<p>​    cat /proc/cpuinfo          # 查看CPU信息</p>
+<p>​    cat /proc/cpuinfo | grep ‘physical id’        #查看cpu个数</p>
+<p>​    cat /proc/cpuinfo | grep ‘core id’             #查看cpu核心个数</p>
+<p>​    cat /proc/cpuinfo | grep ‘processor’            #查看cpu线程个数</p>
+<p>​    hostname                   # 查看计算机名</p>
+<p>​    lspci -tv                      # 列出所有PCI设备</p>
+<p>​    lsusb -tv                      # 列出所有USB设备</p>
+<p>​    lsmod                          # 列出加载的内核模块</p>
+<p>​    env                            # 查看环境变量</p>
+<h4 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h4><p>​    free -m                        # 查看内存使用量和交换区使用量</p>
+<p>​    df -h                          # 查看各分区使用情况</p>
+<p>​    du -sh &lt;目录名&gt;            # 查看指定目录的大小</p>
+<p>​    grep MemTotal /proc/meminfo       # 查看内存总量</p>
+<p>​    grep MemFree /proc/meminfo        # 查看空闲内存量</p>
+<p>​    uptime                         # 查看系统运行时间、用户数、负载</p>
+<p>​    cat /proc/loadavg          # 查看系统负载</p>
+<h4 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h4><p>​    mount | column -t              # 查看挂接的分区状态</p>
+<p>​    fdisk -l                           # 查看所有分区</p>
+<p>​    swapon -s                      # 查看所有交换分区</p>
+<p>​    hdparm -i /dev/hda         # 查看磁盘参数(仅适用于IDE设备)</p>
+<p>​    dmesg | grep IDE               # 查看启动时IDE设备检测状况</p>
+<h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>​    ifconfig                       # 查看所有网络接口的属性</p>
+<p>​    iptables -L                    # 查看防火墙设置</p>
+<p>​    route -n                       # 查看路由表</p>
+<p>​    netstat -lntp              # 查看所有监听端口</p>
+<p>​    netstat -antp             # 查看所有已经建立的连接</p>
+<p>​    netstat -s                     # 查看网络统计信息</p>
+<p>​    rfkill list                        # 查看无线网卡和蓝牙情况</p>
+<h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>​    ps -ef                         # 查看所有进程</p>
+<p>​    top                            # 实时显示进程状态</p>
+<p>​    jobs、 fg、 bg、 ctrl+z/c、 启动 &amp;</p>
+<h4 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h4><p>​    w                      # 查看活动用户</p>
+<p>​    id &lt;用户名&gt;            # 查看指定用户信息</p>
+<p>​    last                   # 查看用户登录日志</p>
+<p>​    cut -d: -f1 /etc/passwd   # 查看系统所有用户</p>
+<p>​    cut -d: -f1 /etc/group    # 查看系统所有组</p>
+<p>​    crontab -l             # 查看当前用户的计划任务</p>
+<h4 id="清空访问痕迹"><a href="#清空访问痕迹" class="headerlink" title="清空访问痕迹"></a>清空访问痕迹</h4><p>​    history -c</p>
+<p>​    echo &gt; /var/spool/mail/root<br>​    echo &gt; /var/log/wtmp<br>​    echo &gt; /var/log/secure<br>​    echo &gt; /root/.bash_history</p>
+
+          
         
       
     </div>
@@ -1592,7 +2006,7 @@ Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本�
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,512
+                  1,548
                 </span>
               
 
@@ -1619,18 +2033,180 @@ Pattern为一个判断条件， 如 $2&gt;3 &amp;&amp; $3 ~ /^Hel.*/， 基本�
       
         
           
-          shell作用​    用户登录后，要启动一个进程，负责将用户的操作传给内核，这个进程是用户登录到系统后运行的命令解释器或某个特定的程序，即Shell。
-linux中用户概念
-linxu中存在用户的概念， 系统中存在三种用户：
-root用户：    id=0                登陆she
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/linux-user/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="shell作用"><a href="#shell作用" class="headerlink" title="shell作用"></a>shell作用</h4><p>​    用户登录后，要启动一个进程，负责将用户的操作传给内核，这个进程是用户登录到系统后运行的命令解释器或某个特定的程序，即Shell。</p>
+<h4 id="linux中用户概念"><a href="#linux中用户概念" class="headerlink" title="linux中用户概念"></a>linux中用户概念</h4><ol>
+<li><p>linxu中存在用户的概念， 系统中存在三种用户：</p>
+<p>root用户：    id=0                登陆shell为/bin/bash(表示可以登录)</p>
+<p>系统用户：    id=(1-1000)            没有登陆shell（/usr/sbin/nologin, 不需要登陆）</p>
+<p>普通用户：    id=(1000-65534)        登陆shell为/bin/bash(可以登录)</p>
+</li>
+<li><p>系统中的所有的文件都存在一个所属用户和所属组的概念， 并且存在所属用户、所属组、附属组的权限， 并且每个用户都存在一个用户名（用户id）， 一个所属组（组id）， 0-31个附属组（附属组id）， 并且每个进程都需要以一个用户的身份来运行， 表示当前用户是否存在访问系统资源的权限</p>
+</li>
+</ol>
+<h4 id="查看用户信息"><a href="#查看用户信息" class="headerlink" title="查看用户信息"></a>查看用户信息</h4><ol>
+<li>id显示当前用户信息</li>
+</ol>
+<p>​    uid=1000(feng)        用户id（用户名）</p>
+<p>​        gid=1000(feng)        用户组id（用户组名）</p>
+<p>​        groups=1000(feng)        用户附属组id（附属组名）    可以存在多个附属组</p>
+<ol start="2">
+<li><p>passwd修改用户密码</p>
+</li>
+<li><p>w/who/whoami</p>
+</li>
+<li><p>who -r 查看运行级别</p>
+</li>
+</ol>
+<h4 id="基本文件"><a href="#基本文件" class="headerlink" title="基本文件"></a>基本文件</h4><ul>
+<li>/etc/passwd        用户相关信息</li>
+</ul>
+<p>​    用户名:密码:uid:gid:描述信息:家目录:登陆shell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">.....</span><br><span class="line">mail:x:8:8:mail:/var/mail:/usr/sbin/nologin</span><br><span class="line">nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin</span><br><span class="line">uuidd:x:108:112::/run/uuidd:/bin/false</span><br><span class="line">feng:x:1000:1000:feng,,,:/home/feng:/bin/bash</span><br><span class="line">sshd:x:110:65534::/var/run/sshd:/usr/sbin/nologin</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>/etc/shadow        用户密码</p>
+</li>
+<li><p>/etc/group        用户组信息</p>
+</li>
+</ul>
+<h4 id="创建用户-useradd"><a href="#创建用户-useradd" class="headerlink" title="创建用户 useradd"></a>创建用户 useradd</h4><ul>
+<li><p>在/etc/passwd中添加用户信息</p>
+</li>
+<li><p>为用户创建一个家目录/home/uname</p>
+</li>
+<li>将/etc/skel中的文件复制到用户的家目录当中(所以如果希望每次创建新用户的相同动作)</li>
+<li>建立一个与用户名相同的组， 新建用户默认属于这个组</li>
+<li>如果使用passwd命令创建密码， 则将密码保存在/etc/shadow当中</li>
+</ul>
+<p>​        可以使用以下参数：</p>
+<p>​            -d    家目录</p>
+<p>​            -s        登陆shell</p>
+<p>​            -u    userid</p>
+<p>​            -g        主组</p>
+<p>​            -G    附属组（多个， 用“，”分割）</p>
+<ul>
+<li><p>用户其它操作</p>
+<p>usermod        修改用户</p>
+<p>userdel             删除用户 -r 家目录也一起删除</p>
+</li>
+</ul>
+<h4 id="用户组相关操作（组和用户是独立的概念）"><a href="#用户组相关操作（组和用户是独立的概念）" class="headerlink" title="用户组相关操作（组和用户是独立的概念）"></a>用户组相关操作（组和用户是独立的概念）</h4><p>​    groupadd        添加组</p>
+<p>​    groupmod        修改组</p>
+<p>​    groupdel        删除组</p>
+<h4 id="组的规划案例："><a href="#组的规划案例：" class="headerlink" title="组的规划案例："></a>组的规划案例：</h4><table>
+<thead>
+<tr>
+<th>组</th>
+<th>用户</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>training</td>
+<td>feng、xiang</td>
+</tr>
+<tr>
+<td>market</td>
+<td>alice、bob</td>
+</tr>
+<tr>
+<td>manage</td>
+<td>steve、john</td>
+</tr>
+</tbody>
+</table>
+<h5 id="创建组："><a href="#创建组：" class="headerlink" title="创建组："></a>创建组：</h5><p>​    <code>groupadd training</code></p>
+<p>​    <code>groupadd market</code></p>
+<p>​    <code>groupadd manage</code></p>
+<h5 id="创建用户："><a href="#创建用户：" class="headerlink" title="创建用户："></a>创建用户：</h5><p>​    <code>useradd -G training feng -p 123456</code></p>
+<p>​        <code>useradd -G training xiang -p 123456</code></p>
+<p>​        <code>useradd -G market alice -p 123456</code></p>
+<p>​        <code>useradd -G market bob -p 123456</code></p>
+<p>​        <code>useradd -G manage steve -p 123456</code></p>
+<p>​        <code>useradd -G manage john -p 123456</code></p>
+<h4 id="权限-文件夹必须用户可执行权限，-不然无法查看文件夹中的内容"><a href="#权限-文件夹必须用户可执行权限，-不然无法查看文件夹中的内容" class="headerlink" title="权限(文件夹必须用户可执行权限， 不然无法查看文件夹中的内容)"></a>权限(文件夹必须用户可执行权限， 不然无法查看文件夹中的内容)</h4><p>​    文件类型|文件所属组|其它 链接数 所属用户 所属组 大小 最后修改时间 文件名</p>
+<p>​    drwxr-xr-x  6 feng feng  4096 Aug  4 15:22 ./</p>
+<p>​    drwxr-xr-x  3 root root  4096 Jan  2  2017 ../</p>
+<p>​    -rw——-  1 feng feng 15478 Aug  4 14:34 .bash_history</p>
+<p>​    所有的权限命令都是-R来递归修改目录下的权限</p>
+<ul>
+<li><p>更改文件所属用户</p>
+<p>​    chown    feng        Hello.java</p>
+</li>
+<li><p>更改文件所属组</p>
+<p>​    chgrp        feng        Hello.java</p>
+</li>
+<li><p>更改文件权限</p>
+<p>​    chmod 模式 文件</p>
+<p>​    模式：</p>
+<p>​    u、g、o、a 表示用户、组、其它、所有</p>
+<p>​        +、-表示添加或者减少</p>
+<p>​        r、w、x代表三种权限</p>
+<p>​        777用三个数字来表示三组权限</p>
+<p>​            数字权限： r = 2^2 = 4, w = 2^1 = 2 , x = 2^0 = 1</p>
+<p>​            如：rw = 4+2 = 6</p>
+<p>​    实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">chmod u+rw	Hello.java</span><br><span class="line">chmod g-x	hello</span><br><span class="line">chmod go+r	Hello.java</span><br><span class="line">chmod a-x	Hello.class</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="登陆中断的umask值，-表示当前登录用户创建文件的权限"><a href="#登陆中断的umask值，-表示当前登录用户创建文件的权限" class="headerlink" title="登陆中断的umask值， 表示当前登录用户创建文件的权限"></a>登陆中断的umask值， 表示当前登录用户创建文件的权限</h4><p>​    注意：对于普通用户的默认umask值为0002， 管理员用户的默认umask值为0002</p>
+<p>​            前面1位：特殊权限， 有三个（suid、sgid、sticky）</p>
+<p>​            后面3位： ugo模型的基本权限</p>
+<p>​    特殊权限：</p>
+<table>
+<thead>
+<tr>
+<th>权限</th>
+<th>对文件的影响</th>
+<th>对目录的影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>suid</td>
+<td>以文件的所属用户身份执行，而非执行文件的用户</td>
+<td>无</td>
+</tr>
+<tr>
+<td>sgid</td>
+<td>以文件所属组身份执行</td>
+<td>在该目录中创建的文件的所属组与该目录的所属组相同</td>
+</tr>
+<tr>
+<td>sticky</td>
+<td>无</td>
+<td>对目录拥有些权限的用户仅能删除拥有文件，无法删除其它</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>suid（通常都是设置给可执行文件的）：  </p>
+<ul>
+<li><p>当操作系统需要暴露出一个命令可以给普通用户使用， 但是这个命令需要root用户的权限， 此时将此命令的O权限设置r_x给普通用户， 并添加器suid权限， 此时就满足需求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">feng@ubuntu:~$ ll /usr/bin/passwd    </span><br><span class="line">-rwsr-xr-x 1 root root 54256 May 17 07:37 /usr/bin/passwd*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以看出此时命令的U权限位的x权限设置成了s， 并且O权限位为r_x， 表示：其它用户可以执行当前命令， 但是此时我们知道密码保存在/etc/shadow文件当中， 但是此时西面可以看出shadow文件必须只有root用户才可以访问的， 所以此时passwd命令必须让其以root用户的身份运行。</p>
+<p>feng@ubuntu:~$ ll /etc/shadow</p>
+<p>-rw-r—– 1 root shadow 998 Aug  4 17:33 /etc/shadow</p>
+</li>
+<li><p>mysql程序虽然是root用户启动， 但是此时实际运行的用户为mysql用户</p>
+</li>
+</ul>
+</li>
+<li><p>sticky：</p>
+<p>drwxrwxrwt   8 root root  4096 Aug  4 18:20 tmp/</p>
+</li>
+</ul>
+<p>​        可以看到对于O权限位的x权限变成了t， 对于文件夹而言必须要x权限才能读取， 此时变成了</p>
+<p>​        t权限位， 表示目录下的文件只有当前用户才能删除用户的文件， 其它的文件无法删除</p>
+<ul>
+<li><p>sgid：</p>
+<p>一般使用在多人团队的项目当中（系统中使用很少）， 为文件夹设置一个sgid权限， 并设置</p>
+</li>
+</ul>
+<p>​        所属组都存在访问操作权限， 这样更加方便管理</p>
+<h4 id="文件夹有一个点（-），表示操作系统启用selinux，但是selinux关闭后原先的文件存在点好并不会取消"><a href="#文件夹有一个点（-），表示操作系统启用selinux，但是selinux关闭后原先的文件存在点好并不会取消" class="headerlink" title="文件夹有一个点（.），表示操作系统启用selinux，但是selinux关闭后原先的文件存在点好并不会取消"></a>文件夹有一个点（.），表示操作系统启用selinux，但是selinux关闭后原先的文件存在点好并不会取消</h4><p>​            </p>
+
+          
         
       
     </div>
@@ -1792,18 +2368,91 @@ root用户：    id=0                登陆she
       
         
           
-          gopass各组件说明
-gopass 用于密码管理的工具， 是pass的go语言版本， 提供了多人的密码管理命令行接口
-gnupg 用于真正的加密， gnupg用于生成非对称秘钥， 使用公钥进行机密， 私钥进行解密
-git 用于将gopass需要管理的密码（被gnupg生产的公钥加密过的密码）上传到
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/03/linux-gopass/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="gopass各组件说明"><a href="#gopass各组件说明" class="headerlink" title="gopass各组件说明"></a>gopass各组件说明</h4><ul>
+<li>gopass 用于密码管理的工具， 是pass的go语言版本， 提供了多人的密码管理命令行接口</li>
+<li>gnupg 用于真正的加密， gnupg用于生成非对称秘钥， 使用公钥进行机密， 私钥进行解密</li>
+<li>git 用于将gopass需要管理的密码（被gnupg生产的公钥加密过的密码）上传到git中便于管理</li>
+<li><a href="http://www.voidcn.com/article/p-gngvxvlm-nx.html" target="_blank" rel="noopener">http://www.voidcn.com/article/p-gngvxvlm-nx.html</a></li>
+</ul>
+<h4 id="安装gopass"><a href="#安装gopass" class="headerlink" title="安装gopass"></a>安装gopass</h4><ul>
+<li><p>安装基本工具</p>
+<p><code>apt-get install gnupg git rng-tools</code></p>
+<p><strong>说明：</strong> </p>
+<ul>
+<li>gnupg通过非对称加密算法对密码进行加密</li>
+<li>git用于将加密后的密码上传到git远程仓库中</li>
+</ul>
+</li>
+<li><p>初始化GPG key pair</p>
+<p><code>gpg --gen-key</code></p>
+</li>
+<li><p>安装gopass</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -q -O- https://api.bintray.com/orgs/gopasspw/keys/gpg/public.key | sudo apt-key add -</span><br><span class="line">echo "deb https://dl.bintray.com/gopasspw/gopass trusty main" | sudo tee /etc/apt/sources.list.d/gopass.list</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install gopass</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加自动完成脚本到.zshrc中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source &lt;(gopass completion zsh | head -n -1 | tail -n +2)</span><br><span class="line">compdef _gopass gopass</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>初始化gopass</p>
+<p><code>gopass init</code></p>
+</li>
+</ul>
+<h4 id="安装passmenu"><a href="#安装passmenu" class="headerlink" title="安装passmenu"></a>安装passmenu</h4><ul>
+<li><p>安装dmemu</p>
+<p><code>sudo apt install dmenu</code></p>
+</li>
+<li><p>安装passmenu脚本到path中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">shopt -s nullglob globstar</span><br><span class="line"></span><br><span class="line">typeit=0</span><br><span class="line">if [[ $1 == "--type" ]]; then</span><br><span class="line">	typeit=1</span><br><span class="line">	shift</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">prefix=$&#123;PASSWORD_STORE_DIR-~/.password-store&#125;</span><br><span class="line">password_files=( "$prefix"/**/*.gpg )</span><br><span class="line">password_files=( "$&#123;password_files[@]#"$prefix"/&#125;" )</span><br><span class="line">password_files=( "$&#123;password_files[@]%.gpg&#125;" )</span><br><span class="line"></span><br><span class="line">password=$(printf '%s\n' "$&#123;password_files[@]&#125;" | dmenu "$@")</span><br><span class="line"></span><br><span class="line">[[ -n $password ]] || exit</span><br><span class="line"></span><br><span class="line">if [[ $typeit -eq 0 ]]; then</span><br><span class="line">	pass show -c "$password" 2&gt;/dev/null</span><br><span class="line">else</span><br><span class="line">	pass show "$password" | &#123; IFS= read -r pass; printf %s "$pass"; &#125; |</span><br><span class="line">		xdotool type --clearmodifiers --file -</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加系统快捷键</p>
+<p>路径： <code>System Settings --&gt; keyboard --&gt; Shortcuts --&gt; Custom Shortcuts</code></p>
+<p>添加： 上面脚本的路径</p>
+</li>
+</ul>
+<h4 id="配置git远程仓库"><a href="#配置git远程仓库" class="headerlink" title="配置git远程仓库"></a>配置git远程仓库</h4><ul>
+<li><p>在github中创建个人私有仓库</p>
+</li>
+<li><p>讲gopass的git仓库添加到远程仓库当中</p>
+<p><code>git remote add origin https://github.com/xxxx/gopass.git</code></p>
+<p><code>gopass sync</code></p>
+</li>
+</ul>
+<h4 id="配置gpg"><a href="#配置gpg" class="headerlink" title="配置gpg"></a>配置gpg</h4><ul>
+<li><p>创建回收key， 用于在私钥发送泄露或者忘记私钥密码时回收公钥</p>
+<p><code>gpg --armor --output revoke-key.txt --gen-revoke keyname</code></p>
+</li>
+<li><p>导出公钥和私钥</p>
+<p><code>gpg --armor --output public-key.txt --export keyname</code></p>
+<p><code>gpg --armor --output private-key.txt --export-secret-keys keyname</code></p>
+</li>
+<li><p>备份自己的gpg秘钥对到google云盘当中</p>
+<p><strong>说明：</strong> gpg的秘钥和gopass保护的密码都以及保存起来了， 用于以后的密码找回</p>
+</li>
+</ul>
+<h4 id="直接查看gopass中密码"><a href="#直接查看gopass中密码" class="headerlink" title="直接查看gopass中密码"></a>直接查看gopass中密码</h4><ul>
+<li><p>由于gopass中的密码以及被上面生成的密钥对的公钥加密过， 所以只需要通过上面导出的私钥就可以解密出正真的密码明文</p>
+<p><code>gpg -o hello.txt -d ~/.password-store/storm.gpg</code></p>
+<p><strong>注意：</strong>此时需要输入我们生成密钥时候的密钥密码， 所以从这里可以看到即使别人拿到我们的密钥如果没有私钥密码那么他们照样是无法进行解密的</p>
+</li>
+</ul>
+<h4 id="恢复gopass的环境"><a href="#恢复gopass的环境" class="headerlink" title="恢复gopass的环境"></a>恢复gopass的环境</h4><ul>
+<li><p>git clone 密码库到本地</p>
+<p><code>git clone https://github.com/xxxx/gopass.git ~/.password-store</code></p>
+</li>
+<li><p>gpg 导入公钥和私钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gpg --import ~/public-key.txt </span><br><span class="line">gpg --allow-secret-key-import --import ~/private-key.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>gopass配置使用公钥用户进行加密</p>
+<p><code>gopass init</code></p>
+</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>从上面的说明可以看出github中的密码和google的密码也是非常重要的， 但是通常情况下绑定了手机可以直接找回， 所以不用担心， 直接使用gopass自动生成的密码即可</li>
+<li>私钥是一定不能忘记的， 所以如果这三个密码如果没有全部丢失那么通常情况下自己的gopass密码管理就是没有问题的。</li>
+<li>但是存在一个问题， 那就是机器丢失的问题</li>
+</ul>
+
+          
         
       
     </div>
@@ -1965,26 +2614,64 @@ git 用于将gopass需要管理的密码（被gnupg生产的公钥加密过的�
       
         
           
+            <ol>
+<li><p><code>top</code>         top -H -p</p>
+</li>
+<li><p><code>free</code>        free -m</p>
+</li>
+<li><p><code>vmstat</code>     vmstat 1 10</p>
+</li>
+<li><p><code>pmstat</code>     pmstat -P -ALL 2 3</p>
+</li>
+<li><p><code>pidstat</code>    pidstat -p pid 1 5 -l/d/r/w/t</p>
+</li>
+<li><p><code>iostat</code>    iostat -x 1 3</p>
+</li>
+<li><p><code>ifstat</code>   </p>
+</li>
+<li><p><code>dstat</code></p>
+</li>
+<li><p><code>crontab</code>    定时任务， 注意： 添加PATH，或者直接执行source /etc/profile， 添加文件权限，写定时任务时输出错误日志，脚本中所有的命令和文件必须在path中找到，不然就需要全路径，如果有问题查看日志/var/log/cron</p>
+</li>
+<li><p><code>netstat</code> 显示服务器监听状态， 和正在被其它机器连接以及连接到其它的机器的连接</p>
+<p>-a -t -u： 表示查看正在被其他机器连接或者连接到其它机器， -t tcp, -u udp, -a tcp/udp</p>
+<p>-l: 表示服务器监听状态</p>
+<p>-n 拒绝显示别名，能显示数字的全部转化成数字。</p>
+<p>-p 显示建立相关链接的程序名和端口号</p>
+<p>-e 显示扩展信息</p>
+<p>常用案例：</p>
+<ol>
+<li><p>查看某个端口的连接数：</p>
+<p><code>netstat -an | grep 9991 | wc -l</code> </p>
+</li>
+<li><p>查看某个程序监听的端口</p>
+<p><code>netstat -lp | grep mysql</code></p>
+</li>
+<li><p>查看某个程序对外连接数在ip上的分布：</p>
+<p><code>netstat -an | grep &quot;192.168.1.15:22&quot; |awk &#39;{print $5}&#39;|awk -F: &#39;{print $1}&#39;|sort|uniq -c|sort -nr|head -20</code></p>
+<p>192.168.1.15:22 服务端监听的程序</p>
+</li>
+<li><p>netstat -c实时监控连接的建立</p>
+<p><code>ps -ef | grep name</code> 可以先通过netstat查看到程序进程id， 再通过ps来查看相关信息</p>
+</li>
+</ol>
+</li>
+<li><p><code>lsof</code> 列出打开的文件(list open file), 这是个非常重要的命令， 非常方便我们查看文件相关，我们知道在linux当中所有的硬件设备都是以文件的形式存在， 所以我们可以通过查看文件的信息查看我们的硬件信息， 如： 网络设备， 磁盘等等</p>
+<p>常用参数：</p>
+<p>lsof -p pid： 列出指定进程号所打开的文件</p>
+<p>​    <code>lsof -p 2</code>     列出程序打开的文件</p>
+<p>lsof -i 条件： 列出符合条件的进程。 （4， 6， 协议， :端口， @ip）</p>
+<p>​    <code>sudo lsof -i 4</code>        列出ipv4的进行</p>
+<p>​    <code>sudo lsof -i 6:2181</code>    列出ipv4并且端口为2181的进程</p>
+<p>lsof +d/D 目录： 列出目录下被打开的文件/递归</p>
+<p>​    <code>lsof -d .</code>     当前目录</p>
+<p>​    <code>lsof -D .</code>    递归显示</p>
+<p>​    可以指定多个条件，但默认是OR关系的，如果需要AND关系，必须传入-a参数，比如查看22端口并且使用Ipv6连接的进程：</p>
+<p>​    <code>sudo lsof -c sshd -i 6 -a -i :22</code></p>
+</li>
+</ol>
+
           
-top         top -H -p
-
-free        free -m
-
-vmstat     vmstat 1 10
-
-pmstat     pmstat -P -ALL 2 3
-
-pidstat    pidstat -p pid 1 5 -l/d/r/w/t
-
-iostat  
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/02/linux-server-monitor/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -2025,7 +2712,7 @@ iostat
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2075,7 +2762,7 @@ iostat
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2254,13 +2941,6 @@ iostat
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
 

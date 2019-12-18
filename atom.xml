@@ -113,14 +113,15 @@
     <link href="http://yoursite.com/2019/09/26/tools-vim/"/>
     <id>http://yoursite.com/2019/09/26/tools-vim/</id>
     <published>2019-09-26T09:25:06.000Z</published>
-    <updated>2019-09-26T09:35:22.072Z</updated>
+    <updated>2019-09-26T10:12:23.602Z</updated>
     
     <summary type="html">
     
       
       
-        &lt;h4 id=&quot;使用原生vim&quot;&gt;&lt;a href=&quot;#使用原生vim&quot; class=&quot;headerlink&quot; title=&quot;使用原生vim&quot;&gt;&lt;/a&gt;使用原生vim&lt;/h4&gt;&lt;ol&gt;
-&lt;li&gt;更新vim到最新版本 &lt;figure class=&quot;highlight plain&quot;&gt;&lt;
+        &lt;h4 id=&quot;vim使用&quot;&gt;&lt;a href=&quot;#vim使用&quot; class=&quot;headerlink&quot; title=&quot;vim使用&quot;&gt;&lt;/a&gt;vim使用&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;16进制编辑&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table
       
     
     </summary>
@@ -379,7 +380,7 @@
     <link href="http://yoursite.com/2019/04/16/hadoop-hbase/"/>
     <id>http://yoursite.com/2019/04/16/hadoop-hbase/</id>
     <published>2019-04-16T06:53:35.000Z</published>
-    <updated>2019-08-07T03:02:05.434Z</updated>
+    <updated>2019-12-02T09:49:52.496Z</updated>
     
     <summary type="html">
     
@@ -473,7 +474,7 @@
     <link href="http://yoursite.com/2019/01/23/hadoop-yarn/"/>
     <id>http://yoursite.com/2019/01/23/hadoop-yarn/</id>
     <published>2019-01-23T07:06:04.000Z</published>
-    <updated>2019-06-03T10:08:42.002Z</updated>
+    <updated>2019-11-26T06:28:29.059Z</updated>
     
     <summary type="html">
     
@@ -501,7 +502,7 @@
     <link href="http://yoursite.com/2019/01/13/hadoop-kerberos/"/>
     <id>http://yoursite.com/2019/01/13/hadoop-kerberos/</id>
     <published>2019-01-13T11:06:14.000Z</published>
-    <updated>2019-04-23T06:44:16.998Z</updated>
+    <updated>2019-11-26T06:27:29.150Z</updated>
     
     <summary type="html">
     

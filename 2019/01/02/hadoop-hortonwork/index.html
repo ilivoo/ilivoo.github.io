@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-23T03:15:33.179Z">
+<meta property="og:updated_time" content="2019-12-01T11:26:28.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hortonwork 使用">
 <meta name="twitter:description" content="安装 hortonwork sandbox 参考 sandbox安装页面。  安装的过程中会出现端口冲突，直接修改 sandbox/proxy/proxy-deploy.sh 配置就可了， 如： -p 31080 1080 \  修改docker 的root密码, 直接登录进入docker就会提示更改密码  更改ambari admin 密码， 终端下执行 ambari-admin-passwor">
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,811
+                  3,060
                 </span>
               
 
@@ -468,13 +468,14 @@
 </li>
 </ol>
 <h4 id="启动kerberos"><a href="#启动kerberos" class="headerlink" title="启动kerberos"></a>启动kerberos</h4><ol>
-<li><p>安装并配置kerberos</p>
-<p>参考: <code>https://blog.csdn.net/Dr_Guo/article/details/53534927</code></p>
+<li><p>开启ambari-server 的keystore服务，并在kerberos配置时候选择保存key，参考： <code>https://community.hortonworks.com/articles/42927/adding-kdc-administrator-credentials-to-the-ambari.html</code></p>
 </li>
-<li><p>导出kerberos创建的admin/admin用户的keytab到需要的环境中</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>kadmin.local</span><br><span class="line">xst -k admin.keytab -norandkey admin/admin</span><br></pre></td></tr></table></figure>
+<li><p>安装并配置kerberos， 参考: <code>https://blog.csdn.net/Dr_Guo/article/details/53534927</code></p>
 </li>
-<li><p>配置firefox kerberos认证</p>
+<li><p>导出kerberos创建的admin/admin用户的keytab到需<code>https://blog.csdn.net/Dr_Guo/article/details/53534927</code>要的环境中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#kadmin.local</span><br><span class="line">xst -k admin.keytab -norandkey admin/admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>https://blog.csdn.net/Dr_Guo/article/details/53534927</code>配置firefox kerberos认证</p>
 <ul>
 <li><p>firefox中输入<code>about:config</code> </p>
 </li>
@@ -604,6 +605,20 @@
 </li>
 <li><p>spark持久化表，写入到spark的catalog当中，由于spark中snappy版本不对导致冲突，可以在启动程序的使用自定义的snappy jar包</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spark-shell --jars snappy-java-1.1.4.jar --conf spark.driver.extraClassPath=snappy-java-1.1.4.jar --conf spark.executor.extraClassPath=snappy-java-1.1.4.jar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>后续的配置， HDFS、YARN高可用、开启ambari-server的keystore，这样在开启kerberos的时候可以选择记住key，检查hadoop native lib <code>hadoop checknative</code></p>
+</li>
+<li><p>在配置ambari的时候， 如果使用ambari用户作为ambari的服务启动者， 那么在使用ambari配置的过程中可能经常会出现ambari用户权限不足的情况，所以可能需要如下操作：</p>
+<ol>
+<li><p>更改权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R ambari /var/run/ambari-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加sudo操作权限，使用 <code>visudo</code> 添加一行，建议使用完成之后收回权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ambari  ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>phoenix jar包冲突是一个比较棘手的问题， 使用spark的时候不能直接拷贝phoenix jar包到spark的jars目录中， 而是通过指定 <code>--jars</code>  参数来解决， hive的connector是同样的道理。</p>
 </li>
 </ol>
 
@@ -736,7 +751,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -931,13 +946,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>

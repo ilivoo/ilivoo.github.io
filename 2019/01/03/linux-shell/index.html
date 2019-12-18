@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$ 			进程PID shell内建命令 可以使用 man bash-builtins 查看搜有的内建">
+<meta name="description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用12345678910$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$n			位置参数$*,$@		所有的参数，只有在引号时候才有差别$#			参数个数$? 			上一个进程的退出状态$$ 			shell本身">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="shell详解">
 <meta property="og:url" content="http://yoursite.com/2019/01/03/linux-shell/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$ 			进程PID shell内建命令 可以使用 man bash-builtins 查看搜有的内建">
+<meta property="og:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用12345678910$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$n			位置参数$*,$@		所有的参数，只有在引号时候才有差别$#			参数个数$? 			上一个进程的退出状态$$ 			shell本身">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-26T09:08:58.093Z">
+<meta property="og:updated_time" content="2019-09-27T10:14:39.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shell详解">
-<meta name="twitter:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用123456$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$*,$@,$n	位置参$? 			进程退出状态$$ 			进程PID shell内建命令 可以使用 man bash-builtins 查看搜有的内建">
+<meta name="twitter:description" content="shell属于弱类型语言, 其默认的变量类型为字符串类型shell 中符号使用12345678910$(),``		命令替换用，变成一个完整的命令并执行$[],$(())   简单的数学计算，支持+ - * / %$&amp;#123;&amp;#125;,$ 		参数替换$n			位置参数$*,$@		所有的参数，只有在引号时候才有差别$#			参数个数$? 			上一个进程的退出状态$$ 			shell本身">
 
 
 
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,155
+                  2,516
                 </span>
               
 
@@ -407,7 +407,9 @@
       
 
       
-        <h4 id="shell属于弱类型语言-其默认的变量类型为字符串类型"><a href="#shell属于弱类型语言-其默认的变量类型为字符串类型" class="headerlink" title="shell属于弱类型语言, 其默认的变量类型为字符串类型"></a>shell属于弱类型语言, 其默认的变量类型为字符串类型</h4><h4 id="shell-中符号使用"><a href="#shell-中符号使用" class="headerlink" title="shell 中符号使用"></a>shell 中符号使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$(),``		命令替换用，变成一个完整的命令并执行</span><br><span class="line">$[],$(())   简单的数学计算，支持+ - * / %</span><br><span class="line">$&#123;&#125;,$ 		参数替换</span><br><span class="line">$*,$@,$n	位置参</span><br><span class="line">$? 			进程退出状态</span><br><span class="line">$$ 			进程PID</span><br></pre></td></tr></table></figure>
+        <h4 id="shell属于弱类型语言-其默认的变量类型为字符串类型"><a href="#shell属于弱类型语言-其默认的变量类型为字符串类型" class="headerlink" title="shell属于弱类型语言, 其默认的变量类型为字符串类型"></a>shell属于弱类型语言, 其默认的变量类型为字符串类型</h4><h4 id="shell-中符号使用"><a href="#shell-中符号使用" class="headerlink" title="shell 中符号使用"></a>shell 中符号使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$(),``		命令替换用，变成一个完整的命令并执行</span><br><span class="line">$[],$(())   简单的数学计算，支持+ - * / %</span><br><span class="line">$&#123;&#125;,$ 		参数替换</span><br><span class="line">$n			位置参数</span><br><span class="line">$*,$@		所有的参数，只有在引号时候才有差别</span><br><span class="line">$#			参数个数</span><br><span class="line">$? 			上一个进程的退出状态</span><br><span class="line">$$ 			shell本身进程PID</span><br><span class="line">$!			shell最后运行的后台Process的PID</span><br><span class="line">$-			使用Set命令设定的Flag一览</span><br></pre></td></tr></table></figure>
+<h4 id="set命令"><a href="#set命令" class="headerlink" title="set命令"></a>set命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">set -o		显示所有的set命令Flag表，显示开启或者关闭</span><br><span class="line">set +o		显示所有的set命令Flag表，相当与set命令Flag的备份模式显示</span><br><span class="line">set -e or -o errexit	命令执行失败时，shell会立即退出</span><br><span class="line">set -n or -o noexec		不执行命令，相当与语法检查</span><br><span class="line">set -u or -o unset		引用为定义的变量的时候，会推出程序并打印错误</span><br><span class="line">set -x or -o xtrace		跟踪代码执行trace</span><br><span class="line">set -o pipefail			默认情况下，一个管道的返回值是最后一个命令的返回值，比如cmda | cmdb | cmdc这个管道，返回值是由cmdc命令的返回值决定的。如果指定了pipefail选项，那么管道的返回值就会由最后一个失败的命令决定，意思就是有命令失败就会返回非0值。如果所有命令都成功，则返回成功。</span><br><span class="line">set -a or -o allexport	所有的变量都会export到环境变量中</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong>set命令主要使用来开关shell的扩展的，在set命令中，选项前面跟着<strong>-</strong>号表示开启这个选项，<strong>+</strong>表示关闭这个选项。shopt命令也是扩展shell的功能。</p>
 <h4 id="shell内建命令"><a href="#shell内建命令" class="headerlink" title="shell内建命令"></a>shell内建命令</h4><ul>
 <li>可以使用 <code>man bash-builtins</code> 查看搜有的内建命令及其使用</li>
 </ul>
@@ -681,7 +683,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -743,7 +745,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#shell属于弱类型语言-其默认的变量类型为字符串类型"><span class="nav-number">1.</span> <span class="nav-text">shell属于弱类型语言, 其默认的变量类型为字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-中符号使用"><span class="nav-number">2.</span> <span class="nav-text">shell 中符号使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell内建命令"><span class="nav-number">3.</span> <span class="nav-text">shell内建命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell命令类型"><span class="nav-number">4.</span> <span class="nav-text">shell命令类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中不同的执行方式"><span class="nav-number">5.</span> <span class="nav-text">shell中不同的执行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令返回值"><span class="nav-number">6.</span> <span class="nav-text">命令返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试命令"><span class="nav-number">7.</span> <span class="nav-text">测试命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-语言"><span class="nav-number">8.</span> <span class="nav-text">shell 语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-number">9.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个命令同时执行"><span class="nav-number">10.</span> <span class="nav-text">多个命令同时执行</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#shell属于弱类型语言-其默认的变量类型为字符串类型"><span class="nav-number">1.</span> <span class="nav-text">shell属于弱类型语言, 其默认的变量类型为字符串类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-中符号使用"><span class="nav-number">2.</span> <span class="nav-text">shell 中符号使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#set命令"><span class="nav-number">3.</span> <span class="nav-text">set命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell内建命令"><span class="nav-number">4.</span> <span class="nav-text">shell内建命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell命令类型"><span class="nav-number">5.</span> <span class="nav-text">shell命令类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell中不同的执行方式"><span class="nav-number">6.</span> <span class="nav-text">shell中不同的执行方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令返回值"><span class="nav-number">7.</span> <span class="nav-text">命令返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试命令"><span class="nav-number">8.</span> <span class="nav-text">测试命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shell-语言"><span class="nav-number">9.</span> <span class="nav-text">shell 语言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用命令"><span class="nav-number">10.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个命令同时执行"><span class="nav-number">11.</span> <span class="nav-text">多个命令同时执行</span></a></li></ol></div>
             
 
           </div>
@@ -876,13 +878,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>

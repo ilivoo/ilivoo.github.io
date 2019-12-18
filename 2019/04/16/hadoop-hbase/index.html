@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-07T03:02:05.434Z">
+<meta property="og:updated_time" content="2019-12-02T09:49:52.496Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hbase、phoenix 创建表">
 <meta name="twitter:description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  554
+                  1,088
                 </span>
               
 
@@ -434,7 +434,8 @@
 <p><strong>说明：</strong></p>
 <ul>
 <li><code>IMMUTABLE_ROWS</code> 不可变表不能进行更新，主要是用来创建索引的时候，如果是不可变的那么所以就不需要进行实时维护，对于全局索引如果是不可变的，那么写到索引表是在客户端完成的，而可变的索引是在服务端完成的。不可变索引写性能要高些。</li>
-<li><code>row_timestamp</code> 指定某一行为timestamp, 那么在插入的时候就指定这个时间为数据的真实timestamp, 此处必须注意, 所以如果数据删除之后, 再不能插入主键为相同的数据, 所以对于这样的表, 数据一定不能删除. 不建议在表中使用这个字段, 除非自己知道自己在干什么.</li>
+<li><code>row_timestamp</code> 指定主键中的某个字段为行的timestamp, 那么在插入的时候就指定这个时间为数据的真实timestamp（列上的timestamp都为这个时间， 这个时间可以指定也可以是服务端自动生成，由于是rowkey中的一部分，所以这个时间一定不可能发生变化，以后所有的upsert语句都不会更改这个时间）, 此处必须注意，如果数据删除之后, 再不能插入主键为相同的数据（因为主键相同，那么意味着列的timestamp并没有发生任何变化， 此时hbase已经将此timestamp的版本设置为了删除标识，所以即使插入数据版本也没有发生变化，还是删除的）， 所以对于这样的表，数据一定不能删除。不建议在表中使用这个字段，除非自己知道自己在干什么。此方式并不会减少数据存储，timestamp也会存在与主键之中，仅仅更改了列的版本的处理方式。</li>
+<li>phoenix为每一行添加了一个空的列， 别去列mapping可以设置mapping字节数，下面有讲解。</li>
 </ul>
 <p>更改表的分区策略</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter &apos;TEST&apos;, &#123;SPLIT_POLICY =&gt; &apos;org.apache.hadoop.hbase.regionserver.KeyPrefixRegionSplitPolicy&apos;, CONFIGURATION =&gt; &#123;&apos;KeyPrefixRegionSplitPolicy.prefix_length&apos; =&gt; &apos;2&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
@@ -451,12 +452,24 @@
 <ul>
 <li><code>SALT_BUCKETS</code> 大小通常是cpu core <em> (0.5 ~ 2) </em> region server, 例如: 6 <em> 0.5 </em> 3 = 9</li>
 <li>row key 顺序扫描可以优化，通过在 <code>hbase-sites.xml</code> 中指定 <code>phoenix.query.rowKeyOrderSaltedTable=true</code> 禁止用户指定分割点</li>
-<li>加盐后会在row key前面添加一个字节（0-255）, 这样就可以对</li>
+<li>加盐后会在row key前面添加一个字节（0-255），并且会自动进行分割，如果需要手动split，需要添加上前面的一个盐字节</li>
 </ul>
 <ol start="6">
 <li><p>查询</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scan &#123; STARTROW =&gt; &apos;FixedWidthUsername&apos; LIMIT =&gt; 30&#125;</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>hbase 列预测限定，因为列进行mapping的时候，如果知道有多少列，那么就可以使用固定大小的mapping值来进行对应</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COLUMN_ENCODED_BYTES = 1;</span><br></pre></td></tr></table></figure>
+<p>此处1表示一个字节，那么做多可以代表256个数值，也就可以进行转换256个列</p>
+</li>
+<li><p>不可变表（IMMUTABLE_ROWS）列encoding，通过encoding可以降低存储，提供更好的性能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IMMUTABLE_STORAGE_SCHEME = SINGLE_CELL_ARRAY_WITH_OFFSETS</span><br></pre></td></tr></table></figure>
+<p>此处表示，单个cell存储一行的一个列族，建议不可变表使用这种设置， 并且设置此参数的时候列的mapping必须设定，也就是说需要添加 <code>COLUMN_ENCODED_BYTES</code> 参数</p>
+<p>注意：这种优化策略不用应用与稀疏表，行中有50%的数据存在则不是稀疏表，与之对应的设定就是 <code>IMMUTABLE_STORAGE_SCHEME = ONE_CELL_PER_COLUMN</code></p>
+</li>
+<li><p>动态列，由于hbase的列的灵活性，所以phoenix也提供了这种动态添加列的方式， 也就是在create schema初期并不会提供列名，而是在插入和查询的时候指定需要查询的列和列对应的类型。从这里可以看到后期绑定也是非常实用的功能。</p>
+</li>
+<li>修改表类型 <code>ALTER TABLE my_table SET IMMUTABLE_ROWS=true,DISABLE_WAL=true;</code></li>
 </ol>
 
       
@@ -588,7 +601,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -783,13 +796,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>

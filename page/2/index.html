@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -98,7 +98,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -421,20 +421,74 @@
       
         
           
-          phoenix 读写考虑
-phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列
-
-性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计
-
-关注读性能，通常是创建多个global 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/08/01/hadoop-phoenix/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="phoenix-读写考虑"><a href="#phoenix-读写考虑" class="headerlink" title="phoenix 读写考虑"></a>phoenix 读写考虑</h4><ul>
+<li><p>phoenix 在每一行中添加一个默认的列，并且设置为 <code>x</code>，每次更新都会自动更新这一列</p>
+</li>
+<li><p>性能影响最大的因素一定是主键、salt 表(<code>http://phoenix.apache.org/salted.html</code>)以及schema设计</p>
+</li>
+<li><p>关注读性能，通常是创建多个global index, <code>http://phoenix.apache.org/secondary_indexing.html</code></p>
+</li>
+<li><p>关注写性能，预定义分区或使用salt表，使用真实类型代替原始类型，使用local index</p>
+</li>
+<li><p>为了保证读性能，可以考虑使用覆盖索引， <code>CREATE INDEX index ON table（...）INCLUDE(...)</code></p>
+</li>
+<li><p>对于不可变表或者只插入的表创建设置 <code>IMMUTABLE_ROWS=true</code></p>
+</li>
+<li><p>如果速度更加重要，设置 <code>DISABLE_WAL</code>， 注意可能会丢失数据</p>
+</li>
+<li><p><code>row timestamp</code> 将hbase行的时间映射到行键上面，这样在scan的时候就可以使用这个时间了，这个时间可以自己设置，也可以让hbase服务端自动设置, 一旦这个时间写入到行键，那么行健肯定是不会变了。但是如果行进行了update，那么此时默认列 <code>x</code> 的时间戳会更新, 可见每次进行更新的时候，系统都会带上默认列进行更新。从上面的信息可以看出，<code>row_timestamp</code> 仅仅只是提供了一种可以不用设置时间的方式并显示它， 但是在实际使用过程中并没有任何用处，所以如果没有特别的理由，最好不要使用这个时间戳，说明 <code>http://phoenix.apache.org/rowtimestamp.html</code></p>
+</li>
+<li><p>如果表的元数据改变不是特别平凡，设置 <code>UPDATE_CACHE_FREQUENCY</code>为15分钟左右</p>
+</li>
+<li><p>如果数据表不是稀疏表（超过50%列有值），设置 <code>SINGLE_CELL_ARRAY_WITH_OFFSETS</code> 数据编码模式（将整个列族的一行放入到一个hbase cell当中）, <code>http://phoenix.apache.org/columnencoding.html</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> IMMUTABLE <span class="keyword">TABLE</span> T   </span><br><span class="line">(  </span><br><span class="line">    a_string <span class="built_in">varchar</span> <span class="keyword">not</span> <span class="literal">null</span>,   </span><br><span class="line">    col1 <span class="built_in">integer</span>  </span><br><span class="line">    <span class="keyword">CONSTRAINT</span> pk PRIMARY <span class="keyword">KEY</span> (a_string)  </span><br><span class="line">)   </span><br><span class="line">IMMUTABLE_STORAGE_SCHEME = SINGLE_CELL_ARRAY_WITH_OFFSETS,  </span><br><span class="line">COLUMN_ENCODED_BYTES = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置块编码 <code>CREATE TABLE … ( … ) DATA_BLOCK_ENCODING=‘FAST_DIFF’</code> ， <code>FAST_DIFF</code> 和 <code>SNAPPY</code> 都是不错的选择</p>
+</li>
+<li><p>表的数据如果存在分离，创建多个列族</p>
+</li>
+<li><p>对于结构体对象，不要使用json（压缩性能不好），可以使用protobuf、avro、bson等等</p>
+</li>
+<li><p>尽量不要关闭列mapping</p>
+</li>
+<li><p>表太大使用 <code>ASYNC</code> 创建index， <code>if not exists event_object_id_idx_b on trans.event (object_id) ASYNC UPDATE_CACHE_FREQUENCY=60000</code></p>
+</li>
+<li><p>大范围查询，可以使用 <code>GZIP</code> 压缩，但是需要注意写性能，以及在scan的时候，设置 <code>Scan.setCacheBlocks(false)</code></p>
+</li>
+<li><p>对于大的查询或者连接查询，推荐使用 <code>Hints</code> 来优化性能</p>
+</li>
+<li><p>对于大客户端，不要使用 <code>executeBatch</code> ，使用多条进行<code>update and commit</code>，对于瘦客户端，推荐使用 <code>executeBatch</code>，可以减少与query server的RPC调用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">try (Connection conn = DriverManager.getConnection(url)) &#123;</span><br><span class="line">  conn.setAutoCommit(false);</span><br><span class="line">  int batchSize = 0;</span><br><span class="line">  int commitSize = 1000; // number of rows you want to <span class="keyword">commit</span> per batch.  </span><br><span class="line">  try (<span class="keyword">Statement</span> stmt = conn.prepareStatement(<span class="keyword">upsert</span>)) &#123;</span><br><span class="line">    stmt.set ... <span class="keyword">while</span> (there <span class="keyword">are</span> <span class="keyword">records</span> <span class="keyword">to</span> <span class="keyword">upsert</span>) &#123;</span><br><span class="line">      stmt.executeUpdate(); </span><br><span class="line">      batchSize++; </span><br><span class="line">      if (batchSize % commitSize == 0) &#123; </span><br><span class="line">        conn.commit(); </span><br><span class="line">      &#125; </span><br><span class="line">   &#125; </span><br><span class="line"> conn.commit(); // <span class="keyword">commit</span> the <span class="keyword">last</span> batch <span class="keyword">of</span> <span class="keyword">records</span> </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>update ... select ...</code> 插入大量数据时候，通常打开 <code>autocommit</code> 并且设置 <code>phoenix.mutate.batchSize</code></p>
+</li>
+<li><p>删除大量数据时候，通常打开 <code>autoCommit</code>，这样region server直接删除，而不需要返回row key到客户端</p>
+</li>
+<li><p>对于应用来说，快速失败比让客户端等待要好得多，可以设置更改等待时间<code>phoenix.query.timeoutMs</code>，配置设置参考 <code>http://phoenix.apache.org/tuning.html</code></p>
+</li>
+</ul>
+<h4 id="CsvBulkLoadTool"><a href="#CsvBulkLoadTool" class="headerlink" title="CsvBulkLoadTool"></a>CsvBulkLoadTool</h4><ul>
+<li><p>参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-a,--array-delimiter &lt;arg&gt;   数组元素分隔符，默认冒号</span><br><span class="line">-b,--binaryEncoding &lt;arg&gt;    Specifies binary encoding</span><br><span class="line">-c,--import-columns &lt;arg&gt;    导入的列，逗号分割</span><br><span class="line">-d,--delimiter &lt;arg&gt;         字段分隔符，默认逗号</span><br><span class="line">-e,--escape &lt;arg&gt;            转移字符，默认反斜线</span><br><span class="line">-g,--ignore-errors           Ignore input errors</span><br><span class="line">-h,--help                    Show this help and quit</span><br><span class="line">-i,--input &lt;arg&gt;             输入路径，逗号分割</span><br><span class="line">-it,--index-table &lt;arg&gt;      当导入索引时，指定索引表</span><br><span class="line">-o,--output &lt;arg&gt;            输出临时HFile路径</span><br><span class="line">-q,--quote &lt;arg&gt;             自定义短语分隔符，默认双引号</span><br><span class="line">-s,--schema &lt;arg&gt;            Phoenix schema name (optional)</span><br><span class="line">-t,--table &lt;arg&gt;             Phoenix table name (mandatory)</span><br><span class="line">-z,--zookeeper &lt;arg&gt;         zookeeper连接信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本命令形式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo -u hbase HADOOP_CLASSPATH=$(hbase mapredcp):/usr/hdp/current/hbase-client/conf hadoop jar /usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-client.jar org.apache.phoenix.mapreduce.CsvBulkLoadTool</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>字段分隔符设置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-d $‘\t’</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>小写表名转义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--table \&quot;\&quot;t\&quot;\&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意，还有一个工具可以完成表导入工具 <code>psql.py</code>, 并且它是使用单线程phoenix客户端的方式，每秒2-5万条数据</p>
+<ul>
+<li>首先使用 <code>psql.py create_table.sql</code></li>
+<li>再使用 <code>psql.py load_data.cvs</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="JsonBulkLoadTool"><a href="#JsonBulkLoadTool" class="headerlink" title="JsonBulkLoadTool"></a>JsonBulkLoadTool</h4><h4 id="IndexToolUtil"><a href="#IndexToolUtil" class="headerlink" title="IndexToolUtil"></a>IndexToolUtil</h4><h4 id="IndexScrutinyTool"><a href="#IndexScrutinyTool" class="headerlink" title="IndexScrutinyTool"></a>IndexScrutinyTool</h4><h4 id="映射hbase表到phoenix"><a href="#映射hbase表到phoenix" class="headerlink" title="映射hbase表到phoenix"></a>映射hbase表到phoenix</h4>
+          
         
       
     </div>
@@ -607,15 +661,9 @@ phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更�
       
         
           
-          kafka幂等性和kafka提供的最少一次的语义操作通常来说，kafka提供最少一次的语义会非常容易实现，业务的幂等性却不是那么容易。但是幂等性的实现也不是不可能的，如mongodb基于语句的异步复制就实现了幂等性（如：它讲update value=value +1， 改成了set value = 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/07/24/hadoop-kafka/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="kafka幂等性和kafka提供的最少一次的语义操作"><a href="#kafka幂等性和kafka提供的最少一次的语义操作" class="headerlink" title="kafka幂等性和kafka提供的最少一次的语义操作"></a>kafka幂等性和kafka提供的最少一次的语义操作</h4><p>通常来说，kafka提供最少一次的语义会非常容易实现，业务的幂等性却不是那么容易。但是幂等性的实现也不是不可能的，如mongodb基于语句的异步复制就实现了幂等性（如：它讲update value=value +1， 改成了set value = value + 1）。</p>
+
+          
         
       
     </div>
@@ -777,17 +825,33 @@ phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更�
       
         
           
+            <ol>
+<li><p>区间分组统计</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SELECT </span><br><span class="line">	elt(INTERVAL(score, 0, 60, 80, 100), &apos;bad&apos;, &apos;good&apos;, &apos;perfect&apos;) as level, </span><br><span class="line">	count(name) as count </span><br><span class="line">FROM </span><br><span class="line">	class</span><br><span class="line">GROUP BY elt(INTERVAL(score, 0, 60, 80, 100), &apos;bad&apos;, &apos;good&apos;, &apos;perfect&apos;);</span><br></pre></td></tr></table></figure>
+<p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SELECT </span><br><span class="line">	elt(INTERVAL(score, 0, 60, 80, 100), &apos;1/bad&apos;, &apos;1/good&apos;, &apos;1/perfect&apos;) as level,</span><br><span class="line">	count(name) as count </span><br><span class="line">FROM </span><br><span class="line">	class </span><br><span class="line">GROUP BY elt(INTERVAL(score, 0, 60, 80, 100), &apos;1/bad&apos;, &apos;1/good&apos;, &apos;1/perfect&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li><p>按时间段分组统计</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">	DATE_FORMAT(trigger_time, &apos;%Y-%m-%d %h&apos;) trigger_time,</span><br><span class="line">	COUNT(id) triggerCount</span><br><span class="line">FROM</span><br><span class="line">	`job_qrtz_trigger_log`</span><br><span class="line">WHERE</span><br><span class="line">	trigger_time BETWEEN &apos;2018-02-02 09:18:36&apos; AND &apos;2018-03-05 23:18:36&apos;</span><br><span class="line">GROUP BY DATE_FORMAT(trigger_time, &apos;%Y-%m-%d %h&apos;) trigger_time</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分组统计的说明，可以看到上面都是通过区间进行分组统计， 那么分组统计首先是通过具体的字段进行分组， 分组到具体的桶后，剩下的就是一个对这个list操作了</p>
+<ul>
+<li><p>基本对list操作的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">AVG</span><br><span class="line">BIT_AND</span><br><span class="line">BIT_OR</span><br><span class="line">BIT_XOR</span><br><span class="line">COUNT</span><br><span class="line">COUNT DISTINCT</span><br><span class="line">GROUP_CONCAT 对整个List的字段进行连接</span><br><span class="line">JSON_ARRAYAGG</span><br><span class="line">JSON_OBJECTAGG</span><br><span class="line">MAX</span><br><span class="line">MIN</span><br><span class="line">STD</span><br><span class="line">STDDEV</span><br><span class="line">STDDEV_POP</span><br><span class="line">STDDEV_SAMP</span><br><span class="line">SUM</span><br><span class="line">VARIANCE</span><br><span class="line">VAR_POP</span><br><span class="line">VAR_SAMP</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>将纵表变成横表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select </span><br><span class="line">	name,</span><br><span class="line">	(case class when &apos;语文&apos; then score else 0 end) as 语文,</span><br><span class="line">	(case class when &apos;数学&apos; then score else 0 end) as 数学,</span><br><span class="line">	(case class when &apos;英语&apos; then score else 0 end) as 英语</span><br><span class="line">from </span><br><span class="line">	class_score</span><br><span class="line">group by name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将纵表变成横表思路二，对数据进行拼接再到程序中进行处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select </span><br><span class="line">	name,</span><br><span class="line">	group_concat(class, &quot;,&quot;, score, &quot;;&quot;)</span><br><span class="line">from </span><br><span class="line">	class_score</span><br><span class="line">group by name</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
           
-区间分组统计
-123456SELECT 	elt(INTERVAL(score, 0, 60, 80, 100), &apos;bad&apos;, &apos;good&apos;, &apos;perfect&apos;) as level, 	count(name) as count FRO
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/07/02/mysql-use/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -960,20 +1024,13 @@ phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更�
       
         
           
+            <ol>
+<li><p>HDFS配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
           
-HDFS配置
-1 
-
-
-
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/06/17/hdp-cluster-config/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1119,7 +1176,7 @@ HDFS配置
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  554
+                  1,088
                 </span>
               
 
@@ -1146,17 +1203,61 @@ HDFS配置
       
         
           
-          创建日志表
-创建test表
-123create &apos;test&apos;, \&#123;NAME =&gt; &apos;f&apos;, COMPRESSION =&gt; &apos;SNAPPY&apos;&#125;, \&#123;SPLITS =&gt; [&apos;40&a
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/04/16/hadoop-hbase/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="创建日志表"><a href="#创建日志表" class="headerlink" title="创建日志表"></a>创建日志表</h4><ol>
+<li><p>创建test表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create &apos;test&apos;, \</span><br><span class="line">&#123;NAME =&gt; &apos;f&apos;, COMPRESSION =&gt; &apos;SNAPPY&apos;&#125;, \</span><br><span class="line">&#123;SPLITS =&gt; [&apos;40&apos;,&apos;80&apos;,&apos;c0&apos;], SPLIT_POLICY =&gt; &apos;org.apache.hadoop.hbase.regionserver.KeyPrefixRegionSplitPolicy&apos;, CONFIGURATION =&gt; &#123;&apos;KeyPrefixRegionSplitPolicy.prefix_length&apos; =&gt; &apos;2&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建testIndex</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create &apos;testIndex&apos;, &#123;NAME =&gt; &apos;f&apos;, COMPRESSION =&gt; &apos;SNAPPY&apos;&#125;, &#123;SPLITS =&gt; [&apos;40&apos;,&apos;80&apos;,&apos;c0&apos;]&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建最新一条数据表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create &apos;testNewest&apos;, &#123;NAME =&gt; &apos;f&apos;, VERSIONS =&gt; 1, BLOCKCACHE =&gt; true, IN_MEMORY =&gt; true&#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>注意: </strong> 此处可以设置 <code>DURABILITY =&gt; &#39;SKIP_WAL&#39;</code>, 不过最好是在程序中控制WAL是否写入.</p>
+</li>
+<li><p>创建phoenix表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table TEST(prefix char(2) not null, time bigint not null, id char(10) not null,  message varchar, constraint pk primary key(prefix, time desc row_timestamp, id)) IMMUTABLE_ROWS=true SPLIT ON (&apos;40&apos;, &apos;80&apos;, &apos;c0&apos;) COMPRESSION=&apos;GZ&apos;;</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong></p>
+<ul>
+<li><code>IMMUTABLE_ROWS</code> 不可变表不能进行更新，主要是用来创建索引的时候，如果是不可变的那么所以就不需要进行实时维护，对于全局索引如果是不可变的，那么写到索引表是在客户端完成的，而可变的索引是在服务端完成的。不可变索引写性能要高些。</li>
+<li><code>row_timestamp</code> 指定主键中的某个字段为行的timestamp, 那么在插入的时候就指定这个时间为数据的真实timestamp（列上的timestamp都为这个时间， 这个时间可以指定也可以是服务端自动生成，由于是rowkey中的一部分，所以这个时间一定不可能发生变化，以后所有的upsert语句都不会更改这个时间）, 此处必须注意，如果数据删除之后, 再不能插入主键为相同的数据（因为主键相同，那么意味着列的timestamp并没有发生任何变化， 此时hbase已经将此timestamp的版本设置为了删除标识，所以即使插入数据版本也没有发生变化，还是删除的）， 所以对于这样的表，数据一定不能删除。不建议在表中使用这个字段，除非自己知道自己在干什么。此方式并不会减少数据存储，timestamp也会存在与主键之中，仅仅更改了列的版本的处理方式。</li>
+<li>phoenix为每一行添加了一个空的列， 别去列mapping可以设置mapping字节数，下面有讲解。</li>
+</ul>
+<p>更改表的分区策略</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter &apos;TEST&apos;, &#123;SPLIT_POLICY =&gt; &apos;org.apache.hadoop.hbase.regionserver.KeyPrefixRegionSplitPolicy&apos;, CONFIGURATION =&gt; &#123;&apos;KeyPrefixRegionSplitPolicy.prefix_length&apos; =&gt; &apos;2&apos;&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upsert into test values(&apos;00&apos;, 1555385043000, &apos;1234567890&apos;, &apos;hello phoenix&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table TEST(PREFIX char(2) not null, TM char(14) not null, STCD char(10) not null, DRP varchar, INTV varchar, PDR varchar, DYP varchar, WTH varchar, constraint pk primary key(PREFIX, TM desc, STCD)) SPLIT ON (&apos;40&apos;, &apos;80&apos;, &apos;c0&apos;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table st_statistics_pptn_day_new(stcd char(10) not null, tm char(8) not null, drp BIGINT, constraint pk primary key(stcd, tm desc)) SALT_BUCKETS = 4;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table st_statistics_pptn_hour_new(stcd char(10) not null, tm char(10) not null, drp BIGINT, constraint pk primary key(stcd, tm desc)) SALT_BUCKETS = 4;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>   <strong>说明 : </strong> </p>
+<ul>
+<li><code>SALT_BUCKETS</code> 大小通常是cpu core <em> (0.5 ~ 2) </em> region server, 例如: 6 <em> 0.5 </em> 3 = 9</li>
+<li>row key 顺序扫描可以优化，通过在 <code>hbase-sites.xml</code> 中指定 <code>phoenix.query.rowKeyOrderSaltedTable=true</code> 禁止用户指定分割点</li>
+<li>加盐后会在row key前面添加一个字节（0-255），并且会自动进行分割，如果需要手动split，需要添加上前面的一个盐字节</li>
+</ul>
+<ol start="6">
+<li><p>查询</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scan &#123; STARTROW =&gt; &apos;FixedWidthUsername&apos; LIMIT =&gt; 30&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hbase 列预测限定，因为列进行mapping的时候，如果知道有多少列，那么就可以使用固定大小的mapping值来进行对应</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COLUMN_ENCODED_BYTES = 1;</span><br></pre></td></tr></table></figure>
+<p>此处1表示一个字节，那么做多可以代表256个数值，也就可以进行转换256个列</p>
+</li>
+<li><p>不可变表（IMMUTABLE_ROWS）列encoding，通过encoding可以降低存储，提供更好的性能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IMMUTABLE_STORAGE_SCHEME = SINGLE_CELL_ARRAY_WITH_OFFSETS</span><br></pre></td></tr></table></figure>
+<p>此处表示，单个cell存储一行的一个列族，建议不可变表使用这种设置， 并且设置此参数的时候列的mapping必须设定，也就是说需要添加 <code>COLUMN_ENCODED_BYTES</code> 参数</p>
+<p>注意：这种优化策略不用应用与稀疏表，行中有50%的数据存在则不是稀疏表，与之对应的设定就是 <code>IMMUTABLE_STORAGE_SCHEME = ONE_CELL_PER_COLUMN</code></p>
+</li>
+<li><p>动态列，由于hbase的列的灵活性，所以phoenix也提供了这种动态添加列的方式， 也就是在create schema初期并不会提供列名，而是在插入和查询的时候指定需要查询的列和列对应的类型。从这里可以看到后期绑定也是非常实用的功能。</p>
+</li>
+<li>修改表类型 <code>ALTER TABLE my_table SET IMMUTABLE_ROWS=true,DISABLE_WAL=true;</code></li>
+</ol>
+
+          
         
       
     </div>
@@ -1296,15 +1397,8 @@ HDFS配置
       
         
           
+            
           
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/03/17/linux-httpie/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1466,17 +1560,92 @@ HDFS配置
       
         
           
-          openvpn服务端安装
-安装openvpn
-12345yum install -y epel-release yum update -yyum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expectyum instal
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/03/15/linux-openvpn/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="openvpn服务端安装"><a href="#openvpn服务端安装" class="headerlink" title="openvpn服务端安装"></a>openvpn服务端安装</h4><ol>
+<li><p>安装openvpn</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install -y epel-release </span><br><span class="line">yum update -y</span><br><span class="line">yum install -y openssl lzo pam openssl-devel lzo-devel pam-devel expect</span><br><span class="line">yum install -y easy-rsa</span><br><span class="line">yum install -y openvpn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置easy-rsa</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cp -rf /usr/share/easy-rsa/3.0.3 /etc/openvpn/server/easy-rsa</span><br><span class="line">cd /etc/openvpn/server/easy-rsa</span><br><span class="line">./easyrsa init-pki</span><br><span class="line">./easyrsa build-ca nopass</span><br><span class="line">./easyrsa build-server-full server nopass</span><br><span class="line">./easyrsa build-client-full client nopass</span><br><span class="line">./easyrsa gen-dh</span><br><span class="line">openvpn --genkey --secret ta.key</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置openvpn</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 日志存放目录</span></span><br><span class="line">mkdir -p /var/log/openvpn/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 配置权限</span></span><br><span class="line">chown openvpn:openvpn /var/log/openvpn</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用户管理目录</span></span><br><span class="line">mkdir -p /etc/openvpn/server/user</span><br><span class="line"><span class="meta">#</span><span class="bash"> 用户IP固定目录</span></span><br><span class="line">mkdir -p /etc/openvpn/server/ccd</span><br></pre></td></tr></table></figure>
+<p>编辑<code>/etc/openvpn/server/server.conf</code>文件，并写入以下内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#################################################</span></span><br><span class="line"><span class="comment"># This file is for the server side              #</span></span><br><span class="line"><span class="comment"># of a many-clients &lt;-&gt; one-server              #</span></span><br><span class="line"><span class="comment"># OpenVPN configuration.                        #</span></span><br><span class="line"><span class="comment">#                                               #</span></span><br><span class="line"><span class="comment"># Comments are preceded with '#' or ';'         #</span></span><br><span class="line"><span class="comment">#################################################</span></span><br><span class="line">port 1194</span><br><span class="line">proto tcp-server</span><br><span class="line"><span class="comment">## Enable the management interface</span></span><br><span class="line"><span class="comment"># management-client-auth</span></span><br><span class="line"><span class="comment"># management localhost 7505 /etc/openvpn/user/management-file</span></span><br><span class="line">dev tap     <span class="comment"># TUN/TAP virtual network device</span></span><br><span class="line">user openvpn</span><br><span class="line">group openvpn</span><br><span class="line">ca /etc/openvpn/server/easy-rsa/pki/ca.crt</span><br><span class="line">cert /etc/openvpn/server/easy-rsa/pki/issued/server.crt</span><br><span class="line">key /etc/openvpn/server/easy-rsa/pki/private/server.key</span><br><span class="line">dh /etc/openvpn/server/easy-rsa/pki/dh.pem</span><br><span class="line">tls-auth /etc/openvpn/server/easy-rsa/ta.key 0</span><br><span class="line"><span class="comment">## Using System user auth.</span></span><br><span class="line"><span class="comment"># plugin /usr/lib64/openvpn/plugins/openvpn-plugin-auth-pam.so login</span></span><br><span class="line"><span class="comment">## Using Script Plugins</span></span><br><span class="line">auth-user-pass-verify /etc/openvpn/server/user/checkpsw.sh via-env</span><br><span class="line">script-security 3</span><br><span class="line"><span class="comment"># client-cert-not-required  # Deprecated option</span></span><br><span class="line">verify-client-cert</span><br><span class="line">username-as-common-name</span><br><span class="line"><span class="comment">## Connecting clients to be able to reach each other over the VPN.</span></span><br><span class="line">client-to-client</span><br><span class="line"><span class="comment">## Allow multiple clients with the same common name to concurrently connect.</span></span><br><span class="line"><span class="comment"># duplicate-cn</span></span><br><span class="line">client-config-dir ccd</span><br><span class="line"><span class="comment"># ifconfig-pool-persist ipp.txt</span></span><br><span class="line">server 10.8.0.0 255.255.255.0</span><br><span class="line">push <span class="string">"dhcp-option DNS 114.114.114.114"</span></span><br><span class="line">push <span class="string">"dhcp-option DNS 8.8.8.8"</span></span><br><span class="line"><span class="comment"># push "route 10.93.0.0 255.255.255.0"</span></span><br><span class="line"><span class="comment"># comp-lzo - DEPRECATED This option will be removed in a future OpenVPN release. Use the newer --compress instead.</span></span><br><span class="line">compress lzo</span><br><span class="line"><span class="comment"># cipher AES-256-CBC</span></span><br><span class="line">ncp-ciphers <span class="string">"AES-256-GCM:AES-128-GCM"</span></span><br><span class="line"><span class="comment">## In UDP client mode or point-to-point mode, send server/peer an exit notification if tunnel is restarted or OpenVPN process is exited.</span></span><br><span class="line"><span class="comment"># explicit-exit-notify 1</span></span><br><span class="line">keepalive 10 120</span><br><span class="line">persist-key</span><br><span class="line">persist-tun</span><br><span class="line">verb 3</span><br><span class="line"><span class="built_in">log</span> /var/<span class="built_in">log</span>/openvpn/server.log</span><br><span class="line"><span class="built_in">log</span>-append /var/<span class="built_in">log</span>/openvpn/server.log</span><br><span class="line">status /var/<span class="built_in">log</span>/openvpn/status.log</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/openvpn/server/</span><br><span class="line">ln -sf server.conf .service.conf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建用户密码文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tee /etc/openvpn/server/user/psw-file &lt;&lt; EOF</span><br><span class="line">mytest mytestpass</span><br><span class="line">EOF</span><br><span class="line">chmod 600 /etc/openvpn/server/user/psw-file</span><br><span class="line">chown openvpn:openvpn /etc/openvpn/server/user/psw-file</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 用户名和密码可以多行, 表示多个用户. 这里的用户名和密码, 和上面的 <code>client</code> 不是一回事, <code>client</code> 表示密钥, 所有的用户都可以使用同一个密钥, 也可以使用不同的, 所有通常为了简单只创建一个密钥, 并通过用户名来区分.</p>
+</li>
+<li><p>创建密码检查脚本 <code>/etc/openvpn/server/user/checkpsw.sh</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/sh</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##########################################################</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> checkpsw.sh (C) 2004 Mathias Sundman &lt;mathias@openvpn.se&gt;</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script will authenticate OpenVPN users against</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> a plain text file. The passfile should simply contain</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> one row per user with the username first followed by</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> one or more space(s) or tab(s) and <span class="keyword">then</span> the password.</span></span><br><span class="line">PASSFILE="/etc/openvpn/server/user/psw-file"</span><br><span class="line">LOG_FILE="/var/log/openvpn/password.log"</span><br><span class="line">TIME_STAMP=`date "+%Y-%m-%d %T"`</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##########################################################</span></span></span><br><span class="line">if [ ! -r "$&#123;PASSFILE&#125;" ]; then</span><br><span class="line">  echo "$&#123;TIME_STAMP&#125;: Could not open password file \"$&#123;PASSFILE&#125;\" for reading." &gt;&gt;  $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line">CORRECT_PASSWORD=`awk '!/^;/&amp;&amp;!/^#/&amp;&amp;$1=="'$&#123;username&#125;'"&#123;print $2;exit&#125;' $&#123;PASSFILE&#125;`</span><br><span class="line">if [ "$&#123;CORRECT_PASSWORD&#125;" = "" ]; then</span><br><span class="line">  echo "$&#123;TIME_STAMP&#125;: User does not exist: username=\"$&#123;username&#125;\", password=</span><br><span class="line">\"$&#123;password&#125;\"." &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line">if [ "$&#123;password&#125;" = "$&#123;CORRECT_PASSWORD&#125;" ]; then</span><br><span class="line">  echo "$&#123;TIME_STAMP&#125;: Successful authentication: username=\"$&#123;username&#125;\"." &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">  exit 0</span><br><span class="line">fi</span><br><span class="line">echo "$&#123;TIME_STAMP&#125;: Incorrect password: username=\"$&#123;username&#125;\", password=</span><br><span class="line">\"$&#123;password&#125;\"." &gt;&gt; $&#123;LOG_FILE&#125;</span><br><span class="line">exit 1</span><br></pre></td></tr></table></figure>
+<p>赋予写权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /etc/openvpn/server/user/checkpsw.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 查看service名</span><br><span class="line">rpm -ql openvpn |grep service</span><br><span class="line">/usr/lib/systemd/system/openvpn-client@.service</span><br><span class="line">/usr/lib/systemd/system/openvpn-server@.service</span><br><span class="line">/usr/lib/systemd/system/openvpn@.service</span><br><span class="line"># 启动</span><br><span class="line">systemctl start openvpn-server@.service.service</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>问题总结:</p>
+<ul>
+<li><p>添加用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo user password &gt;&gt; /etc/openvpn/server/user/psw-file</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为用户固定IP地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tee /etc/openvpn/server/ccd/$&#123;user&#125; &lt;&lt; EOF</span><br><span class="line">ifconfig-push 10.8.0.30 255.255.255.0</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 替换此处的用户名, 和IP地址</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="obfsproxy服务端安装"><a href="#obfsproxy服务端安装" class="headerlink" title="obfsproxy服务端安装"></a>obfsproxy服务端安装</h4><ol>
+<li><p>安装python, 版本最好是大于2.7.5</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y python-devel bzip2 bzip2-devel zlib</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li><p>安装pip和对应工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wget https://bootstrap.pypa.io/get-pip.py</span><br><span class="line">python get-pip.py</span><br><span class="line">pip install --upgrade setuptools</span><br><span class="line">pip install --upgrade incremental</span><br><span class="line">pip install psutil</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装Twisted</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget https://twistedmatrix.com/Releases/Twisted/18.9/Twisted-18.9.0.tar.bz2</span><br><span class="line">tar -jxvf Twisted-18.9.0.tar.bz2</span><br><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装obfsproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/dounine/obfsproxy.git</span><br><span class="line">tar -xzf obfsproxy-0.2.13.tar.gz</span><br><span class="line">python setup.py install</span><br><span class="line">ln -s /usr/bin/obfsproxy /usr/local/bin/obfsproxy</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 中间可能还会出现其它python问题, google解决即可</p>
+</li>
+<li><p>启动obfsproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy obfs3 --dest=127.0.0.1:1194 server 0.0.0.0:10102</span><br></pre></td></tr></table></figure>
+<p><strong>说明 : </strong> dest表示obfsproxy接收到的数据传输到哪里, 此处接收到数据传输到openvpn, server表示它是服务端,  0.0.0.0:10102表示监听的端口号.</p>
+</li>
+<li><p>添加obfsproxy的防火墙配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent  --add-port=10102/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="obfsproxy客户端安装"><a href="#obfsproxy客户端安装" class="headerlink" title="obfsproxy客户端安装"></a>obfsproxy客户端安装</h4><ol>
+<li><p>安装obfsproxy客户端和服务端完全一样</p>
+</li>
+<li><p>启动obfsproxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfsproxy obfs3 --dest=服务端IP地址:10102 client 127.0.0.1:9997</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="openvpn客户端安装"><a href="#openvpn客户端安装" class="headerlink" title="openvpn客户端安装"></a>openvpn客户端安装</h4><ol>
+<li><p>安装openvpn客户端和服务端完全一样</p>
+</li>
+<li><p>配置openvpn, 从server上将生成的<code>ca.crt</code>、<code>client.crt</code>、<code>client.key</code>、<code>ta.key</code>文件下载到客户端，并添加配置文件<code>client.ovpn</code>, 内容如下: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">client</span><br><span class="line">proto tcp-client</span><br><span class="line">dev tap</span><br><span class="line">auth-user-pass</span><br><span class="line">remote 127.0.0.1 9997</span><br><span class="line">ca ca.crt</span><br><span class="line">cert client.crt</span><br><span class="line">key client.key</span><br><span class="line">tls-auth ta.key 1</span><br><span class="line">remote-cert-tls server</span><br><span class="line">auth-nocache</span><br><span class="line">persist-tun</span><br><span class="line">persist-key</span><br><span class="line">comp-lzo</span><br><span class="line">verb 4</span><br><span class="line">mute 10</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong> 此处的remote并没有设置为openvpn的服务端地址, 而是设置为obfsproxy客户端监听的地址, 这样openvpn就先把数据发送给obfsproxy客户端, obfsproxy客户端再发送给obfsproxy服务端, obfsproxy服务端再发送给openvpn服务端.</p>
+</li>
+</ol>
+<h4 id="openvpn经常会出现闪断"><a href="#openvpn经常会出现闪断" class="headerlink" title="openvpn经常会出现闪断"></a>openvpn经常会出现闪断</h4><ol>
+<li><p>为openvpn客户端和服务端都创建启动脚本，并加入到crontab中，这样就不怕断开连接</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/ilivoo/tools-openvpn</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
+          
         
       
     </div>
@@ -1660,15 +1829,8 @@ HDFS配置
       
         
           
+            
           
-          
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/23/hadoop-spark-hive/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1841,18 +2003,43 @@ HDFS配置
       
         
           
-          spark动态资源分配
-开启External shuffle service
+            <h4 id="spark动态资源分配"><a href="#spark动态资源分配" class="headerlink" title="spark动态资源分配"></a>spark动态资源分配</h4><ul>
+<li><p>开启External shuffle service</p>
+<ul>
+<li><p>Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Executor提供shuffle数据时，会影响任务运行。External shuffle Service是长期存在于NodeManager进程中的一个辅助服务。通过该服务来抓取shuffle数据，减少了Executor的压力，在Executor GC的时候也不会影响其他Executor的任务运行。</p>
+</li>
+<li><p>NodeManager中启动External shuffle Service</p>
+<p>在<code>yarn-site.xml</code>中添加如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;                                                                        	  &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;                                         &lt;value&gt;spark_shuffle&lt;/value&gt;                                                   &lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.aux-services.spark_shuffle.class&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;org.apache.spark.network.yarn.YarnShuffleService&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;!-- 可选配置--&gt;</span><br><span class="line">    &lt;name&gt;spark.shuffle.service.port&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;7337&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拷贝<code>${SPARK_HOME}/lib/spark-${SPARK_VERSION}-yarn-shuffle.jar</code></p>
+<p>到<code>${HADOOP_HOME}/share/hadoop/yarn/lib/</code>目录下, 并重启NodeManager进程，也就启动了External shuffle Service。</p>
+</li>
+<li><p>Spark应用中使用External shuffle Service， 在spark-defaults.conf中添加配置或者直接使用–conf配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">spark.shuffle.service.enabled  true</span><br><span class="line">spark.shuffle.service.port     7337</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意：</p>
+<p>如果 <code>yarn.nodemanager.aux-services</code>配置项已存在，则在 value 中添加spark_shuffle，且用逗号和其他值分开。    </p>
+<p><code>spark.shuffle.service.port</code>的值需要和上面yarn-site.xml中的值一样， 可以都直接使用默认值。</p>
+</li>
+<li><p>实际上现在hdp3.0 以上版本都已经自动开启了spark的External shuffle Service, 只需要设置在spark-defaults 和 yarn-site中设置 <code>spark.shuffle.service.port=7337</code></p>
+</li>
+</ul>
+</li>
+<li><p>spark程序开启动态资源分配</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">spark.dynamicAllocation.enabled				true</span><br><span class="line">spark.dynamicAllocation.minExecutors		1</span><br><span class="line">spark.dynamicAllocation.initialExecutors	1</span><br><span class="line">spark.dynamicAllocation.maxExecutors		9</span><br><span class="line">spark.dynamicAllocation.executorIdleTimeout	60</span><br><span class="line">spark.dynamicAllocation.cachedExecutorIdleTimeout	60</span><br><span class="line">spark.executor.cores	2</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>注意：</p>
+<p>cores尽量设置为 &lt;= 3, 也就是说通常都是增大maxExecutors, 减小cores</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="yarn-资源分配建议"><a href="#yarn-资源分配建议" class="headerlink" title="yarn 资源分配建议"></a>yarn 资源分配建议</h4><ul>
+<li>设置Executor最大可用cores 和 memery， 这样能防止单个机器压力过大， 对于总的物理cores和memery来说需要减去操作系统以及hbase等其它的存储需要消耗的资源才为yarn最大可用资源， 通常需要预留生效资源的10%左右</li>
+</ul>
 
-Spark系统在运行含shuffle过程的应用时，Executor进程除了运行task，还要负责写shuffle数据，给其他Executor提供shuffle数据。当Executor进程任务过重，导致GC而不能为其他Ex
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/23/hadoop-yarn/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -2025,19 +2212,148 @@ Spark系统在运行含shuffle过程的应用时，Executor进程除了运行tas
       
         
           
-          kerberos客户端配置
-krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf
+            <h4 id="kerberos客户端配置"><a href="#kerberos客户端配置" class="headerlink" title="kerberos客户端配置"></a>kerberos客户端配置</h4><ul>
+<li><p>krb5.conf配置选项参考： <code>https://linux.die.net/man/5/krb5.conf</code></p>
+</li>
+<li><p>配置kerberos多用户ticket缓存名字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#vi /etc/profile</span><br><span class="line">default_ccache_name = DIR:/tmp/kerberos</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>也可以设置环境变量达到相同的效果<code>export KRB5CCNAME=DIR:/tmp/kerberos</code></li>
+<li>kerberos客户端在任意时刻只能有一个票证可用， 所以不管如何配置都不可能达到一次配置一次认证就可以了，而是认证之后可以进行多次切换不同的认证</li>
+</ul>
+</li>
+<li><p>多个kerberos的krb5.conf合并</p>
+<ul>
+<li><p>通常情况每个kerberos服务器有一个krb5.conf文件， 如果有多个kerberos服务器需要认证那么通常会比较麻烦，需要拷贝配置文件，所以通常情况下我们可以讲这些文件合并一个文件。通常情况下只需要合并<code>realms</code> 就可以了，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[realms]</span><br><span class="line">  ILIVOO.COM = &#123;</span><br><span class="line">    admin_server = sandbox-hdp.hortonworks.com</span><br><span class="line">    kdc = sandbox-hdp.hortonworks.com</span><br><span class="line">  &#125;</span><br><span class="line">  EXAMPLE.COM = &#123;</span><br><span class="line">    admin_server = dev1</span><br><span class="line">    kdc = dev1</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>多个keytab文件合并</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#ktutil</span><br><span class="line">ktutil:  rkt /etc/security/keytabs/hdfs.keytab</span><br><span class="line">ktutil:  rkt /etc/security/keytabs/hbase.keytab </span><br><span class="line">ktutil:  wkt /etc/krb5.keytab</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="kerberos客户端工具使用"><a href="#kerberos客户端工具使用" class="headerlink" title="kerberos客户端工具使用"></a>kerberos客户端工具使用</h4><ul>
+<li><p>查看keytab文件中用户</p>
+<p><code>klist -kt /etc/krb5.keytab</code></p>
+</li>
+<li><p>认证</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kinit -k admin/admin@ILIVOO.COM</span><br><span class="line">kinit -k admin/admin@EXAMPLE.COM</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示认证</p>
+<ul>
+<li><p>显示当前认证</p>
+<p><code>klist</code></p>
+</li>
+<li><p>显示所以认证</p>
+<p><code>klist -A</code></p>
+</li>
+</ul>
+</li>
+<li><p>切换认证</p>
+<p><code>kswitch -p admin/admin@ILIVOO.COM</code></p>
+</li>
+<li><p>销毁认证</p>
+<ul>
+<li><p>销毁当前认证</p>
+<p><code>kdestroy</code></p>
+<p>注意销毁当前认证， 并不会自动选择一个当前认证</p>
+</li>
+<li><p>销毁所有认证</p>
+<p><code>kdestroy -A</code></p>
+</li>
+</ul>
+</li>
+<li><p>更新认证</p>
+<p><code>kinit -R</code></p>
+</li>
+</ul>
+<h4 id="kerberos服务端工具使用"><a href="#kerberos服务端工具使用" class="headerlink" title="kerberos服务端工具使用"></a>kerberos服务端工具使用</h4><p>说明： </p>
+<ol>
+<li>headless keytab与没有headless的keytab的区别， 主要是headless keytab可以在任何机器上使用，而没有headless的keytab只能在特定的服务器使用， 也就是说它们是服务器绑定的， 如： headless keytab 名称是 <a href="mailto:`hdfs-ilivoo@ILIVOO.COM" target="_blank" rel="noopener">`hdfs-ilivoo@ILIVOO.COM</a><code>， 而没有headless keytab是</code><a href="mailto:nn/hdp1.ilivoo.com@ILIVOO.COM" target="_blank" rel="noopener">nn/hdp1.ilivoo.com@ILIVOO.COM</a>`</li>
+<li>kerberos管理员账户： <a href="mailto:`*/admin@ILIVOO.COM" target="_blank" rel="noopener">`*/admin@ILIVOO.COM</a><code>(可以通过</code><em>/var/kerberos/krb5kdc/kadm5.acl</em> `指定)</li>
+</ol>
+<ul>
+<li><p>添加Principal</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local</span><br><span class="line">addprinc -randkey admin-ilivoo@ILIVOO.COM</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导出keytab文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/security/keytab</span><br><span class="line">kadmin.local</span><br><span class="line">ktadd/xst -k admin.headless.keytab admin-ilivoo</span><br></pre></td></tr></table></figure>
+<p><strong>注意 : </strong>如果keytab是随机密码的, 那么直接使用上面就可以了, 但是如果上面的keytab不是使用randkey, 那么此时必须使用 <code>-norandkey</code> 参数导出来才不会有错. 例如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ktadd/xst -norandkey -k admin.admin.keytab admin/admin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>合并keytab文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/security/keytab</span><br><span class="line">ktutil</span><br><span class="line">rkt admin.headless.keytab</span><br><span class="line">rkt hdfs.headless.keytab</span><br><span class="line">wkt all.headless.keytab</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="ambari、kerberos、service、host-权限"><a href="#ambari、kerberos、service、host-权限" class="headerlink" title="ambari、kerberos、service、host 权限"></a>ambari、kerberos、service、host 权限</h4><ul>
+<li><p>对于ambari来说它是一个集群的管理着， 它有自己权限管理， 通常分为集群管理者、集群使用者、服务管理者、服务操作者、服务开发者等等。 并且它的权限用户通常也是可以和host的权限进行对应上的。如：在主机上创建了 admin 用户， 并且在ambari中创建了admin用户， 并且把admin用户配置成为集群管理者。</p>
+</li>
+<li><p>kerberos主要是用来验证某个人就是自己所声称的那个人， 所以通常情况下也是和主机的用户对于的， 也就是说根据需要是否在kerberos中创建主机用户的principal。通常情况下， service使用principal验证能够访问自己的用户， 那么对应用户访问的时候就必须为自己获取票证。</p>
+</li>
+<li><p>通常来说service是为了验证的话才需要为自己开启权限验证， 并且指定只有某种用户才能访问自己， 如果其它的服务或者客户端需要访问自己， 那么就必须获得票证。并且通常来说service有自己权限验证，可以将其授权给某个用户， 也就是说想要访问service必须先证明你就是自己声称的那个人， 这样就表示通过了service的kerberos验证， 再就是service有自己的权限验证(acl)， service必须为这个用户授权之后这个用户才能访问这个服务。通常情况下服务与服务之间的kerberos验证是非常严格的， 如： DataNode想要连接到NameNode那么必须有 <a href="mailto:`nn/host@ILIVOO.COM" target="_blank" rel="noopener">`nn/host@ILIVOO.COM</a><code>, 而服务的使用者却比较宽泛点， 如hdfs用户想要访问集群， 那么通常只需要</code><a href="mailto:hdfs-ilivoo@ILIVOO.COM" target="_blank" rel="noopener">hdfs-ilivoo@ILIVOO.COM</a>`， 甚至其它的用户也可以创建文件等等， 只是hdfs用户通常被指定为管理用户，其它用户需要hdfs用户为其授权。</p>
+</li>
+<li><p>host权限主要是用来控制对主机的访问权限， 但是通常情况下来说host权限也与其它的权限对应上， 方便服务的开发与管理。</p>
+</li>
+<li><p>通过上面的分析， 通常情况下我们使用这些复杂的权限的时候会非常小心， 并且规划好权限对于我们的开发至关重要。如下案例：</p>
+<ol>
+<li><p>运维人员， 通常都是需要对集群进行管理， 并监控集群的状态， 通常情况可以简单分为两种运维人员， 集群管理员， 集群监测员，创建权限如下：</p>
+<p>集群管理员： host中创建 cluster admin 用户(cadmin), ambari中创建用户(cadmin)用户，并为其设置为集群管理员角色。</p>
+<p>集群监测源： host中创建 cluster view 用户(cview), ambari中创建(cview)用户， 并为其设置为集群操作员角色。</p>
+</li>
+<li><p>开发人员， 通常对服务进行启动停止， 配置修改， 对某些服务进行访问， 通常不同的开发人员有不用的权限。如下案例：</p>
+<p>spark开发人员： host中创建开发用户(feng), ambari中创建(feng)，并为其设置集群服务操作员角色， 在kerberos中添加票证， 并导出keytab文件给用户。 为用户配置hdfs权限， yarn权限， spark权限，hbase权限， kafka权限， hive权限等等。</p>
+<p>注意： hdfs、yarn、spark、hbase、kafka、hive等为feng添加权限的时候， 通常需要先使用kinit登录到自己的权限， 再讲权限设置给feng用户。 如： hbase 为feng用户添加权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kinit -kt /var/kerberos/keytab/hbase.headless.keytab hbase-ilivoo@ILIVOO.COM</span><br><span class="line">hbase shell</span><br><span class="line">grant  &apos;feng&apos;, &apos;RWCA&apos;   #授权feng用户有rwca权限</span><br></pre></td></tr></table></figure>
+<p>当然： 现在情况有所变化， hdfs、yarn、hbase、kafka、hive等都可以使用ranger为其配置权限， 所以如果这些组件使用了ranger插件， 那么就必须使用ranger为其配置。</p>
+</li>
+<li><p>建议能够使用hdfs自己的权限位， 就不要使用ranger来管理。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="kafka安装kerberos"><a href="#kafka安装kerberos" class="headerlink" title="kafka安装kerberos"></a>kafka安装kerberos</h4><ul>
+<li><p>参考 <code>https://www.cnblogs.com/dongxiao-yang/p/7131626.html</code></p>
+</li>
+<li><p>服务端修改基本配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">listeners=SASL_PLAINTEXT://:6667      --修改listeners</span><br><span class="line">sasl.kerberos.service.name=kafka      --添加kerberos.name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启用kerberos后，部分kafka管理脚本需要增加额外的参数才能使用, 建立 <code>client.properties</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">security.protocol=SASL_PLAINTEXT</span><br></pre></td></tr></table></figure>
+<p>新命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">所以新命令的使用方式为</span><br><span class="line">/usr/hdp/3.1.0.0-78/kafka/bin/kafka-topics.sh --create --zookeeper hdp1.ilivoo.com:2181 --replication-factor 3 --partitions 12 --topic test</span><br><span class="line"></span><br><span class="line">bin/kafka-consumer-groups.sh --bootstrap-server hdp1.ilivoo.com:6667 --list --command-config client.properties</span><br><span class="line"></span><br><span class="line">bin/kafka-console-producer.sh --broker-list hdp1.ilivoo.com:6667 --topic dxTT --producer.config client.properties</span><br><span class="line">过期，需要重新申请或者renew Ticket</span><br><span class="line">bin/kafka-console-consumer.sh --bootstrap-server hdp1.ilivoo.com:6667 --topic dxTT --consumer.config client.properties --from-beginning</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="kerberos遇到的问题"><a href="#kerberos遇到的问题" class="headerlink" title="kerberos遇到的问题"></a>kerberos遇到的问题</h4><ul>
+<li><p><code>kinit -R</code> 无法续约，这是因为kerberos的每个principal都可以指定超过此时间则ticket就会过期，需要重新申请或者renew有效时间和刷新时间， 默认添加principal的时候并没有指定它的刷新时间和有效时间，所以就使用了服务器默认配置的时间</p>
+<p><code>kerberos Server上的/var/kerberos/krb5kdbc/kdc.conf中的max_life kadmin.local</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">modprinc -maxlife &quot;1 week&quot; feng@ILIVOO.COM</span><br><span class="line">modprinc -maxrenewlife &quot;1 week&quot; feng@ILIVOO.COM</span><br><span class="line">modprinc -maxlife &quot;1 week&quot; krbtgt/ILIVOO.COM@ILIVOO.COM</span><br><span class="line">modprinc -maxrenewlife &quot;1 week&quot; krbtgt/ILIVOO.COM@ILIVOO.COM</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>krbtgt表示服务端的tgt必须设置， 设置完成需要重新<code>kinit</code></p>
+</li>
+<li><p>kerberos 的票据的生命周期由lifetime和renewlifetime决定， 当生命周期超过lifetime则ticket就会过期，需要重新申请或者renew，如果重新申请非常容易理解， 直接重新申请就可以了。如果需要renew则首先要开启renew功能， 由上一个问题解决。通常情况下来说，renewlifetime会大于lifetime，如：lifetime=2d，renewlifetime=7d。而这两个时间由五个基本的时间决定：</p>
+<ul>
+<li><p>最基本由kerberos Server上的/var/kerberos/krb5kdbc/kdc.conf中的max_life 和 max_renewable_life决定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[realms]</span><br><span class="line"> ILIVOO.COM = &#123;</span><br><span class="line">  max_life = 2d</span><br><span class="line">  max_renewable_life = 7d</span><br><span class="line">  ...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内置principal krbtgt的maxmum ticket life 和 renew life,可在kadmin命令下执行getprinc命令查看</p>
+</li>
+<li><p>使用的principal的maximum tiket life 和 renew life，可在kadmin命令下用getprinc命令查看</p>
+</li>
+<li><p>再就是kerberos client上/etc/krb5.conf的ticket_lifetime 和 renew_lifetime</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[libdefaults]</span><br><span class="line">  ticket_lifetime = 2d</span><br><span class="line">  renew_lifetime = 7d</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>kinit 参数后面指定的时间, 如： <code>kinit -l 2d -r 7d my_principal</code></p>
+</li>
+</ul>
+<p><strong>注意：</strong>上面五个生命周期依次往上逐渐取最小</p>
+</li>
+<li><p>kerberos spark集群连接hbase、kafka， 由于spark以及处理了kerberos认证问题，在spark的Driver启动的时候spark获取kerberos认证， 并将认证打包成代理Token存放在HDFS上， 当启动Executor的时候会带上这个Token用于Executor上的验证。当Token快要失效的时候Spark Driver会再次去刷新认证， 并讲认证信息告诉Executor，从而保证整个过程中长时间运行。</p>
+<p><strong>注意：</strong>hbase的classpath是一个麻烦的事情， 因为通常情况下如果简单指定hbase-client会导致hbase 在Executor中没有认证的现象，所以必须讲hbase-server依赖带上。</p>
+</li>
+</ul>
 
-配置kerberos多用户ticket缓存名字
-12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerbero
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/13/hadoop-kerberos/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -2078,7 +2394,7 @@ krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2128,7 +2444,7 @@ krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2307,13 +2623,6 @@ krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
 

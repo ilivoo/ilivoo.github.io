@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -100,7 +100,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -441,7 +441,7 @@
 <p><code>sudo apt install dmenu</code></p>
 </li>
 <li><p>安装passmenu脚本到path中</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line">shopt -s nullglob globstar</span><br><span class="line"></span><br><span class="line">typeit=0</span><br><span class="line">if [[ $1 == "--type" ]]; then</span><br><span class="line">	typeit=1</span><br><span class="line">	shift</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">prefix=$&#123;PASSWORD_STORE_DIR-~/.password-store&#125;</span><br><span class="line">password_files=( "$prefix"/**/*.gpg )</span><br><span class="line">password_files=( "$&#123;password_files[@]#"$prefix"/&#125;" )</span><br><span class="line">password_files=( "$&#123;password_files[@]%.gpg&#125;" )</span><br><span class="line"></span><br><span class="line">password=$(printf '%s\n' "$&#123;password_files[@]&#125;" | dmenu "$@")</span><br><span class="line"></span><br><span class="line">[[ -n $password ]] || exit</span><br><span class="line"></span><br><span class="line">if [[ $typeit -eq 0 ]]; then</span><br><span class="line">	pass show -c "$password" 2&gt;/dev/null</span><br><span class="line">else</span><br><span class="line">	pass show "$password" | &#123; IFS= read -r pass; printf %s "$pass"; &#125; |</span><br><span class="line">		xdotool type --clearmodifiers --file -</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">shopt -s nullglob globstar</span><br><span class="line"></span><br><span class="line">typeit=0</span><br><span class="line">if [[ $1 == "--type" ]]; then</span><br><span class="line">	typeit=1</span><br><span class="line">	shift</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">prefix=$&#123;PASSWORD_STORE_DIR-~/.password-store&#125;</span><br><span class="line">password_files=( "$prefix"/**/*.gpg )</span><br><span class="line">password_files=( "$&#123;password_files[@]#"$prefix"/&#125;" )</span><br><span class="line">password_files=( "$&#123;password_files[@]%.gpg&#125;" )</span><br><span class="line"></span><br><span class="line">password=$(printf '%s\n' "$&#123;password_files[@]&#125;" | dmenu "$@")</span><br><span class="line"></span><br><span class="line">[[ -n $password ]] || exit</span><br><span class="line"></span><br><span class="line">if [[ $typeit -eq 0 ]]; then</span><br><span class="line">	pass show -c "$password" 2&gt;/dev/null</span><br><span class="line">else</span><br><span class="line">	pass show "$password" | &#123; IFS= read -r pass; printf %s "$pass"; &#125; |</span><br><span class="line">		xdotool type --clearmodifiers --file -</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>添加系统快捷键</p>
 <p>路径： <code>System Settings --&gt; keyboard --&gt; Shortcuts --&gt; Custom Shortcuts</code></p>
@@ -618,7 +618,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -813,13 +813,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
   <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>

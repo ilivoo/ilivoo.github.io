@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -98,7 +98,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -388,15 +388,33 @@
       
         
           
-          安装tmuxinator1234567891011121314https://github.com/tmuxinator/tmuxinatorsudo apt-get install ruby-fullsudo gem install tmuxinator设置编辑器， 由于tmuxinator编辑项
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/26/tools-tmuxinator/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <p>安装tmuxinator<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/tmuxinator/tmuxinator</span><br><span class="line">sudo apt-get install ruby-full</span><br><span class="line">sudo gem install tmuxinator</span><br><span class="line">设置编辑器， 由于tmuxinator编辑项目</span><br><span class="line">$EDITOR = vim</span><br><span class="line">tmuxinator默认的存放项目位置</span><br><span class="line">~/.config/tmuxinator</span><br><span class="line">配置zsh命令简写和自动完成 TAB键</span><br><span class="line">a. 在.zshrc中添加</span><br><span class="line">source ~/.bin/tmuxinator.zsh</span><br><span class="line">b. 拷贝自动完成脚本</span><br><span class="line">cp ~/.bin/tmuxinator.fish ~/.config/fish/completions/</span><br><span class="line">注意：如果不存在~/.bin目录，那么自己下载到这个文件夹</span><br><span class="line">文件路径 https://github.com/tmuxinator/tmuxinator/tree/master/completion/</span><br></pre></td></tr></table></figure></p>
+<p>基本命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator new/edit/open project		创建/编辑/打开项目， 可以使用n/e/o简洁表示</span><br><span class="line">tmuxinator start [PROJECT] [ARGS]	启动一个项目</span><br><span class="line">tmuxinator stop [PROJECT]			停止一个项目</span><br><span class="line">tmuxinator list						显示所有项目</span><br><span class="line">tmuxinator delete [PROJECT1] [PROJECT2]	删除一个或者多个项目</span><br><span class="line">tmuxinator copy [EXISTING] [NEW]		复制一个项目</span><br><span class="line">tmuxinator debug [PROJECT] [ARGS]	debug一个项目</span><br></pre></td></tr></table></figure></p>
+<p>示例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"># 项目名称</span><br><span class="line">name: sample</span><br><span class="line"># 项目主目录</span><br><span class="line">root: ~/</span><br><span class="line"># 所有的窗口创建之前执行的命令</span><br><span class="line">pre_window: echo &quot;hello world&quot;</span><br><span class="line"></span><br><span class="line"># 所有的windows</span><br><span class="line">windows:</span><br><span class="line">    # windows 1 editor, 指定名字为myeditor</span><br><span class="line">    - editor: myeditor</span><br><span class="line">        # 指定当前window的主目录</span><br><span class="line">        root: ~/projects/editor</span><br><span class="line">        # layout 指定当前window的排版方式， 默认有5种</span><br><span class="line">        # 也可以自己定制， 方法在下面</span><br><span class="line">        layout: main-vertical</span><br><span class="line">        # 当前windows下所有的panes， 使用layout指定的排版方式排版</span><br><span class="line">        panes:</span><br><span class="line">            # 面板一， 此面板只有命令vim， 所以这样写就可以了</span><br><span class="line">            - vim</span><br><span class="line">            # 面板二， 此面板存在多一个命令， 将多个命令回车添加</span><br><span class="line">            # 必须上一个命令执行成功才会执行下一个命令</span><br><span class="line">            - logs:</span><br><span class="line">                - ssh logs@example.com</span><br><span class="line">                - cd /var/logs</span><br><span class="line">                - tail -f development.log</span><br><span class="line">    # window 2， 可以看到单个窗口一个命令， 直接写就可以了</span><br><span class="line">    - server: bundle exec rails s</span><br><span class="line">    # window 3， 同上</span><br><span class="line">    - logs: tail -f log/development.log</span><br></pre></td></tr></table></figure></p>
+<p>使用环境变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root: &lt;%= ENV[&quot;MY_CUSTOM_DIR&quot;] %&gt;</span><br></pre></td></tr></table></figure></p>
+<p>使用参数传递</p>
+<ol>
+<li><p>位置参数</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator start project foo</span><br><span class="line"># 此处的args[0]就是foo</span><br><span class="line">root: ~/&lt;%= @args[0] %&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>命名参数</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmuxinator start project workspace=workspace/todo</span><br><span class="line"># 此处的workspace 就是上面设置的值workspace/todo</span><br><span class="line">root: ~/&lt;%= @settings[&quot;workspace&quot;] %&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>tmux默认5种layout<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">even-horizontal</span><br><span class="line">even-vertical</span><br><span class="line">main-horizontal</span><br><span class="line">main-vertical</span><br><span class="line">tiled</span><br></pre></td></tr></table></figure></p>
+<p>tmux自定义layout</p>
+<ol>
+<li><p>打印layout</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ tmux list-windows</span><br><span class="line">1: bash* (4 panes) [211x47] [layout 9a0a,211x47,0,0&#123;110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24&#123;49x23,111,24,14,50x23,161,24,15&#125;]&#125;] @3 (active)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>截取layout</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">9a0a,211x47,0,0&#123;110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24&#123;49x23,111,24,14,50x23,161,24,15&#125;]&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置layout</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">layout:9a0a,211x47,0,0&#123;110x47,0,0,12,100x47,111,0[100x23,111,0,13,100x23,111,24&#123;49x23,111,24,14,50x23,161,24,15&#125;]&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+          
         
       
     </div>
@@ -558,20 +576,36 @@
       
         
           
-          
-安装tmux
- 1https://github.com/gpakosz/.tmux
+            <ol>
+<li><p>安装tmux</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/gpakosz/.tmux</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置tmux</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set-option -g allow-rename off</span><br><span class="line">每一次窗口执行不同的命令窗口的名字就会发生变化， 此处是关闭自动命名</span><br><span class="line">set-window-option -g pane-base-index 1</span><br><span class="line">设置窗口pane的下标从1开始</span><br><span class="line"># on Linux, this requires xsel or xclip</span><br><span class="line">tmux_conf_copy_to_os_clipboard=true</span><br><span class="line">设置tmux剪切板与系统剪切板同步</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用tmux</p>
+<ol>
+<li>tmux使用来管理回话并提供分屏等功能的软件， 当tmux开启时， 就会启动一个tmux-server的程序，用来管理上面所有的session会话， 每个session会话中可以存在多个windows（窗口）， 每个窗口又存在多个panel（面板）</li>
+<li><p>tmux命令</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tmux + tab				列出所有tmux可以使用的命令</span><br><span class="line">tmux new-session -s name		创建session</span><br><span class="line">tmux list-session			查看session</span><br><span class="line">tmux attach-session name	attach到某个session</span><br><span class="line">tmux kill-session name		杀死某个session</span><br><span class="line">tmux info 				查看session, window, pane, 运行的进程号</span><br><span class="line">tmux list-keys 				列出所有可以的快捷键和其运行的 tmux 命令</span><br><span class="line">tmux list-commands 		列出所有的 tmux 命令及其参数</span><br><span class="line">tmux kill-server 关闭所有 session</span><br></pre></td></tr></table></figure>
+<p> <em>注意</em> 所有的上面这些命令在没进入某个session之前直接使用tmux command args来调用， 当进如了tmux之后直接在任何的panel中通过 <code>&lt;pre&gt; + : +command args</code>来激活命令行操作， 此时所有的命令只需要使用 command args就可以调用了</p>
+</li>
+<li><p>tmux 基本操作</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">? 列出所有快捷键；按q返回</span><br><span class="line">d 脱离当前会话,可暂时返回Shell界面</span><br><span class="line">s 选择并切换会话；在同时开启了多个会话时使用</span><br><span class="line">: 进入命令行模式；此时可输入支持的命令，例如 kill-server 关闭所有tmux会话, rename 重命名当前session</span><br><span class="line">[ 复制模式，光标移动到复制内容位置，空格键开始，方向键选择复制，回车确认，q/Esc退出， 可以设置vi模式复制</span><br><span class="line">] 进入粘贴模式，粘贴之前复制的内容，按q/Esc退出</span><br><span class="line">t 显示当前的时间</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>tmux 窗口操作</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">c 创建新窗口</span><br><span class="line">&amp; 关闭当前窗口</span><br><span class="line">[0-9] 数字键切换到指定窗口</span><br><span class="line">ctrl + h/l 左右切换窗口（安装ctrl， 并快速的按h/l）</span><br><span class="line">w 通过窗口列表切换窗口</span><br><span class="line">, 重命名当前窗口，便于识别</span><br><span class="line">. 修改当前窗口编号，相当于重新排序</span><br><span class="line">f 在所有窗口中查找关键词，便于窗口多了切换</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>tmux 面板操作</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&quot;/- 将当前面板上下分屏</span><br><span class="line">%/_ 将当前面板左右分屏</span><br><span class="line">x 关闭当前分屏</span><br><span class="line">! 将当前面板置于新窗口,即新建一个窗口,其中仅包含当前面板</span><br><span class="line">z 最大化当前所在面板</span><br><span class="line">ctrl+方向键 以1个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">alt+方向键 以5个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">H/J/K/L 以1个单元格移动边缘以调整当前面板大小</span><br><span class="line">q 显示面板编号</span><br><span class="line">o 选择当前窗口中下一个面板</span><br><span class="line">方向键/h/j/k/l 移动光标选择对应面板</span><br><span class="line">&#123; 向前置换当前面板</span><br><span class="line">&#125; 向后置换当前面板</span><br><span class="line">alt+o 逆时针旋转当前窗口的面板</span><br><span class="line">ctrl+o 顺时针旋转当前窗口的面板</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>tmux 滚屏操作，由于tmux接管如果输出大量的数据无法看到上面屏幕的字， 如果此时鼠标操作关闭，那么当使用鼠标滑轮的时候显示的执行过命令的显示， 而不能屏幕翻页， 要想达到这个目的有两个办法：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">打开鼠标操作， 使用滑轮上下翻页 &lt;pre&gt; + m</span><br><span class="line">打开复制模式， 使用vi的翻滚策略来操作， 此时又会碰到一个问题， 如果前缀是ctrl + b那么不好往下整页翻滚， 建议使用半屏翻滚 ctrl + u / d(f)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</li>
+</ol>
 
-设置tmux
- 1234567set-option -g allow-rename off每一次窗口执行不同的命令窗口的名字就会发生变化， 此处是关闭自动命名set-window-option -g pane-b
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/26/tools-tmux/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -711,23 +745,18 @@
       
         
           
+            <ol>
+<li><p>安装zsh</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install zsh    #安装zsh</span><br><span class="line">chsh -s /bin/zsh            #不需要sudo，重启</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装oh-my-zsh</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/robbyrussell/oh-my-zsh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装zsh插件</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi-mode</span><br><span class="line">autojump 				        需要安装软件</span><br><span class="line">zsh-autosuggestions 	  https://github.com/zsh-users/zsh-autosuggestions</span><br><span class="line">last-working-dir        </span><br><span class="line">d						            在终端输入d 显示最近频繁进入的路径，然后输入路径前对应的序号可快速进入对应路径</span><br><span class="line">history					        用法：在终端输入h即可</span><br><span class="line">zsh-syntax-highlighting	https://github.com/zsh-users/zsh-syntax-highlighting</span><br><span class="line">web-search				      如：google StackOverflow， 指定搜搜引擎就可以了</span><br><span class="line">sublime					        需要安装软件， [s]st [|文件|文件夹] [管理员]打开 [当前目录|文件|文件夹]</span><br></pre></td></tr></table></figure></li>
+</ol>
+
           
-安装zsh
- 12sudo apt-get install zsh    #安装zshchsh -s /bin/zsh            #不需要sudo，重启
-
-安装oh-my-zsh
- 1https://github.com/robbyrussell/oh-my-zsh
-
-安装zsh插件
-
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/26/tools-zsh/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -889,22 +918,17 @@
       
         
           
+            <ol>
+<li><p>安装直接网上搜索，并对其破解</p>
+</li>
+<li><p>插件安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. ConvertToUTF8 和 GBK Support</span><br><span class="line">2. Pretty Json</span><br><span class="line">3. SideBarEnhancements</span><br><span class="line">4. vim</span><br><span class="line">5. MarkdownPreview</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>快捷键</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、使用Ctrl + `：打开或者关闭Sublime Text控制台。SublimeText控制台就是一个python的命令窗口。</span><br><span class="line">2、Ctrl+Shift+P：打开或者关闭命令行模式。</span><br><span class="line">3、Alt+Shift+2：分屏显示。( Alt+Shift+数字 )表示分几屏。默认即1，最大貌似是5。</span><br><span class="line">4、Sublime Text的一大亮点是支持多重选择——同时选择多个区域，然后同时进行编辑。Ctrl + D选择当前光标所在的词并高亮该词所有出现的位置，再次Ctrl + D选择该词出现的下一个位置。</span><br></pre></td></tr></table></figure></li>
+</ol>
+
           
-安装直接网上搜索，并对其破解
-
-插件安装
-123451. ConvertToUTF8 和 GBK Support2. Pretty Json3. SideBarEnhancements4. vim5. MarkdownPreview
-
-快捷键
-12341、使用Ctrl + `：打开或者关闭Subl
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/26/tools-sublime/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1039,7 +1063,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  956
+                  1,043
                 </span>
               
 
@@ -1066,25 +1090,38 @@
       
         
           
-          使用原生vim
-更新vim到最新版本 1sudo add-apt-repository ppa:jonathonf/vim
+            <h4 id="vim使用"><a href="#vim使用" class="headerlink" title="vim使用"></a>vim使用</h4><ul>
+<li><p>16进制编辑</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">使用vim 打开需要编辑的文件， 如： Hello.class</span><br><span class="line">	vim -b Hello.class</span><br><span class="line">进入xxd转换程序模式</span><br><span class="line">	:%!xxd</span><br><span class="line">查找并修改文件16进制部分</span><br><span class="line">退出xxd转换程序模式（必须退出， 不然以xxd显示进行保存）</span><br><span class="line">	:%!xxd -r</span><br><span class="line">推出vim</span><br><span class="line">	:wq</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="原生vim"><a href="#原生vim" class="headerlink" title="原生vim"></a>原生vim</h4><ol>
+<li>更新vim到最新版本 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:jonathonf/vim</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li>安装vim <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/amix/vimrc</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li><p>添加自动更新到crontab中</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 */6 * * * cd /home/feng/.vim_runtime &amp;&amp; git pull --rebase &gt; /dev/null 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="4">
+<li><p>插件快捷键讲解</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ack.vim         内容搜索      &lt;leader&gt; + g</span><br><span class="line">ctrlp.vim       文件搜索      &lt;leader&gt; + j</span><br><span class="line">bufexplorer.zip 缓存查看      &lt;leader&gt; + o</span><br><span class="line">mru.vim         最近文件      &lt;leader&gt; + f</span><br><span class="line">NERD Tree       文件目录      &lt;leader&gt; + nn</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="使用neovim-vim的替代品-推荐"><a href="#使用neovim-vim的替代品-推荐" class="headerlink" title="使用neovim(vim的替代品,推荐)"></a>使用neovim(vim的替代品,推荐)</h4><ol>
+<li><p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install software-properties-common</span><br><span class="line">sudo add-apt-repository ppa:neovim-ppa/stable</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install neovim</span><br><span class="line">sudo apt-get install python-dev python-pip python3-dev python3-pip</span><br><span class="line">sudo update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 60</span><br><span class="line">sudo update-alternatives --config vi</span><br><span class="line">sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 60</span><br><span class="line">sudo update-alternatives --config vim</span><br><span class="line">sudo update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60</span><br><span class="line">sudo update-alternatives --config editor</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line">call plug#begin(&apos;~/.local/share/nvim/plugged&apos;)</span><br><span class="line">Plug &apos;vim-airline/vim-airline&apos;</span><br><span class="line">Plug &apos;majutsushi/tagbar&apos;</span><br><span class="line">Plug &apos;kien/ctrlp.vim&apos;</span><br><span class="line">Plug &apos;tacahiroy/ctrlp-funky&apos;</span><br><span class="line">Plug &apos;mileszs/ack.vim&apos;</span><br><span class="line">Plug &apos;yegappan/mru&apos;</span><br><span class="line">Plug &apos;ianva/vim-youdao-translater&apos;</span><br><span class="line">Plug &apos;yonchu/accelerated-smooth-scroll&apos;</span><br><span class="line">Plug &apos;jlanzarotta/bufexplorer&apos;</span><br><span class="line">Plug &apos;mhinz/vim-startify&apos;</span><br><span class="line">Plug &apos;scrooloose/nerdtree&apos;, &#123; &apos;on&apos;:  &apos;NERDTreeToggle&apos; &#125;</span><br><span class="line">Plug &apos;easymotion/vim-easymotion&apos;</span><br><span class="line">Plug &apos;Valloric/YouCompleteMe&apos;</span><br><span class="line">call plug#end()</span><br><span class="line"></span><br><span class="line">set nobackup</span><br><span class="line">set nowb</span><br><span class="line">set noswapfile</span><br><span class="line">&quot;set number</span><br><span class="line">nnoremap &lt;F5&gt; :set nonumber!&lt;CR&gt;:set foldcolumn=0&lt;CR&gt;  &lt;Paste&gt;</span><br><span class="line">set hlsearch</span><br><span class="line">set ignorecase</span><br><span class="line">set incsearch</span><br><span class="line">set smartcase</span><br><span class="line">filetype plugin indent on</span><br><span class="line">set tabstop=4</span><br><span class="line">set softtabstop=4</span><br><span class="line">set shiftwidth=4</span><br><span class="line">set expandtab</span><br><span class="line"></span><br><span class="line">&quot;快捷键的映射，通过不同的前缀定义快捷键在那种模式下启动</span><br><span class="line">&quot;nore前缀   非递归</span><br><span class="line">&quot;n前缀      普通实施生效</span><br><span class="line">&quot;v前缀      可视模式生效</span><br><span class="line">&quot;i前缀      插入模式生效</span><br><span class="line">&quot;c前缀      在EX命令模式生效</span><br><span class="line"></span><br><span class="line">&quot;定义前缀键</span><br><span class="line">:let mapleader=&quot;;&quot;</span><br><span class="line"></span><br><span class="line">&quot;定义NERDTree出发快捷键</span><br><span class="line">map &lt;F2&gt; :NERDTreeToggle&lt;CR&gt;</span><br><span class="line">autocmd bufenter * if (winnr(&quot;$&quot;) == 1 &amp;&amp; exists(&quot;b:NERDTree&quot;) &amp;&amp; b:NERDTree.isTabTree()) | q | endif</span><br><span class="line"></span><br><span class="line">&quot;定义文件结构快捷键</span><br><span class="line">nmap &lt;F3&gt; :TagbarToggle&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;定义文件搜索相关</span><br><span class="line">&quot;let g:ctrlp_map = &apos;&lt;c-p&gt;&apos;</span><br><span class="line">let g:ctrlp_map = &apos;&lt;F8&gt;&apos;</span><br><span class="line">let g:ctrlp_cmd = &apos;CtrlP&apos;</span><br><span class="line">let g:ctrlp_working_path_mode = &apos;ra&apos;</span><br><span class="line">set wildignore+=*/tmp/*,*.so,*.swp,*.zip</span><br><span class="line">let g:ctrlp_custom_ignore = &#123;</span><br><span class="line">  \ &apos;dir&apos;:  &apos;\v[\/]\.(git|hg|svn)$&apos;,</span><br><span class="line">  \ &apos;file&apos;: &apos;\v\.(exe|so|dll)$&apos;,</span><br><span class="line">  \ &apos;link&apos;: &apos;some_bad_symbolic_links&apos;,</span><br><span class="line">  \ &#125;</span><br><span class="line">let g:ctrlp_user_command = [&apos;.git&apos;, &apos;cd %s &amp;&amp; git ls-files -co --exclude-standard&apos;]</span><br><span class="line">let g:ctrlp_working_path_mode=0</span><br><span class="line">let g:ctrlp_match_window_bottom=1</span><br><span class="line">let g:ctrlp_max_height=15</span><br><span class="line">let g:ctrlp_match_window_reversed=0</span><br><span class="line">let g:ctrlp_mruf_max=500</span><br><span class="line">let g:ctrlp_follow_symlinks=1</span><br><span class="line">&quot;ctrl + j/k 进行上下选择</span><br><span class="line">&quot;ctrl + x 在当前窗口水平分屏打开文件</span><br><span class="line">&quot;ctrl + v 同上, 垂直分屏</span><br><span class="line">&quot;ctrl + t 在tab中打开</span><br><span class="line"></span><br><span class="line">&quot;定义文件中搜索函数</span><br><span class="line">nnoremap &lt;Leader&gt;f :CtrlPFunky&lt;Cr&gt;</span><br><span class="line">nnoremap &lt;Leader&gt;fu :execute &apos;CtrlPFunky &apos; . expand(&apos;&lt;cword&gt;&apos;)&lt;Cr&gt;</span><br><span class="line">let g:ctrlp_funky_syntax_highlight = 1</span><br><span class="line">let g:ctrlp_extensions = [&apos;funky&apos;]</span><br><span class="line"></span><br><span class="line">&quot;定义内容搜索快捷键</span><br><span class="line">let g:ackprg = &apos;ag --nogroup --nocolor --column&apos;</span><br><span class="line">map &lt;F7&gt; :Ack&lt;space&gt;</span><br><span class="line">if executable(&apos;ag&apos;)</span><br><span class="line">  &quot; Use Ag over Grep</span><br><span class="line">  set grepprg=ag\ --nogroup\ --nocolor</span><br><span class="line"></span><br><span class="line">  &quot; Use ag in CtrlP for listing files. Lightning fast and respects .gitignore</span><br><span class="line">  let g:ctrlp_user_command = &apos;ag %s -l --nocolor -g &quot;&quot;&apos;</span><br><span class="line"></span><br><span class="line">  &quot; ag is fast enough that CtrlP doesn&apos;t need to cache</span><br><span class="line">  let g:ctrlp_use_caching = 0</span><br><span class="line">endif</span><br><span class="line"></span><br><span class="line">&quot;定义缓冲文件快捷键</span><br><span class="line">nnoremap &lt;silent&gt; &lt;F9&gt; :BufExplorer&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;定义最近文件快捷键</span><br><span class="line">nnoremap &lt;silent&gt; &lt;F10&gt; :MRU&lt;CR&gt;</span><br><span class="line">let MRU_Window_Height = 10</span><br><span class="line">&quot;jk          # 在历史记录列表中上下移动</span><br><span class="line">&quot;Enter       # 进入相应文件</span><br><span class="line">&quot;o       # 水平方向打开</span><br><span class="line">&quot;t           # 在新标签中打开历史文件</span><br><span class="line">&quot;u           # 更新文件列表</span><br><span class="line">&quot;q           # 退出MRU历史记录</span><br><span class="line">&quot;v           # 以只读模式打开</span><br><span class="line">&quot;/           # 在MRU列表中快速查找</span><br><span class="line"></span><br><span class="line">&quot;定义有道翻译快捷键</span><br><span class="line">vnoremap &lt;silent&gt; &lt;C-T&gt; :&lt;C-u&gt;Ydv&lt;CR&gt;</span><br><span class="line">nnoremap &lt;silent&gt; &lt;C-T&gt; :&lt;C-u&gt;Ydc&lt;CR&gt;</span><br><span class="line">noremap &lt;leader&gt;yd :&lt;C-u&gt;Yde&lt;CR&gt;</span><br><span class="line"></span><br><span class="line">&quot;定义跳转快捷键</span><br><span class="line">map  &lt;Leader&gt;w &lt;Plug&gt;(easymotion-bd-w)</span><br><span class="line">nmap &lt;Leader&gt;w &lt;Plug&gt;(easymotion-overwin-w)</span><br><span class="line"></span><br><span class="line">&quot;YouCompleteMe快捷键</span><br><span class="line">nnoremap &lt;leader&gt;gl :YcmCompleter GoToDeclaration&lt;CR&gt;</span><br><span class="line">nnoremap &lt;leader&gt;gf :YcmCompleter GoToDefinition&lt;CR&gt;</span><br><span class="line">nnoremap &lt;leader&gt;gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR&gt;</span><br></pre></td></tr></table></figure></li>
+</ol>
 
-
-
-安装vim 1https://github.com/amix/vimrc
-
-
-
-添加自动更新到crontab中
- 10 */6 * * * cd /home/feng/.
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/26/tools-vim/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -1246,16 +1283,12 @@
       
         
           
-          操作系统启动顺序12345引导程序init进程(初始化操作系统 fork exec)login进程(用于校验用户信息, 并执行exec)bash进程(解释用户输入,并执行fork和exec)用户进程, 整个启动顺序
-进程基本操作1234567nohup 用来接管程序运行，不会挂起程序并接管控制台输出
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/26/linux-terminal/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="操作系统启动顺序"><a href="#操作系统启动顺序" class="headerlink" title="操作系统启动顺序"></a>操作系统启动顺序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">引导程序</span><br><span class="line">init进程(初始化操作系统 fork exec)</span><br><span class="line">login进程(用于校验用户信息, 并执行exec)</span><br><span class="line">bash进程(解释用户输入,并执行fork和exec)</span><br><span class="line">用户进程, 整个启动顺序</span><br></pre></td></tr></table></figure>
+<h4 id="进程基本操作"><a href="#进程基本操作" class="headerlink" title="进程基本操作"></a>进程基本操作</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nohup 用来接管程序运行，不会挂起程序并接管控制台输出到文件中</span><br><span class="line">command &amp;   //将进程放在后台执行 </span><br><span class="line">ctrl-z      //暂停当前进程 并放入后台, 放入后台后可以直接使用bg转换成后台执行 </span><br><span class="line">jobs        //查看当前后台任务</span><br><span class="line">bg          //将任务转为后台执行 </span><br><span class="line">fg          //将任务调回前台 </span><br><span class="line">kill        //杀掉任</span><br></pre></td></tr></table></figure>
+<h4 id="进程输入输出重定向"><a href="#进程输入输出重定向" class="headerlink" title="进程输入输出重定向"></a>进程输入输出重定向</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">重定向（在终端下如果，没有指明标准输入、标准输出、标准错误， 那么默认都是屏幕）</span><br><span class="line">标准输入 0， 标准输出 1， 标准错误 2， &gt; 替换， &gt;&gt; 追加</span><br><span class="line">&lt; 		将标准输入更改为某个文件</span><br><span class="line">&gt; 		默认将标准输入重定向， 和 1&gt; 完全等价</span><br><span class="line">2&gt; 		将标准错误重定向</span><br><span class="line">&amp; 		表示获取到某种类型管道（如果没有数字表示获取所有管道）， 如 &amp;1表示获取到标准输出</span><br><span class="line">tee 	多重输出</span><br><span class="line">如：command &gt; log.out 2&gt;&amp;1 &lt; /dev/null &amp;， 将标准输出重定向到我文件（此时标准输出1就是文件log.out）,  把标准错误重定向到标准输出中(最终也是文件中), 标准输入使用 /dev/null 文件， 并后台启动</span><br></pre></td></tr></table></figure>
+<h4 id="！使用技巧"><a href="#！使用技巧" class="headerlink" title="！使用技巧"></a>！使用技巧</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">!!  上一个命令， 在缺少sudo的时候是非常有用的， sudo !!</span><br><span class="line">!n  运行历史的第n条命令</span><br><span class="line">!-n 运行历史的倒数第n条命令</span><br><span class="line">!*  使用上一个命令的所有参数： touch hello world,  rm -rf !*  删除刚才创建的两个文件</span><br><span class="line">!^  使用上一个命令的地一个参数: touch hello world, rm -rf !^ 删除hello文件</span><br><span class="line">!$ 使用上一个命令的最后一个参数 :  touch hello world,  rm -rf !$ 删除world文件</span><br><span class="line">!:-  使用上一个命令的除了最后一个参数所有的参数，包括命令:  touch hello world</span><br></pre></td></tr></table></figure>
+
+          
         
       
     </div>
@@ -1417,17 +1450,38 @@
       
         
           
+            <ol>
+<li><p><code>DefaultMongoPartitioner</code> 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小（没有太多实质性的意义,所以并不准）</span><br><span class="line">samplesPerPartition 每个分区抽样个数</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一步通过 <code>collStats</code> 聚合命令获取集合的统计信息</li>
+<li>如果有 <code>match</code> 聚合操作就使用 <code>countDocuments(match)</code> 方法获取集合的数量</li>
+<li>抽样获取集合分区键，并对集合进行分区</li>
+</ul>
+</li>
+<li><p><code>MongoSplitVectorPartitioner</code>  通过 <code>SplitVector</code>命令来进行分区，需要 <code>ClusterManager</code> 权限， 这个命令的最初意图是对集合进行split，也就是对集群生成chunk分裂计划，所以mongo spark就借鉴这个命令进行分区划分， 主要对单节点或者复制集群使用</p>
+<p>注意：适合 <code>match</code> 聚合中只使用 <code>$gt</code> 和 <code>$lt</code> 类型的比较符, 如果不是的那么它使用最小和最大键作为分区，这样分区之后由于它不会使用 <code>match</code> 所以可能导致分区并不是特别合适</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小（比较准确的值）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoShardedPartitioner</code> 直接对sharded集合进行分区，因为sharded集合本身就是分区的，所以mongo spark直接使用 <code>chunk</code> 大小作为分区大小，只能对shard集群使用，并且它还会给出 <code>chunk</code> 的具体位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shardKey shard键</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoPaginateByCountPartitioner</code> 通过分页数量来对分区，由于需要多次执行分页操作，而且越到大的分区其实是越慢的，所以没什么用，可以对任何部署方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">numberOfPartitions 每个分区数量</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoPaginateBySizePartitioner</code> 通过分页集合大小来进行分区，和上面道理差不错多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从上面的集中分区方式可以，<code>DefaultMongoPartitioner</code> 之所以被当着默认的是因为它满足分和部署方式，并且性能一般也还可以。但是对于平时使用的过程中建议还是根据集群的部署方式以及 <code>match</code> 条件进行选择合适的 <code>partitioner</code> </p>
+<ul>
+<li>如果集群是单机或这复制集群，并且 <code>match</code> 中只有使用 <code>$gt</code> 和 <code>$lt</code> 类型的比较符， 那么推荐使用 <code>MongoSplitVectorPartitioner</code></li>
+<li>如果是shard机器，那么直接使用 <code>MongoShardedPartitioner</code> ，并推荐看看 <code>chunk</code> 的具体位置怎么使用, 在现在mongo spark中并没有使用到这个参数</li>
+<li>如果不是上面两种情况，那么直接使用使用 <code>DefaultMongoPartitioner</code> 就好了</li>
+</ul>
+</li>
+</ol>
+
           
-DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以
-123partitionKey 分区键partitionSizeMB 每个分区大小（没有太多实质性
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/23/mongo-spark-partitioner/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -1600,17 +1654,93 @@ DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mon
       
         
           
-          importtsv
-命令参数说明
-12345678910111213141516171819202122232425Usage: importtsv -Dimporttsv.columns=a,b,c [options] &lt;tablename&gt; &lt;inputdir&gt;impor
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/08/05/hadoop-hbase-admin/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="importtsv"><a href="#importtsv" class="headerlink" title="importtsv"></a>importtsv</h4><ul>
+<li><p>命令参数说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Usage: importtsv -Dimporttsv.columns=a,b,c [options] &lt;tablename&gt; &lt;inputdir&gt;</span><br><span class="line"></span><br><span class="line">importtsv.columns 导入的列常量</span><br><span class="line">HBASE_ROW_KEY 行健</span><br><span class="line">HBASE_TS_KEY 可选，put时使用的时间，指定这个列后 importtsv.timestamp 将会被忽略</span><br><span class="line">HBASE_CELL_TTL cell time to live</span><br><span class="line">HBASE_CELL_VISIBILITY visibility label expression.</span><br><span class="line">HBASE_ATTRIBUTES_KEY  key=&gt;value</span><br><span class="line"></span><br><span class="line">导入方式参数</span><br><span class="line">-Dimporttsv.bulk.output 使用bulkload方式导入，并指定bulkload的缓存位置</span><br><span class="line">其它参数</span><br><span class="line">-Dimporttsv.dry.run=true 测试模式，数据并非真正导入到表中，如果表不存在创建，并在最后删除</span><br><span class="line">-Dimporttsv.skip.bad.lines=false 是否跳过错误行</span><br><span class="line">-Dimporttsv.log.bad.lines=true log错误行</span><br><span class="line">-Dimporttsv.skip.empty.columns=false 是否跳过空的列</span><br><span class="line">&apos;-Dimporttsv.separator=|&apos; 使用管道代替tab分隔符</span><br><span class="line">-Dimporttsv.timestamp=currentTimeAsLong 使用当前时间</span><br><span class="line">-Dimporttsv.mapper.class=my.Mapper 自定义mapper代替org.apache.hadoop.hbase.mapreduce.TsvImporterMapper</span><br><span class="line">-Dmapreduce.job.name=jobName 指定job名字</span><br><span class="line">-Dcreate.table=no 避免创建表，导入的表必须存在hbase中</span><br><span class="line">-Dno.strict=false 是否严格模式，默认false忽略列族检查</span><br><span class="line">性能参数</span><br><span class="line">  -Dmapreduce.map.speculative=false</span><br><span class="line">  -Dmapreduce.reduce.speculative=false</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>简单例子</p>
+<ul>
+<li><p>文件中的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">r0001	feng	29</span><br><span class="line">r0002	xiang	27</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>直接导入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver importtsv -Dimporttsv.columns=HBASE_ROW_KEY,INFO:name,INFO:age user /user/hbase/user.tsv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>bulkload导入</p>
+<ul>
+<li><p>导出成HFiles</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver importtsv -Dimporttsv.columns=HBASE_ROW_KEY,INFO:name,INFO:age -Dimporttsv.bulk.output=/user/hbase/user_bulk user /user/hbase/user.tsv</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入HFiles</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver completebulkload /user/hbase/user_bulk user</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="export"><a href="#export" class="headerlink" title="export"></a>export</h4><ul>
+<li><p>命令参数说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Usage: Export [-D &lt;property=value&gt;]* &lt;tablename&gt; &lt;outputdir&gt; [&lt;versions&gt; [&lt;starttime&gt; [&lt;endtime&gt;]] [^[regex pattern] or [Prefix] to filter]]</span><br><span class="line"></span><br><span class="line">扫描行存在两种过滤器，正则表达式和前缀</span><br><span class="line"></span><br><span class="line">输出SequenceFile的压缩形式</span><br><span class="line">   -D mapreduce.output.fileoutputformat.compress=true</span><br><span class="line">   -D mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.GzipCodec</span><br><span class="line">   -D mapreduce.output.fileoutputformat.compress.type=BLOCK</span><br><span class="line">指定Scan的参数</span><br><span class="line">   -D hbase.mapreduce.scan.column.family=&lt;family1&gt;,&lt;family2&gt;, ...</span><br><span class="line">   -D hbase.mapreduce.include.deleted.rows=true</span><br><span class="line">   -D hbase.mapreduce.scan.row.start=&lt;ROWSTART&gt;</span><br><span class="line">   -D hbase.mapreduce.scan.row.stop=&lt;ROWSTOP&gt;</span><br><span class="line">   -D hbase.client.scanner.caching=100</span><br><span class="line">   -D hbase.export.visibility.labels=&lt;labels&gt;，指定权限相关</span><br><span class="line">   -D hbase.export.scanner.batch=10</span><br><span class="line">   -D hbase.export.scanner.caching=100</span><br><span class="line">mapreduce参数</span><br><span class="line">   -D mapreduce.job.name=jobName</span><br><span class="line">   -D mapreduce.map.speculative=false</span><br><span class="line">   -D mapreduce.reduce.speculative=false</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li>此处将versions和starttime endtime直接放入到命令行参数当中，可见通常情况下我们都是通过时间来进行增量拷贝</li>
+<li>从这里就衍生出一个问题，我们真的需要将时间戳添加到rowkey当中吗？如果需要通过时间快速的查找那么通常情况下是需要的，如果仅仅只是备份那么通常情况下也不介意全表扫描。充分利用时间戳和版本信息。</li>
+</ul>
+</li>
+<li><p>简单例子</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver export user /user/hbase/user_export</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="import"><a href="#import" class="headerlink" title="import"></a>import</h4><ul>
+<li><p>命令参数说明</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Usage: Import [options] &lt;tablename&gt; &lt;inputdir&gt;</span><br><span class="line"></span><br><span class="line">导入方式参数</span><br><span class="line">  -Dimport.bulk.output=/path/for/output</span><br><span class="line">  -Dimport.bulk.hasLargeResult=true</span><br><span class="line">WAL参数</span><br><span class="line">  -Dimport.wal.durability=&lt;SKIP_WAL/ASYNC_WAL/SYNC_WAL/...&gt;</span><br><span class="line">使用Filter</span><br><span class="line">  -Dimport.filter.class=</span><br><span class="line">  -Dimport.filter.args=</span><br><span class="line">  -Dhbase.import.version=0.94 指定export导出的时hbase版本</span><br><span class="line">MapReduce参数</span><br><span class="line">  -D mapreduce.job.name=jobName</span><br><span class="line">  -Dmapreduce.map.speculative=false</span><br><span class="line">  -Dmapreduce.reduce.speculative=false</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>简单例子</p>
+<ul>
+<li><p>直接导入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver import user /user/hbase/user_export</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>bulkload导入</p>
+<ul>
+<li><p>导出成HFiles</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver import -Dimport.bulk.output=/user/hbase/user_import_bulk user /user/hbase/user_export</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入HFiles</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver completebulkload /user/hbase/user_import_bulk user</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="sqoop-import"><a href="#sqoop-import" class="headerlink" title="sqoop import"></a>sqoop import</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table user --hbase-table user --column-family INFO --hbase-row-key id --hbase-bulkload</span><br></pre></td></tr></table></figure>
+<h4 id="mapreduce-import"><a href="#mapreduce-import" class="headerlink" title="mapreduce import"></a>mapreduce import</h4><ul>
+<li><p>编写MapReduce程序并打包成jar包</p>
+</li>
+<li><p>使用hadoop运行jar包，跟通用的MapReduce一样，但是需要指定hbase classpath</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HADOOP_CLASSPATH=`$&#123;HBASE_HOME&#125;/bin/hbase classpath` $&#123;HADOOP_HOME&#125;/bin/hadoop jar user.jar</span><br></pre></td></tr></table></figure>
+<p><strong>注意： </strong></p>
+<ul>
+<li>如果有classpath的问题，可以参照官网 <code>&lt;http://hbase.apache.org/book.html#hbase.mapreduce.classpath&gt;</code></li>
+<li>如果MapReduce程序虚设置相关参数可以参照 <code>org.apache.hadoop.hbase.mapreduce.Driver</code> 中的基本类进行配置。</li>
+</ul>
+</li>
+</ul>
+<h4 id="copytable-import"><a href="#copytable-import" class="headerlink" title="copytable import"></a>copytable import</h4><ul>
+<li><p>命令参数说明</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Usage: CopyTable [--options] [--starttime=X] [--endtime=Y] [--new.name=NEW] [--peer.adr=ADR] &lt;tablename&gt;</span><br><span class="line"></span><br><span class="line">Options:</span><br><span class="line"> 控制参数</span><br><span class="line"> startrow     the start row</span><br><span class="line"> stoprow      the stop row</span><br><span class="line"> starttime    beginning of the time range (unixtime in millis)</span><br><span class="line">              without endtime means from starttime to forever</span><br><span class="line"> endtime      end of the time range.  Ignored if no starttime specified.</span><br><span class="line"> versions     number of cell versions to copy</span><br><span class="line"> families     comma-separated list of families to copy</span><br><span class="line">              To copy from cf1 to cf2, give sourceCfName:destCfName.</span><br><span class="line">              To keep the same name, just give "cfName"</span><br><span class="line"> all.cells    also copy delete markers and deleted cells</span><br><span class="line"> bulkload     Write input into HFiles and bulk load to the destination table</span><br><span class="line"> 目标集群信息</span><br><span class="line"> rs.class     hbase.regionserver.class of the peer cluster</span><br><span class="line">              specify if different from current cluster</span><br><span class="line"> rs.impl      hbase.regionserver.impl of the peer cluster</span><br><span class="line"> peer.adr    hbase.zookeeper.quorum:hbase.zookeeper.client.port:zookeeper.znode.parent</span><br><span class="line"> new.name     new table's name</span><br><span class="line"></span><br><span class="line">性能参数</span><br><span class="line">    -Dhbase.client.scanner.caching=100 通常应该&gt;=100</span><br><span class="line">    -Dmapreduce.map.speculative=false 永远为false</span><br><span class="line">    </span><br><span class="line">Examples:</span><br><span class="line"> To copy 'TestTable' to a cluster that uses replication for a 1 hour window:</span><br><span class="line"><span class="meta"> $</span> hbase org.apache.hadoop.hbase.mapreduce.CopyTable --starttime=1265875194289 --endtime=1265878794289 --peer.adr=server1,server2,server3:2181:/hbase --families=myOldCf:myNewCf,cf2,cf3 TestTable</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>本地集群导入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.mapreduce.Driver copytable --families=INFO:info  --bulkload --new.name=user2 user</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="rowcounter"><a href="#rowcounter" class="headerlink" title="rowcounter"></a>rowcounter</h4><h4 id="CellCounter"><a href="#CellCounter" class="headerlink" title="CellCounter"></a>CellCounter</h4><h4 id="snapshot-export"><a href="#snapshot-export" class="headerlink" title="snapshot export"></a>snapshot export</h4><ul>
+<li>在同一个集群中使用snapshot通常是用来数据的备份与恢复，并且它对整个hbase集群几乎没有影响</li>
+<li>snapshot export工具是在两个集群中进行备份和恢复的</li>
+</ul>
+
+          
         
       
     </div>
@@ -1783,19 +1913,144 @@ DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mon
       
         
           
-          前置设置
-由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限
-12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop
+            <h4 id="前置设置"><a href="#前置设置" class="headerlink" title="前置设置"></a>前置设置</h4><ul>
+<li><p>由于sqoop需要执行MapReduce任务，并且通常指定输出为 <code>/user/sqoop</code> 目录，所以需要创建并指定权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -mkdir /user/sqoop</span><br><span class="line">hdfs dfs -chown sqoop:hdfs /user/sqoop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>由于sqoop需要访问有hive数据库权限，所以通常需要使用ranger指定sqoop访问被写入的hive数据库</p>
+</li>
+<li>建议使用需要访问目录的用户去执行sqoop命令，这样上面两步都可以省略</li>
+<li>所有的sqoop import需要指定参数 <code>-Dorg.apache.sqoop.splitter.allow_text_splitter=true</code></li>
+<li>每次执行MapReduce任务可能需要删除MapReduce任务输出目录</li>
+<li>官网连接：<code>https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html</code></li>
+<li>hortonwork 教程： <code>https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.1.0/migrating-data/content/hive_moving_data_from_hdfs_to_hive.html</code></li>
+</ul>
+<h4 id="sqoop-import-参数说明"><a href="#sqoop-import-参数说明" class="headerlink" title="sqoop import 参数说明"></a>sqoop import 参数说明</h4><ul>
+<li><p>MySQL连接参数</p>
+<ul>
+<li><code>--connect</code> 指定连接地址</li>
+<li><code>--username, -P|--password|--password-file</code> 关系型数据库密码选项</li>
+</ul>
+</li>
+<li><p>导入控制，默认情况下使用 <code>select min(&lt;split-by&gt;), max(&lt;split-by&gt;) from &lt;table name&gt; where &lt;split-by&gt;</code>  来进行并行度控制，如果没有指定split-by则使用主键作为分区并行键</p>
+<ul>
+<li><p>基本形式导入</p>
+<ul>
+<li><p>指定参数<code>--table --columns --where</code>  需要导出的表、列和条件</p>
+</li>
+<li><p>此处可以不用指定 <code>--target-dir</code> 是因为模式使用 <code>--table</code> 作为 MapReduce输出目录</p>
+</li>
+<li><p>示例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table r_cond_info</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>查询形式导入</p>
+<ul>
+<li><p>指定参数 <code>--query --split-by|-m 1 --target-dir</code> 查询语句、并行分区键（或者使用一个分区）和MapReduce输出目录</p>
+</li>
+<li><p><code>--split-limit</code>  限制分区最大值，防止MapReduce数据发送倾斜</p>
+</li>
+<li><p>示例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query 'select * from r_cond_info where $CONDITIONS' --split-by stcd --target-dir '/user/sqoop/r_cond_info_dir'</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong></p>
+<ul>
+<li>此处必须指定 <code>$CONDITIONS</code> ，并且它会在运行的时候进行替换成 <code>--split-by</code> 的条件</li>
+<li>这种形式不能使用 <code>--as-orcfile</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>导入hive参数</p>
+<ul>
+<li><p><code>--hive-import --hive-database cmsw</code>  基本参数</p>
+</li>
+<li><p><code>--hive-table</code>  知道导入到hive中的表（修改默认mysql表名）</p>
+</li>
+<li><p><code>--create-hive-table</code> 如果hive中表存在，则报错</p>
+</li>
+<li><p><code>--hive-overwrite</code> 覆盖以及存在的表</p>
+</li>
+<li><p><code>--external-table-dir</code>  指定外部表的位置（这个外部表的位置就是MapReduce结果的位置, 注意运行sqoop的用户，因为此时hive需要访问MapReduce输出目录），这样hive表就是一个外部表，通常和 <code>--target-dir</code> 联合使用</p>
+</li>
+<li><p>示例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table r_comm_info --hive-import --hive-database cmsw --as-orcfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>sqoop直接迁移数据到hive当中，是先执行MapReduce任务将RDBMS中的数据按照指定的格式（如：–as-orcfile）写入到HDFS当中，再将HDFS中的数据复制到hive当中</p>
+</li>
+</ul>
+</li>
+<li><p>增量迁移</p>
+<ul>
+<li><p><code>--incremental</code> 增量模式，append 和 lastmodified</p>
+<ul>
+<li>append 表示添加模式（单调递增主键不断添加数据）</li>
+<li>lastmodified 最后修改模式 （存在一个单调递增值，修改数据后会自动增加，如表中存在最后修改时间字段）</li>
+</ul>
+</li>
+<li><p><code>--check-column</code> 指定检查的列，列不能为字符类型</p>
+</li>
+<li><code>--last-value</code> 指定最后增量值，或者最后修改的值</li>
+</ul>
+</li>
+</ul>
+<h4 id="sqoop增量迁移数据到hive中"><a href="#sqoop增量迁移数据到hive中" class="headerlink" title="sqoop增量迁移数据到hive中"></a>sqoop增量迁移数据到hive中</h4><ul>
+<li><p>MySQL中的表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `id` int(11) NOT NULL,</span><br><span class="line">  `name` varchar(20) DEFAULT NULL,</span><br><span class="line">  `last_modify` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive中的表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> base_user(</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">int</span>, </span><br><span class="line">    <span class="keyword">name</span> <span class="keyword">string</span>, </span><br><span class="line">    last_modify <span class="keyword">string</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用基于查询的形式进行控制 lastmodified 类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query 'select * from user where last_modify &gt; "2019-01-01 00:00:00" and $CONDITIONS' --split-by id --target-dir '/user/hive/user' --hive-import --hive-database cmsw --hive-table increment_user --create-hive-table --external-table-dir '/user/hive/increment_user'</span><br></pre></td></tr></table></figure>
+<p><strong>注意： </strong>每次执行前需要删除 <code>/user/hive/user</code> 、<code>/user/hive/increment_user</code> 以及hive表中的 <code>increment_user</code> 表</p>
+</li>
+<li><p>使用增量迁移参数进行控制 lastmodified 类型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table user --target-dir '/user/hive/user' --incremental lastmodified --check-column last_modify --last-value '2019-01-01 00:00:00'</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li>使用 <code>--incremental lastmodified</code> 不支持 hive import，只能后续多进行一个步骤</li>
+<li>执行完成后需要记录 <code>--last-value</code> 的值供后面使用， 推荐使用sqoop job来执行</li>
+</ul>
+</li>
+<li><p>最终将数据写入到基础hive表中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">merge into base_user using increment_user on base_user.id = increment_user.id when matched then update set name=increment_user.name, last_modify=increment_user.last_modify when not matched then insert values(increment_user.id, increment_user.name, increment_user.last_modify);</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong></p>
+<ul>
+<li>使用merge语句建议为base表的连接字段添加主键索引，这样速度会明显加快</li>
+</ul>
+</li>
+<li><p>使用基于查询的形式进行控制 append 类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query &apos;select * from user where id &gt; 0 and $CONDITIONS&apos; --split-by id --target-dir &apos;/user/hive/user&apos; --hive-import --hive-database cmsw --hive-table increment_user --create-hive-table --external-table-dir &apos;/user/hive/increment_user&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用增量迁移参数进行控制 append 类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table user --target-dir &apos;/user/hive/user&apos; --incremental append --check-column id --last-value 0 --hive-import --hive-database cmsw --hive-table increment_user --create-hive-table --external-table-dir &apos;/user/hive/increment_user&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>[选择] 如果已经创建hive外部表则不需要此步骤</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> increment_user (</span><br><span class="line">    <span class="keyword">id</span> <span class="built_in">INT</span>,</span><br><span class="line">    <span class="keyword">name</span> <span class="keyword">STRING</span>,</span><br><span class="line">    last_modify <span class="keyword">STRING</span></span><br><span class="line">) <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">','</span> <span class="keyword">STORED</span> <span class="keyword">AS</span> TEXTFILE location <span class="string">'/user/hive/user'</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明</p>
+<ul>
+<li><p>通常情况下对于事实性性的表都是需要根据时间进行分区的</p>
+</li>
+<li><p>对于维度表通常会进行修改和添加，这样lastmodified就是一个不错的选择了</p>
+</li>
+<li><p>当然最重要的还是hive支持的ACID和merge语句，这样能让我们更加容易维护整个表</p>
+</li>
+<li><p>对于只插入性质的表，通常可以创建一个 <code>insert-only transactional</code> 表，并且进行分区（不能直接使用删除语句，但是可以直接删除分区）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE T2(a int, b int) TBLPROPERTIES (&apos;transactional_properties&apos;=&apos;insert_only&apos;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不建议直接将数据从关系型数据库导入到hive中，使用hive中间表可以保证数据ACID</p>
+</li>
+<li><p>现在也可以直接使用hive的 <code>JdbcStorageHandler</code> 直接访问关系型数据库中的数据，这样更加简单</p>
+</li>
+</ul>
+</li>
+</ul>
 
-由于sqoop需要访问有hive
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/08/01/hadoop-sqoop/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -1968,20 +2223,100 @@ DefaultMongoPartitioner 默认partitioner使用mongodb的抽样聚合操作( mon
       
         
           
-          hive与其它系统集成说明
-现在hive使用StorageHandler只能创建external表, 外部表不能使用load语法
-使用hive作为数据仓库，这样和其它系统直接集成，这样可以打通和其它系统直接的交互，直接导入导出数据
-其它系统通过hive进行连接，也可以达到不同系统之间互通导数据
+            <h4 id="hive与其它系统集成说明"><a href="#hive与其它系统集成说明" class="headerlink" title="hive与其它系统集成说明"></a>hive与其它系统集成说明</h4><ul>
+<li>现在hive使用StorageHandler只能创建external表, 外部表不能使用load语法</li>
+<li>使用hive作为数据仓库，这样和其它系统直接集成，这样可以打通和其它系统直接的交互，直接导入导出数据</li>
+<li>其它系统通过hive进行连接，也可以达到不同系统之间互通导数据</li>
+</ul>
+<h4 id="hive使用phoenix-PhoenixStorageHandler"><a href="#hive使用phoenix-PhoenixStorageHandler" class="headerlink" title="hive使用phoenix PhoenixStorageHandler"></a>hive使用phoenix PhoenixStorageHandler</h4><ul>
+<li><p>配置hive访问phoenix jar包</p>
+<ul>
+<li><p>在hive-env.sh中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HIVE_AUX_JARS_PATH=$&#123;HIVE_AUX_JARS_PATH&#125;:/usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-hive.jar</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在hive-site.xml中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;hive.aux.jars.path&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;/usr/hdp/current/phoenix-client/phoenix-5.0.0.3.1.0.0-78-hive.jar &lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>配置hive用户访问phoenix的系统表权限，通常使用ranger进行配置</p>
+</li>
+<li><p>在phoenix中创建测试表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create table test(id integer not null primary key, name string, age integer);</span><br><span class="line">upsert into test values(1, &quot;xiang&quot;, 28);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在hive中创建external表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create external table test(id int, name string, age int)</span><br><span class="line">STORED BY &apos;org.apache.phoenix.hive.PhoenixStorageHandler&apos;</span><br><span class="line">TBLPROPERTIES (</span><br><span class="line">  &quot;phoenix.table.name&quot; = &quot;test&quot;,</span><br><span class="line">  &quot;phoenix.zookeeper.quorum&quot; = &quot;cmsw1.tepia.com,cmsw2.tepia.com,cmsw3.tepia.com&quot;,</span><br><span class="line">  &quot;phoenix.zookeeper.znode.parent&quot; = &quot;/hbase-unsecure&quot;,</span><br><span class="line">  &quot;phoenix.zookeeper.client.port&quot; = &quot;2181&quot;,  </span><br><span class="line">  &quot;phoenix.rowkeys&quot; = &quot;id&quot;,</span><br><span class="line">  &quot;phoenix.column.mapping&quot; = &quot;id:ID, name:NAME, age:AGE&quot;</span><br><span class="line">);</span><br><span class="line">insert into test values(2, &apos;feng&apos;, 30);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置普通用户访问hive数据库的功能</p>
+</li>
+</ul>
+<p><strong>说明：</strong></p>
+<blockquote>
+<p>将数据存储Phoenix，本质是HBase提供的SQL。用于后端的查询，要求RT在秒级以内。phoenix作为hbase二级索引的最佳组合，测试过上百万级别的数据构建二级索引最快的能在毫秒内返回。另外还有数据的统计分析及数据处理、机器学习建模，当然可以直接操作phoenix或spark+phoenix。对于离线的建模业务，我们希望使用hive做更复杂的处理。</p>
+</blockquote>
+<h4 id="hive使用HBaseStorageHandler"><a href="#hive使用HBaseStorageHandler" class="headerlink" title="hive使用HBaseStorageHandler"></a>hive使用HBaseStorageHandler</h4><ul>
+<li><p>配置hive访问hbase jar包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">	&lt;name&gt;hive.aux.jars.path&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;</span><br><span class="line">		/usr/hdp/3.1.0.0-78/hbase/lib/commons-lang3-3.6.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-zookeeper-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-mapreduce-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/jackson-annotations-2.9.5.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-shaded-miscellaneous-2.1.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/jackson-databind-2.9.5.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-hadoop-compat-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-metrics-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-client-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-protocol-shaded-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/jackson-core-2.9.5.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/protobuf-java-2.5.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-shaded-netty-2.1.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/metrics-core-3.2.1.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-server-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-hadoop2-compat-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-metrics-api-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-common-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-protocol-2.0.2.3.1.0.0-78.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/hbase-shaded-protobuf-2.1.0.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/htrace-core4-4.2.0-incubating.jar,</span><br><span class="line">        /usr/hdp/3.1.0.0-78/hbase/lib/zookeeper.jar</span><br><span class="line">	&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在创建hive时，需要添加访问hbase的权限，根据创建或者访问添加具体权限</p>
+</li>
+<li><p>hbase表不存在，需要添加hbase的创建表权限（设置当前用户有创建hbase_table表的权限）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> hive_table (<span class="keyword">key</span> <span class="built_in">int</span>, <span class="keyword">value</span> <span class="keyword">string</span>) </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span></span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,cf1:val"</span>)</span><br><span class="line">TBLPROPERTIES (<span class="string">"hbase.table.name"</span> = <span class="string">"default:hbase_table"</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong></p>
+<ul>
+<li>hbase.columns.mapping 是必须的，这将会和 HBase 表的列族进行验证</li>
+<li>hbase.table.name 属性是可选的，默认指定 HBase 表名与 Hive 表名一致</li>
+<li>当将 hive_table 表删除，对应的 hbase_table 表不受影响，里面依旧有数据</li>
+<li>当删除 hbase_table 表后，再查询 hive_table 表数据</li>
+<li>hive外部表不支持load语句，所以可以直接将数据导入到hbase中，或者创建hive内部表使用load导入，再通过 <code>insert ... select ...</code> 语句导入到外部表中</li>
+<li>Hive 读取的是 HBase 表最新的数据，并且创建的hbase表默认只有一个version, 可以修改最大version</li>
+</ul>
+</li>
+<li><p>hbase存在，需要添加hbase访问权限</p>
+<ul>
+<li><p>hbase中创建表，并添加数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create &apos;person&apos;, &apos;cf&apos;</span><br><span class="line">put &apos;person&apos;, &apos;r001&apos;, &apos;cf:name&apos;, &apos;feng&apos;</span><br><span class="line">put &apos;person&apos;, &apos;r001&apos;, &apos;cf:age&apos;, &apos;10&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建hive表，并插入数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> person(<span class="keyword">id</span> <span class="keyword">string</span>, <span class="keyword">name</span> <span class="keyword">string</span>, age <span class="keyword">string</span>) <span class="keyword">stored</span> <span class="keyword">by</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span> <span class="keyword">with</span> serdeproperties (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,cf:name,cf:age"</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> person <span class="keyword">values</span>(<span class="string">'r002'</span>, <span class="string">'xiang'</span>, <span class="string">'12'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="hive使用KafkaStorageHandler"><a href="#hive使用KafkaStorageHandler" class="headerlink" title="hive使用KafkaStorageHandler"></a>hive使用KafkaStorageHandler</h4><ul>
+<li><p>创建默认json序列化表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> kafka_table(<span class="string">`message_type`</span> <span class="keyword">string</span>, <span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`tm`</span> <span class="keyword">string</span>) <span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span> TBLPROPERTIES (<span class="string">"kafka.topic"</span> = <span class="string">"cmsw"</span>, <span class="string">"kafka.bootstrap.servers"</span>=<span class="string">"cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667"</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示表的信息 <code>show create table kafka_table</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> <span class="string">`kafka_table`</span>(               </span><br><span class="line">  <span class="string">`message_type`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,  </span><br><span class="line">  <span class="string">`stcd`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,       </span><br><span class="line">  <span class="string">`tm`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,         </span><br><span class="line">  <span class="string">`__key`</span> <span class="built_in">binary</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,      </span><br><span class="line">  <span class="string">`__partition`</span> <span class="built_in">int</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__offset`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__timestamp`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>) </span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> SERDE                                   </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaSerDe'</span>        </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span>                                          </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span>  </span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (                             </span><br><span class="line">  <span class="string">'serialization.format'</span>=<span class="string">'1'</span>)                      </span><br><span class="line">LOCATION                                           </span><br><span class="line">  <span class="string">'hdfs://tepia/warehouse/tablespace/external/hive/kafka_table'</span> </span><br><span class="line">TBLPROPERTIES (                                    </span><br><span class="line">  <span class="string">'bucketing_version'</span>=<span class="string">'2'</span>,                         </span><br><span class="line">  <span class="string">'hive.kafka.max.retries'</span>=<span class="string">'6'</span>,                    </span><br><span class="line">  <span class="string">'hive.kafka.metadata.poll.timeout.ms'</span>=<span class="string">'30000'</span>,   </span><br><span class="line">  <span class="string">'hive.kafka.optimistic.commit'</span>=<span class="string">'false'</span>,          </span><br><span class="line">  <span class="string">'hive.kafka.poll.timeout.ms'</span>=<span class="string">'5000'</span>,             </span><br><span class="line">  <span class="string">'kafka.bootstrap.servers'</span>=<span class="string">'cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667'</span>,  </span><br><span class="line">  <span class="string">'kafka.serde.class'</span>=<span class="string">'org.apache.hadoop.hive.serde2.JsonSerDe'</span>,  </span><br><span class="line">  <span class="string">'kafka.topic'</span>=<span class="string">'cmsw'</span>,                            </span><br><span class="line">  <span class="string">'kafka.write.semantic'</span>=<span class="string">'AT_LEAST_ONCE'</span>,          </span><br><span class="line">  <span class="string">'transient_lastDdlTime'</span>=<span class="string">'1565258896'</span>)</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong></p>
+<ul>
+<li>可以看到此处多了几个kafka记录元数据，并且每个元数据都可以用来作为条件过滤</li>
+<li>kafka记录的值使用json、avro或者orc进行解码，解析后值的类型必须和hive指定的类型相匹配，不然会报错，通常情况下我们只需要映射需要的字段即可</li>
+<li>此处 <code>kafka.write.semantic</code> 指定写入数据到kafka的语义，默认为最少一次，如果kafka版本支持事务，那么此处可以设置为 <code>&quot;kafka.write.semantic&quot;=&quot;EXACTLY_ONCE&quot;</code>精确一次</li>
+<li>写入到kafka时，元数据列也必须设置，<code>__key</code> 设置出array以外的值，可以为null，<code>__partition</code>指定partition或者不设置，<code>__offset</code>固定为-1，<code>__timestamp</code> null或者-1（系统自动生产时间）或者有意义的时间（生产者可以指定的时间）</li>
+</ul>
+</li>
+<li><p>示例</p>
+<ul>
+<li><p>查看最近十分钟数据记录</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*) <span class="keyword">FROM</span> kafka_table </span><br><span class="line">  <span class="keyword">WHERE</span> <span class="string">`__timestamp`</span> &gt;  <span class="number">1000</span> * to_unix_timestamp(<span class="keyword">CURRENT_TIMESTAMP</span> - <span class="built_in">interval</span> <span class="string">'10'</span> MINUTES);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>与维度表进行连接</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//创建最近10分钟视图</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> last_10_minutes_of_kafka_table <span class="keyword">AS</span> <span class="keyword">SELECT</span>  <span class="string">`stcd`</span>, <span class="string">`message_type`</span>, <span class="string">`tm`</span> <span class="keyword">FROM</span> kafka_table </span><br><span class="line">  <span class="keyword">WHERE</span> <span class="string">`__timestamp`</span> &gt;  <span class="number">1000</span> * to_unix_timestamp(<span class="keyword">CURRENT_TIMESTAMP</span> - <span class="built_in">interval</span> <span class="string">'10'</span> MINUTES) ;</span><br><span class="line">  </span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> stcd_table (<span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`name`</span> <span class="keyword">string</span> ,addr <span class="keyword">string</span>) </span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> stcd, <span class="keyword">name</span>, <span class="keyword">sum</span>(message_type) <span class="keyword">from</span> last_10_minutes_of_kafka_table lk <span class="keyword">join</span> stcd_table st <span class="keyword">on</span> lk.stcd = st.stcd <span class="keyword">group</span> <span class="keyword">by</span> stcd, <span class="keyword">name</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">sum</span>(message_type)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive实现kafka ETL</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//创建offset记录表</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> kafka_table_offsets(partition_id <span class="built_in">int</span>, max_offset <span class="built_in">bigint</span>, insert_time <span class="keyword">timestamp</span>);                </span><br><span class="line">//初始化offset记录表</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> kafka_table_offsets </span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`__partition`</span>, <span class="keyword">min</span>(<span class="string">`__offset`</span>) - <span class="number">1</span>, <span class="keyword">CURRENT_TIMESTAMP</span> </span><br><span class="line"><span class="keyword">FROM</span> kafka_table </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`__partition`</span>, <span class="keyword">CURRENT_TIMESTAMP</span>;</span><br><span class="line">//创建ETL表</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orc_kafka_table (partition_id <span class="built_in">int</span>, koffset <span class="built_in">bigint</span>, ktimestamp <span class="built_in">bigint</span>,</span><br><span class="line"><span class="string">`message_type`</span> <span class="keyword">string</span>, <span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`tm`</span> <span class="keyword">string</span>)</span><br><span class="line">//单事务中进行ETL</span><br><span class="line"><span class="keyword">FROM</span> kafka_table kt <span class="keyword">JOIN</span> kafka_table_offsets ot</span><br><span class="line"><span class="keyword">ON</span> (kt.<span class="string">`__partition`</span> = ot.partition_id </span><br><span class="line"><span class="keyword">AND</span> kt.<span class="string">`__offset`</span> &gt; ot.max_offset )</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> orc_kafka_table </span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`__partition`</span>, <span class="string">`__offset`</span>, <span class="string">`__timestamp`</span>, message_type, stcd, tm</span><br><span class="line"><span class="keyword">INSERT</span> OVERWRITE <span class="keyword">TABLE</span> kafka_table_offsets </span><br><span class="line"><span class="keyword">SELECT</span> <span class="string">`__partition`</span>, <span class="keyword">max</span>(<span class="string">`__offset`</span>), <span class="keyword">CURRENT_TIMESTAMP</span> </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`__partition`</span>, <span class="keyword">CURRENT_TIMESTAMP</span>;</span><br><span class="line">//重复上面步骤可以实现ETL，注意如果partition添加的时候需要更新offset表</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="hive使用JdbcStorageHandler"><a href="#hive使用JdbcStorageHandler" class="headerlink" title="hive使用JdbcStorageHandler"></a>hive使用JdbcStorageHandler</h4><ul>
+<li><p>创建表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> user_jdbc(</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>,</span><br><span class="line">  <span class="keyword">name</span> <span class="keyword">string</span>,</span><br><span class="line">  age <span class="built_in">int</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hive.storage.jdbc.JdbcStorageHandler'</span></span><br><span class="line">TBLPROPERTIES (</span><br><span class="line">  <span class="string">"hive.sql.database.type"</span> = <span class="string">"MYSQL"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.driver"</span> = <span class="string">"com.mysql.jdbc.Driver"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.url"</span> = <span class="string">"jdbc:mysql://cmsw1.tepia.com/cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.username"</span> = <span class="string">"cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.password"</span> = <span class="string">"Cmsw@123"</span>,</span><br><span class="line">  <span class="string">"hive.sql.table"</span> = <span class="string">"user"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.maxActive"</span> = <span class="string">"1"</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+</ul>
 
-h
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/08/01/hadoop-hive/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -2022,7 +2357,7 @@ h
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2072,7 +2407,7 @@ h
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2251,13 +2586,6 @@ h
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
 

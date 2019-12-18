@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -98,7 +98,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Muse',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
     fancybox: true,
@@ -383,7 +383,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,104
+                  2,260
                 </span>
               
 
@@ -410,20 +410,256 @@
       
         
           
-          概念
-git存在工作区， 暂存区， 本地仓库， 远程仓库
-工作区: 当前项目root目录
-暂存区: 新文件通过git add添加， 或者已经关联的文件都在暂存区当中
-本地仓库： 本地的仓库， ！，通过commit将暂存区中的内容提交到本地仓库
-远程仓库： 远程的仓库， 通过push将本地的commi
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/28/tools-git/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h5 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h5><ul>
+<li><code>https://github.com/muwenzi/Program-Blog/labels/1.1%20Git</code></li>
+</ul>
+<h5 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h5><ul>
+<li>git存在工作区， 暂存区， 本地仓库， 远程仓库<ul>
+<li>工作区: 当前项目root目录</li>
+<li>暂存区: 新文件通过git add添加， 或者已经关联的文件都在暂存区当中</li>
+<li>本地仓库： 本地的仓库， 通过commit将暂存区中的内容提交到本地仓库</li>
+<li>远程仓库： 远程的仓库， 通过push将本地的commit的版本push到远程</li>
+</ul>
+</li>
+<li>对于已经新添加的文件或者已经关联的文件修改， 都必须通过git add将其添加到暂存区当中， 再通过commit提交到本地，再通过push到远程仓库当中</li>
+</ul>
+<h5 id="git-checkout"><a href="#git-checkout" class="headerlink" title="git checkout"></a>git checkout</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout file 放弃工作空间中改变的文件</span><br><span class="line">git checkout branch 切换到指定分支, 可以添加 -b参数添加一个新的分支</span><br><span class="line">git checkout -b newbranch branch 从branch分支创建一个新的分支， 并切换到新的分支</span><br></pre></td></tr></table></figure>
+<h5 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add . 将工作空间中的改变文件添加到暂存区</span><br></pre></td></tr></table></figure>
+<h5 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git reset用户回退一个已经commit但是并没有push的代码， 常见的参数： --hard  --merge  --mixed  --patch  --soft</span><br><span class="line">git reset --mixed version_hash 会保留源码， 只是将git commit和index信息回退到某个版本 mixed是git reset的默认模式， git reset --mixed 等价于 git reset</span><br><span class="line">git reset --soft 会保留源码， 只是回退到commit信息到某个版本，不涉及index的回退， 如果还需要提交直接提交就可以了</span><br><span class="line">git reset --hard 源代码也会回退到某个版本，commit和index都会回退到某个版本，如果没有指定版本那么就会放弃当前所有的更改回退当上一个commit</span><br></pre></td></tr></table></figure>
+<p><em>注意</em>： 上面reset只是更改本地仓库的代码， 远程仓库代码还没有改变， 所以如果index发生变化， 而线上的index没有发生变化， 那么必定会导致不发进行push， 所以必须pull下来， 再进行<br>push， 此时代码还是回变为线上index的版本， 所以总的来说这种方式不适合回退到线上index版本<br>之前的， 它无法做到， 所以我们经常将其作为本地代码回滚的策略。</p>
+<h5 id="git-revert"><a href="#git-revert" class="headerlink" title="git revert"></a>git revert</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git revert 用于反正提交， 执行时必须要求工作目录必须是干净的</span><br><span class="line">git revert 用一个新提交来消除一个历史提交的所做的任何修改， 所以它的index不会回退， 而是继续向前， revert之后本地的代码也会回滚到指定的历史版本， 这个时候再push是不会发生任何冲突的</span><br><span class="line">git revert commit1 commit2 ... revert 只是回滚某个commit， 所以如果需要回滚多个commit需要指定多个commit</span><br></pre></td></tr></table></figure>
+<h5 id="git-reset-revert总结"><a href="#git-reset-revert总结" class="headerlink" title="git reset/revert总结"></a>git reset/revert总结</h5><p>git reset是直接删除制定的commit（不会影响远程机器上的代码， index直接被删除）， git revert是用一次新的commit来回滚之前的commit（会影响远程机器上的代码， index会继续前进）</p>
+<h5 id="git-fetch-远程仓库-远程仓库分支"><a href="#git-fetch-远程仓库-远程仓库分支" class="headerlink" title="git fetch [远程仓库 [远程仓库分支]]"></a>git fetch [远程仓库 [远程仓库分支]]</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin master</span><br><span class="line">git merge origin/master， 此时可能需要解决冲突等等， 合并之后我们就可以在当前分支上工作并提交到远程分支如果不希望合并当前分支， 但是希望在远处分支上工作， 可以checkout出来一个新的分支</span><br><span class="line">git checkout -b newremotebranch origin/master 可以看到checkout可以直接从一个分支上创建一个新的分支，并不需要工作在origin/master分支上</span><br></pre></td></tr></table></figure>
+<p><em>注意：</em> 下载远程分支， 但并不会合并远程分支到当前分支， 也就是说当前分支可能比下载下来的远程分支滞后几个分支， 所以如果我们希望在远处分支上工作， 那么我们必须将远程分支合并到当前分支</p>
+<h5 id="it-remote"><a href="#it-remote" class="headerlink" title="it remote"></a>it remote</h5><p>某些场合下， 一个git项目需要同时使用两个甚至更多的远程仓库， 比如国外+国内、测试环境+生成环境+审核环境等等， 这样我们就需要对不同的远程仓库分别提交等操作。<br>git remote 参数： add remove set-branches set-url update prune rename set-head show<br>添加仓库， git remote add remote_name remote_url<br>…..<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">案例： 当我们发现github上面存在一个项目我们无法修改， 但是我们希望完全保留其所有的版本信息。操作步骤如下：</span><br><span class="line">a. git clone出项目到本地</span><br><span class="line">b. 在github上面创建一个空的仓库， 地址如下： https://github.com/ilivoo/spring.git</span><br><span class="line">c. 在本地项目下直接删除原来的仓库， git remote remove remote_name</span><br><span class="line">d. 将自己的远程仓库添加到项目当中， git remote add origin https://github.com/ilivoo/spring.git</span><br><span class="line">e. 将本地的项目直接上传到自己的远程项目当中， git push origin master</span><br></pre></td></tr></table></figure></p>
+<p><em>注意：</em> 此处不仅仅限制与将其导入到github中， 也可以导入到国内的码云当中， 而且推荐使用这种方式。 并且码云当中还有一个更好的办法， 来完成这个动作， 直接在码云当中创建一个仓库， 创建过程中直接克隆github上的项目， 这样就是一步到位， 而且速度非常快， 再直接从码云中clone到本地， 关机是码云中还可以将其设置为private<br>另外： git存在fork的概念， 可以直接fork项目再自己对其进行修改， 类似上面的操作</p>
+<h5 id="git-branch"><a href="#git-branch" class="headerlink" title="git branch"></a>git branch</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch branchName 创建一个新的分支</span><br><span class="line">git checkout branchName 切换到新的分支</span><br><span class="line">git checkout -b branchName 创建并切换到一个新的分支</span><br></pre></td></tr></table></figure>
+<h5 id="git-checkout-1"><a href="#git-checkout-1" class="headerlink" title="git checkout"></a>git checkout</h5><p>checkout出某个分支， 注意如果此时暂存区还有修改没有提交， 如果此时checkout的某个分支可以合并， 那么可以切换到对应的分支， 如果有冲突， 那么此时不允许切换到某个分支， 所以在我们切换分支的时候最好是将工作空间清空。</p>
+<h5 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h5><p>合并两个分支， 此时被合并的分支必定是commit状态， 而当前分区可以是未commit状态， 但是如果此时合并时存在冲突， 那么此时是不能merge成功的， 所以此时必须要对当前分支commit再合并， 合并后可能存在冲突， 此时将冲突解决就可以了， 重新提交。 也可以在合并冲突之后使用命令git mergetool来调用mergetool来处理冲突问题， 所以可以设置当前mergetool, 如p4merge<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\ilivoo&gt;cat .gitconfig</span><br><span class="line">[user]</span><br><span class="line">        name = ilivoo</span><br><span class="line">        email = 316488140@qq.com</span><br><span class="line">[merge]</span><br><span class="line">        tool = p4merge</span><br><span class="line">[mergetool &quot;p4merge&quot;]</span><br><span class="line">        cmd = p4merge \&quot;$BASE\&quot; \&quot;$LOCAL\&quot; \&quot;$REMOTE\&quot; \&quot;$MERGED\&quot;</span><br><span class="line">[mergetool]</span><br><span class="line">        trustExitCode = false</span><br><span class="line">[diff]</span><br><span class="line">	tool = p4merge</span><br><span class="line">[difftool &quot;p4merge&quot;]</span><br><span class="line">	cmd = p4merge \&quot;$LOCAL\&quot; \&quot;$REMOTE\&quot;</span><br></pre></td></tr></table></figure></p>
+<p><em>注意：</em> 合并是先执行git merge， 合并可能没有成功存在冲突， 此时再调用git mergetool自动调用合并工具来手动合并， 而git difftool则是直接使用就可以,  参数可以添加任意两个版本<br>如果不想合并， 那么可以直接通过 git merge –abort取消当前合并</p>
+<p>也可以使用meld</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[user]</span><br><span class="line">        name = ilivoo</span><br><span class="line">        email = 316488140@qq.com</span><br><span class="line">[credential]</span><br><span class="line">[commit]</span><br><span class="line">        gpgsign = true</span><br><span class="line">[diff]</span><br><span class="line">        tool = meld</span><br><span class="line">[difftool]</span><br><span class="line">        prompt = false</span><br><span class="line">[difftool &quot;meld&quot;]</span><br><span class="line">        path = /usr/bin/meld</span><br><span class="line">[merge]</span><br><span class="line">        tool = meld</span><br><span class="line">        conflictstyle = diff3</span><br><span class="line">[mergetool &quot;meld&quot;]</span><br><span class="line">        path = /usr/bin/meld</span><br><span class="line">        cmd = meld \&quot;$LOCAL\&quot; \&quot;$MERGED\&quot; \&quot;$REMOTE\&quot; --output \&quot;$MERGED\&quot;</span><br><span class="line">        #cmd = meld \&quot;$LOCAL\&quot; \&quot;$BASE\&quot; \&quot;$REMOTE\&quot; --output \&quot;$MERGED\&quot;</span><br><span class="line">[mergetool]</span><br><span class="line">        prompt = false</span><br></pre></td></tr></table></figure>
+<h5 id="git-clean"><a href="#git-clean" class="headerlink" title="git clean"></a>git clean</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 删除 untracked files</span><br><span class="line">git clean -f</span><br><span class="line"># 连 untracked 的目录也一起删掉</span><br><span class="line">git clean -fd</span><br><span class="line"># 连 .gitignore文件中untrack 文件/目录也一起删掉 （如：idea生成的.idea，日志logs等等）</span><br><span class="line">git clean -xfd</span><br><span class="line"># 在用上述 git clean 前，墙裂建议加上 -n 参数来先看看会删掉哪些文件，防止重要文件被误删</span><br><span class="line">git clean -nxfd</span><br><span class="line"># 注意： 真正的删除是参数f d x， n只是用来查看当前参数可能会删除的那些文件， 如：</span><br><span class="line">git clean -nf查看那些未跟踪的文件会被删除， 但是并不会真正执行删除， git clean -f 才是真正删除未跟踪的文件</span><br></pre></td></tr></table></figure>
+<h5 id="git-设置代理"><a href="#git-设置代理" class="headerlink" title="git 设置代理"></a>git 设置代理</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy &apos;socks5://127.0.0.1:1080&apos;</span><br><span class="line">git config --global https.proxy &apos;socks5://127.0.0.1:1080&apos;</span><br></pre></td></tr></table></figure>
+<h5 id="git-设置无密码提交"><a href="#git-设置无密码提交" class="headerlink" title="git 设置无密码提交"></a>git 设置无密码提交</h5><ul>
+<li>使用保存密码方式<ul>
+<li>git config –global credential.helper store</li>
+<li>.gitconfig文件中会多出<br>  [credential]<br>​          helper = store</li>
+<li>当输入过一次密码之后会在.gitconfig文件的相同目录下生成.git-credentials <a href="https://ilivoo:password@github.com" target="_blank" rel="noopener">https://ilivoo:password@github.com</a></li>
+</ul>
+</li>
+<li>使用秘钥方式, 参考 <code>https://segmentfault.com/a/1190000002645623</code><ul>
+<li>添加秘钥到github当中</li>
+<li>修改.git/config配置文件  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[remote &quot;origin&quot;]</span><br><span class="line">url = git@github.com:ilivoo/project.git</span><br><span class="line">fetch = +refs/heads/*:refs/remotes/origin/*</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="git-配置-commit-签名"><a href="#git-配置-commit-签名" class="headerlink" title="git 配置 commit 签名"></a>git 配置 commit 签名</h5><ul>
+<li>参考 <code>https://coderwall.com/p/d3uo3w/git-gpg-know-thy-commits</code></li>
+<li>步骤：<ul>
+<li>使用gpg生成密钥和公钥 <code>gpg --full-generate-key</code>, 名字和邮箱最好是github的名字和邮箱</li>
+<li>导出公钥并上传到github中</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    <div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/tools-fzf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/28/tools-fzf/" itemprop="url">模糊搜索fzf</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T17:28:57+08:00">
+                2018-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  400
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><ul>
+<li><p>参考github <code>https://github.com/junegunn/fzf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf</span><br><span class="line">~/.fzf/install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置vim插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Plug &apos;junegunn/fzf&apos;, &#123; &apos;dir&apos;: &apos;~/.fzf&apos;, &apos;do&apos;: &apos;./install --all&apos; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置oh-my-zsh插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fzf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
+<li><p>快捷键</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CTRL-T - 粘贴选择的文件或者文件夹到命令行</span><br><span class="line">Set FZF_CTRL_T_COMMAND to override the default command</span><br><span class="line">Set FZF_CTRL_T_OPTS to pass additional options</span><br><span class="line">CTRL-R - 粘贴选择历史命令到命令行</span><br><span class="line">Set FZF_CTRL_R_OPTS to pass additional options</span><br><span class="line">ALT-C - cd到选择的文件夹</span><br><span class="line">Set FZF_ALT_C_COMMAND to override the default command</span><br><span class="line">Set FZF_ALT_C_OPTS to pass additional options</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zsh中配置快捷键命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export FZF_DEFAULT_OPTS=&apos;--height 60% --reverse --border&apos;</span><br><span class="line">export FZF_CTRL_T_OPTS=&quot;--preview &apos;(highlight -O ansi -l &#123;&#125; 2&gt; /dev/null || cat &#123;&#125; || tree -C &#123;&#125;) 2&gt; /dev/null | head -200&apos;&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>fzf终端快捷键</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CTRL-J / CTRL-K (or CTRL-N / CTRL-P) 条目的选择</span><br><span class="line">Enter key to select the item, CTRL-C / CTRL-G / ESC to 退出</span><br><span class="line">On multi-select mode (-m), TAB and Shift-TAB to 标记多条目</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>fzf终端中进行过滤条件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sbtrkt		模糊匹配包含字符</span><br><span class="line">^music		以music开头</span><br><span class="line">mp3$		以mp3结尾</span><br><span class="line">&apos;wild		精确匹配包含wild</span><br><span class="line">!fire		不保护fire</span><br><span class="line">!^music		不以music开头</span><br><span class="line">!mp3$		不以mp3结尾</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>**</code> 进入fzf模式，并使用Tab键进入命令行选择</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim .oh-my-zsh/**		vim查看 .oh-my-zsh 中的文件，但是忘记文件名字</span><br><span class="line">kill -9 				直接进入命令行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>命令说明</p>
+<p>fzf是一个模糊搜索工具，它可以接受任何输入，包括ag的数据，所以我们在使用的时候一定要灵活适应</p>
+<p>fzf的输出可以使用  xargs 进行接收并做操作</p>
+</li>
+</ul>
+
+          
         
       
     </div>
@@ -585,20 +821,64 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
       
         
           
-          mysql 日志
-主要包括： 错误日志、查询日志、慢查询日志、事务日志、二进制日志、回放日志
+            <h5 id="mysql-日志"><a href="#mysql-日志" class="headerlink" title="mysql 日志"></a>mysql 日志</h5><ul>
+<li>主要包括： 错误日志、查询日志、慢查询日志、事务日志、二进制日志、回放日志</li>
+</ul>
+<h5 id="错误日志："><a href="#错误日志：" class="headerlink" title="错误日志："></a>错误日志：</h5><ul>
+<li>错误日志是用来记录mysql系统在运行的过程中所发生的错误， 如启动过程中存在的问题， 系统在配置主从是报的错误等待</li>
+<li>错误日志默认是开启的，并且错误日志无法被禁止， 默认情况下错误日日志存储在mysql数据库的数据文件目录当中， 以主机名作为名字， 并且以.err结尾， 一般情况下</li>
+<li>建议更改日志的名字，这样在统一维护的时候会更加方便</li>
+<li>配置方式: log_error=error.log</li>
+</ul>
+<h5 id="查询日志"><a href="#查询日志" class="headerlink" title="查询日志"></a>查询日志</h5><ul>
+<li>查询日志是用来记录用户的所有操作， 其中包括增删改查等所有信息</li>
+<li>查询日志默认是关闭的， 一般如果不是为了调试数据库都不会开启查询日志， 会产生大量的磁盘io</li>
+<li>配置方式： general_log=log.log</li>
+</ul>
+<h5 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h5><ul>
+<li>慢查询日志是用来记录执行时间超过指定的时间的查询语句， 通过慢查询可以找出运行效率低下需要优化的语句</li>
+<li>慢查询默认关闭的， 一般它对服务器的性能微乎其微， 所以建议线上根据需要开启</li>
+<li><p>配置方式</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log=on</span><br><span class="line">slow_query_log_file=slow.log</span><br><span class="line">long_query_time=0.000001</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动开启：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set global slow_query_log=on;</span><br><span class="line">set global long_query_time=0.000001;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以看到虽然这里设置了， 但是严格它对于当前的session是无法生效的， 如果仅仅只是想对当前session生效， 可以设置，</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set global slow_query_log=on;</span><br><span class="line">set long_query_time=0.000001;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果想对所有的连接有效， 包括已经启动的连接和后面加入的连接有效， 可以设置，</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set global slow_query_log=on;</span><br><span class="line">set global long_query_time=0.000001;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看当前session的配置情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from performance_schema.variables_by_thread as a, (select THREAD_ID,PROCESSLIST_ID,PROCESSLIST_USER,PROCESSLIST_HOST,PROCESSLIST_COMMAND,PROCESSLIST_STATE from performance_schema.threads where PROCESSLIST_USER&lt;&gt;&apos;NULL&apos;) as b where a.THREAD_ID = b.THREAD_ID and a.VARIABLE_NAME = &apos;long_query_time&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可以查看所有的连接是否生效， 再通过kill PROCESSLIST_ID来杀手不生效的连接（一般都是使用连接池来连接的所以问题不大）， 也可以通过笨的方法， 对每一个现有的连接执行一次</p>
+</li>
+<li><p>注意：</p>
+<ol>
+<li>通过这里设置全局变量我们可以看到， mysql设置全局变量未必会对现有的连接生效， 所以我们如果想要进行验证， 最简单的办法就是通过上面的语句进行查询。</li>
+<li>设置线上慢查询日志时最好指定毫秒数， 这样可以用于长期线上开启</li>
+</ol>
+</li>
+</ul>
+<h5 id="事务日志"><a href="#事务日志" class="headerlink" title="事务日志"></a>事务日志</h5><ul>
+<li>事务日志（InnoDB特有的日志）可以帮助提高事务的效率。使用事务日志，存储引擎在修改表的数据时只需要修改其内存拷贝，再把改修改行为记录到持久在硬盘上的事务日志中，而不用每次都将修改的数据本身持久到磁盘。事务日志采用追加的方式，因此写日志的操作是磁盘上一小块区域内的顺序I/O，而不像随机I/O需要在磁盘的多个地方移动磁头，所以采用事务日志的方式相对来说要快得多。事务日志持久以后，内存中被修改的数据在后台可以慢慢的刷回到磁盘。目前大多数的存储引擎都是这样实现的，我们通常称之为预写式日志，修改数据需要写两次磁盘。</li>
+<li>如果数据的修改已经记录到事务日志并持久化，但数据本身还没有写回磁盘，此时系统崩溃，存储引擎在重启时能够自动恢复这部分修改的数据。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">innodb_flush_log_at_timeout=1  事务日志如果没有每一次从缓冲区中刷新到磁盘， 那么每隔一秒刷新一次</span><br><span class="line">innodb_flush_log_at_trx_commit=1  为1表示事务一提交就刷新到磁盘中， 为2表示只有在事务提交时才同步， 有可能丢失整个事务</span><br><span class="line">innodb_log_files_in_group=2 至少两个日志组</span><br><span class="line">innodb_log_group_home_dir=./	日志组的位置</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h5 id="二进制日志"><a href="#二进制日志" class="headerlink" title="二进制日志"></a>二进制日志</h5><ul>
+<li>二进制日志是MySQL服务器用来记录数据修改事件的，比如INSERT、UPDATE、DELETE等会导致数据发生变化的语句，SELECT语句不会被记录在内。MySQL必须先执行完一条语句才能知道它是否修改了数据，因此写入二进制日志文件的时间是语句执行完成的时间。写入顺序是按语句执行完成的先后顺序，事务中的语句会先被缓存起来，成功提交后才会被写入，回滚则不会被写入。非事务的存储引擎，所有的修改会立刻写入到二进制日志中。</li>
+<li>二进制日志顾名思义不是文本而是一种更有效率的二进制格式，它比文本占用更少的空间，但是可读性就很差了，必须使用mysqlbinlog工具才能转换为可读的文本。二进制日志主要用于数据库备份和故障时恢复数据，配置MySQL主从复制必须启用二进制日志。</li>
+<li>二进制日志索引文件中会列出所有二进制日志文件，此文件是文本的因此可以直接查看，文件的最后一行就是当前正在使用的二进制日志文件。</li>
+<li>配置  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">log_bin=on</span><br><span class="line">log_bin_basename=bin.log //指定bin log的名字， 后面会自动生成xxxxx的数字</span><br><span class="line">log_bin_index=bin.log.index //所有bin log文件名的索引</span><br><span class="line">// 通过flush logs会导致当前bin log写完， 并刷新出一个新的log</span><br><span class="line">// 并且在 index中记录这个文件的名字</span><br><span class="line">binlog_do_db //表示只记录指定数据库的二进制日志</span><br><span class="line">binlog_ignore_db //表示不记录指定的数据库的二进制日志</span><br><span class="line">//不建议使用 do/ignore来进行控制, 安全的替换方案是 在 slave上配置过滤,</span><br><span class="line">//使用基于查询中真正涉及到的表的选项, 例如replicate-wild-* 选项</span><br><span class="line">replicate-wild-do-table=ljzxdb.%</span><br><span class="line">sync_binlog //直接影响mysql的性能和完整性</span><br><span class="line">sync_binlog=0：当事务提交后，Mysql仅仅是将binlog_cache中的数据写入</span><br><span class="line">Binlog文件，但不执行fsync之类的磁盘 同步指令通知文件系统将缓存刷新到磁盘，而让Filesystem自行决定什么时候来做同步，性能最好。</span><br><span class="line">sync_binlog=n，在进行n次事务提交以后，Mysql将执行一次fsync之类的磁盘同步指令，同志文件系统将Binlog文件缓存刷新到磁盘。</span><br><span class="line">binglog_format //值有statement（记录逻辑sql语句）、row（记录表的行更动情况）、mixed混合使两种，</span><br><span class="line">// row的存在是因为存在很多不确定性的函数， 如果直接使用， 会导致数据不一致， 如 current_time(), 所以直接将值记录下来就更正确</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="回放日志"><a href="#回放日志" class="headerlink" title="回放日志"></a>回放日志</h4><ul>
+<li>bin log从master发送到slave的时候， slave就变成了reply log， 用于回放master中数据发生的变化</li>
+</ul>
 
-错误日志：
-错误日志是用来记录mysql系统在运行的过程中所发生的错误， 如启动过程中存在的问题， 系统在配置主从是报的错误等待
-错误日志默认是开启的，并且错误日志无法被禁止， 默认情况下错误日日志存储在
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/28/mysql-log/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -760,17 +1040,31 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
       
         
           
+            <ol>
+<li><p>打印删除所有的索引的语句， 包括Primary key</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT CONCAT(&apos;ALTER TABLE `&apos;, TABLE_NAME, &apos;` &apos;, GROUP_CONCAT(DISTINCT CONCAT(&apos;DROP &apos;, IF(UPPER(INDEX_NAME) = &apos;PRIMARY&apos;, &apos;PRIMARY KEY&apos;, CONCAT(&apos;INDEX `&apos;, INDEX_NAME, &apos;`&apos;))) SEPARATOR &apos;, &apos;), &apos;;&apos;) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = &apos;dfh_data&apos; GROUP BY TABLE_NAME ORDER BY TABLE_NAME ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印删除所有的索引的语句，不包括Primary key</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT CONCAT(&apos;ALTER TABLE `&apos;, TABLE_NAME, &apos;` &apos;, GROUP_CONCAT(DISTINCT CONCAT(&apos;DROP &apos;, IF(UPPER(INDEX_NAME) = &apos;PRIMARY&apos;, &apos;PRIMARY KEY&apos;, CONCAT(&apos;INDEX `&apos;, INDEX_NAME, &apos;`&apos;))) SEPARATOR &apos;, &apos;),	&apos;;&apos;) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = &apos;dfh_data&apos; and UPPER(INDEX_NAME) != &apos;PRIMARY&apos; GROUP BY TABLE_NAME ORDER BY TABLE_NAME ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印出所有的所有创建语句， 包括Primary key</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT CONCAT(&apos;ALTER TABLE `&apos;,TABLE_NAME,&apos;` &apos;, &apos;ADD &apos;, IF(NON_UNIQUE = 1, CASE UPPER(INDEX_TYPE) WHEN &apos;FULLTEXT&apos; THEN &apos;FULLTEXT INDEX&apos; WHEN &apos;SPATIAL&apos; THEN &apos;SPATIAL INDEX&apos; ELSE CONCAT(&apos;INDEX `&apos;, INDEX_NAME, &apos;` USING &apos;, INDEX_TYPE)END, IF(UPPER(INDEX_NAME) = &apos;PRIMARY&apos;, CONCAT(&apos;PRIMARY KEY USING &apos;, INDEX_TYPE), CONCAT(&apos;UNIQUE INDEX `&apos;, INDEX_NAME, &apos;` USING &apos;, INDEX_TYPE))),&apos;(&apos;, GROUP_CONCAT(DISTINCT CONCAT(&apos;`&apos;, COLUMN_NAME, &apos;`&apos;) ORDER BY SEQ_IN_INDEX ASC SEPARATOR &apos;, &apos;), &apos;);&apos;) AS &apos;Show_Add_Indexes&apos; FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = &apos;dfh_data&apos; GROUP BY TABLE_NAME, INDEX_NAME ORDER BY TABLE_NAME ASC, INDEX_NAME ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印出所有的创建语句， 不包括Primary key</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT CONCAT(&apos;ALTER TABLE `&apos;,TABLE_NAME,&apos;` &apos;, &apos;ADD &apos;, IF(NON_UNIQUE = 1, CASE UPPER(INDEX_TYPE) WHEN &apos;FULLTEXT&apos; THEN &apos;FULLTEXT INDEX&apos; WHEN &apos;SPATIAL&apos; THEN &apos;SPATIAL INDEX&apos; ELSE CONCAT(&apos;INDEX `&apos;, INDEX_NAME, &apos;` USING &apos;, INDEX_TYPE)END, IF(UPPER(INDEX_NAME) = &apos;PRIMARY&apos;, CONCAT(&apos;PRIMARY KEY USING &apos;, INDEX_TYPE), CONCAT(&apos;UNIQUE INDEX `&apos;, INDEX_NAME, &apos;` USING &apos;, INDEX_TYPE))),&apos;(&apos;, GROUP_CONCAT(DISTINCT CONCAT(&apos;`&apos;, COLUMN_NAME, &apos;`&apos;) ORDER BY SEQ_IN_INDEX ASC SEPARATOR &apos;, &apos;), &apos;);&apos;) AS &apos;Show_Add_Indexes&apos; FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = &apos;dfh_data&apos; AND UPPER(INDEX_NAME) != &apos;PRIMARY&apos; GROUP BY TABLE_NAME, INDEX_NAME ORDER BY TABLE_NAME ASC, INDEX_NAME ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印自增的所有创建语句</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT CONCAT(&apos;ALTER TABLE `&apos;, TABLE_NAME, &apos;` &apos;, &apos;MODIFY COLUMN `&apos;, COLUMN_NAME, &apos;` &apos;, IF(UPPER(DATA_TYPE) = &apos;INT&apos;, REPLACE(SUBSTRING_INDEX(UPPER(COLUMN_TYPE), &apos;)&apos;, 1), &apos;INT&apos;, &apos;INTEGER&apos;), UPPER(COLUMN_TYPE)),&apos;) UNSIGNED NOT NULL AUTO_INCREMENT;&apos;) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = &apos;dfh_data&apos; AND EXTRA = UPPER(&apos;AUTO_INCREMENT&apos;) ORDER BY TABLE_NAME ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印删除自增的创建语句</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT CONCAT(&apos;ALTER TABLE `&apos;, TABLE_NAME, &apos;` &apos;, &apos;MODIFY COLUMN `&apos;, COLUMN_NAME, &apos;` &apos;, IF(UPPER(DATA_TYPE) = &apos;INT&apos;, REPLACE(SUBSTRING_INDEX(UPPER(COLUMN_TYPE), &apos;)&apos;, 1), &apos;INT&apos;, &apos;INTEGER&apos;), UPPER(COLUMN_TYPE)), &apos;) UNSIGNED NOT NULL;&apos;) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = &apos;dfh_data&apos; AND EXTRA = UPPER(&apos;AUTO_INCREMENT&apos;) ORDER BY TABLE_NAME ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打印没有主键的表</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT DISTINCT t.table_schema, t.table_name FROM information_schema.tables AS t LEFT JOIN information_schema.columns AS c ON t.table_schema = c.table_schema AND t.table_name = c.table_name AND c.column_key = &quot;PRI&quot; WHERE t.table_schema NOT IN (&apos;information_schema&apos;, &apos;mysql&apos;, &apos;performance_schema&apos;) AND c.table_name IS NULL AND t.table_type != &apos;VIEW&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+
           
-打印删除所有的索引的语句， 包括Primary key
- 1SELECT CONCAT(&apos;ALTER TABLE `&apos;, TABLE_NAME, &apos;` &apos;, GROUP_CONCAT(DISTINCT CONCAT(&apos;DROP &apos;, IF
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/28/mysql-index-dump/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -932,16 +1226,101 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
       
         
           
-          proxychain
-安装proxychain， 也可以直接使用apt安装 123456git clone https://github.com/rofl0r/proxychains-ng.gitcd proxychains-ng./configuremake &amp;&amp; make ins
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/28/linux-shadowsocket/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="proxychain"><a href="#proxychain" class="headerlink" title="proxychain"></a>proxychain</h4><ol>
+<li>安装proxychain， 也可以直接使用apt安装 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/rofl0r/proxychains-ng.git</span><br><span class="line">cd proxychains-ng</span><br><span class="line">./configure</span><br><span class="line">make &amp;&amp; make install</span><br><span class="line">cp ./src/proxychains.conf /etc/proxychains.conf</span><br><span class="line">cd .. &amp;&amp; rm -rf proxychains-ng</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li>配置proxychain <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/proxychains.conf</span><br><span class="line"># 将socks4 127.0.0.1 9095改为</span><br><span class="line">socks5 127.0.0.1 1080 //1080改为你自己的端口</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li><p>使用proxychain</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains chrome #在需要进行代理的程序前加proxychains</span><br></pre></td></tr></table></figure>
+<p> 确保本地的代理已经打开</p>
+</li>
+<li><p>如果proxychains不能启动某个程序，可以使用下面方式使得程序使用sockets代理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chromium-browser --proxy-server=&quot;socks5://127.0.0.1:1080&quot;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="shadowsocks-客户端"><a href="#shadowsocks-客户端" class="headerlink" title="shadowsocks 客户端"></a>shadowsocks 客户端</h4><ol>
+<li><p>安装混淆工具 &lt;<a href="https://github.com/shadowsocks/simple-obfs" target="_blank" rel="noopener">https://github.com/shadowsocks/simple-obfs</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Debian / Ubuntu</span><br><span class="line">sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev libpcre3-dev libev-dev asciidoc xmlto automake</span><br><span class="line"></span><br><span class="line">git clone https://github.com/shadowsocks/simple-obfs.git</span><br><span class="line">cd simple-obfs</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure &amp;&amp; make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动obfs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obfs-local -s 服务端ip -p 服务端端口号 -l 9996 --obfs http --obfs-host www.ilivoo.com</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装最新shadowsocks, apt直接安装可能版本太低无法支持更多的加密算法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install python-pip</span><br><span class="line">sudo pip install https://github.com/shadowsocks/shadowsocks/archive/master.zip -U</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置shadowsocks</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/shadowsocks.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;server_port&quot;:9996,</span><br><span class="line">    &quot;local_address&quot;: &quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;:1080,</span><br><span class="line">    &quot;password&quot;:&quot;密码&quot;,</span><br><span class="line">    &quot;timeout&quot;:300,</span><br><span class="line">    &quot;method&quot;:&quot;chacha20-ietf-poly1305&quot;,</span><br><span class="line">    &quot;fast_open&quot;: false,  #需要服务端开启</span><br><span class="line">    &quot;workers&quot;: 2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动shadowsocks， 可以直接配置成开机启动启动</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sslocal -c /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="SwitchyOmega"><a href="#SwitchyOmega" class="headerlink" title="SwitchyOmega"></a>SwitchyOmega</h4><ol>
+<li>安装SwitchyOmega， chrome如果没有代理可能无法访问商店， 可以开启shadowsocks并使用proxychain代理chrome再安装，或者直接百度搜索SwitchyOmega离线安装。</li>
+<li>配置SwitchyOmega <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/FelisCatus/SwitchyOmega/wiki/GFWList</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="shadowsocks服务端搭建"><a href="#shadowsocks服务端搭建" class="headerlink" title="shadowsocks服务端搭建"></a>shadowsocks服务端搭建</h4><ol>
+<li><p>建议使用搬瓦工， 并选择手机运营商对应的直连机房</p>
+</li>
+<li><p>安装步骤：</p>
+<ol>
+<li>安装Centos 7 x86_64 bbr 使用谷歌网络优化技术</li>
+<li>安装shadowsocks<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install wget</span><br><span class="line">wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh</span><br><span class="line">chmod +x shadowsocks-all.sh</span><br><span class="line">./shadowsocks-all.sh 2&gt;&amp;1 | tee shadowsocks-all.log</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<pre><code>**安装选择：**
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 安装语言版本 Shadowsocks-libev</span><br><span class="line">2. 密码</span><br><span class="line">3. 端口 443</span><br><span class="line">4. 选择加密算法 chacha20-ietf-poly1305</span><br><span class="line">4. 开启obfs混淆 yes</span><br><span class="line">5. 选择混淆协议 http</span><br></pre></td></tr></table></figure>
+</code></pre><ol start="3">
+<li><p>优化,参照<a href="https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open：" target="_blank" rel="noopener">https://github.com/shadowsocks/shadowsocks/wiki/TCP-Fast-Open：</a></p>
+<ol>
+<li><p>服务端优化tcp_fastopen</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">    &quot;server_port&quot;:443,</span><br><span class="line">    &quot;password&quot;:&quot;fengxiang123&quot;,</span><br><span class="line">    &quot;timeout&quot;:300,</span><br><span class="line">    &quot;user&quot;:&quot;nobody&quot;,</span><br><span class="line">    &quot;method&quot;:&quot;chacha20-ietf-poly1305&quot;,</span><br><span class="line">    &quot;fast_open&quot;:false,</span><br><span class="line">    &quot;nameserver&quot;:&quot;8.8.8.8&quot;,</span><br><span class="line">    &quot;mode&quot;:&quot;tcp_and_udp&quot;,</span><br><span class="line">    &quot;plugin&quot;:&quot;obfs-server&quot;,</span><br><span class="line">    &quot;plugin_opts&quot;:&quot;obfs=http&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>服务端系统开启bbr 和 tcp_fastopen, 搬瓦工选择bbr镜像默认已经开启</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#创建文件</span><br><span class="line">vi /etc/sysctl.d/local.conf</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 配置如下</span><br><span class="line">net.core.default_qdisc=fq</span><br><span class="line">net.ipv4.tcp_congestion_control=bbr</span><br><span class="line"></span><br><span class="line">net.ipv4.neigh.default.base_reachable_time_ms = 600000</span><br><span class="line">net.ipv4.neigh.default.mcast_solicit = 20</span><br><span class="line">net.ipv4.neigh.default.retrans_time_ms = 250</span><br><span class="line">net.ipv4.conf.all.rp_filter=0</span><br><span class="line">net.ipv4.conf.eth0.rp_filter=0</span><br><span class="line">net.ipv4.conf.eth1.rp_filter=0</span><br><span class="line">net.core.default_qdisc=fq</span><br><span class="line">net.ipv4.tcp_congestion_control=bbr</span><br><span class="line">net.ipv4.tcp_fastopen=3</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#启动</span><br><span class="line">    sysctl --system</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端系统开启tcp_fastopen</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 当前生效</span><br><span class="line">echo 3 &gt; /proc/sys/net/ipv4/tcp_fastopen</span><br><span class="line"># 永久生效,在/etc/sysctl.conf中添加</span><br><span class="line">net.ipv4.tcp_fastopen = 3</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="全局代理设置"><a href="#全局代理设置" class="headerlink" title="全局代理设置"></a>全局代理设置</h4><ol>
+<li><p>先需要安装genpac工具（基于gfwlist的代理自动配置(Proxy Auto-config)文件生成工具，支持自定义规则， chrome的代理也是使用这种。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install genpac</span><br><span class="line">mkdir -p ~/opt/autoproxy &amp;&amp; cd sudo pip install genpac</span><br><span class="line">genpac --pac-proxy &quot;SOCKS5 127.0.0.1:1080&quot; --gfwlist-proxy=&quot;SOCKS5 127.0.0.1:1080&quot; --gfwlist-url=https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt --output=&quot;autoproxy.pac&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置系统代理，成功之后会在该目录下生成一个autoproxy.pac文件。然后打开System Settings-&gt;Hardware-&gt;Network-&gt;Network proxy，<br>将Method设置为Automatic，然后Configuration URL中填写autoproxy.pac文件路径</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file:///home/feng/opt/autoproxy/autoproxy.pac</span><br></pre></td></tr></table></figure>
+<p> 注意： 安装完之后此时使用浏览器就可以进行使用全局代理了</p>
+</li>
+<li><p>设置命令行下所有的其它程序使用socks代理，安装一个privoxy代理工具，实现终端内socks5转换为http/https，进而将http/https请求转发<br>给ss，实现终端内的代理</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install privoxy</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置/etc/privoxy/config文件</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#保证存在下面两行存在, forward-socks5t 如果不行就改成 forward-socks5 </span><br><span class="line">listen-address localhost:8118</span><br><span class="line">forward-socks5t / 127.0.0.1:1080 .</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置/etc/profile</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 在末尾添加以下三行：</span><br><span class="line">export http_proxy=http://127.0.0.1:8118</span><br><span class="line">export https_proxy=http://127.0.0.1:8118</span><br><span class="line">export ftp_proxy=http://127.0.0.1:8118 #ftp的代理可以根据需要添加</span><br></pre></td></tr></table></figure>
+<p> 注意： source /etc/profile</p>
+</li>
+<li><p>启动privoxy</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo privoxy --user privoxy /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+<p> 注意：之后每次修改了配置文件后，都要执行sudo service privoxy restart来重启服务</p>
+</li>
+</ol>
+
+          
         
       
     </div>
@@ -1076,7 +1455,7 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,472
+                  1,479
                 </span>
               
 
@@ -1103,23 +1482,143 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
       
         
           
-          基本安装
-安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动
+            <h4 id="基本安装"><a href="#基本安装" class="headerlink" title="基本安装"></a>基本安装</h4><ul>
+<li>安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动</li>
+</ul>
+<h4 id="显卡安装"><a href="#显卡安装" class="headerlink" title="显卡安装"></a>显卡安装</h4><ul>
+<li><p>完全卸载nvida显卡</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove --purge nvidia*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>禁止加载 <code>/etc/modprobe.d/blacklist-nouveau.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset=0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>官网选择合适的cuda版本，安装完成后会默认安装最适合的nvida显卡驱动</p>
+<ul>
+<li><p>查看 <code>/lib/modprobe.d/blacklist-nvidia.conf</code>是否存在，如果存在就注释其中的内容</p>
+</li>
+<li><p>重新编译启动文件 <code>sudo update-initramfs -u</code></p>
+</li>
+<li><p>添加驱动盘</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">/sbin/modprobe nvidia</span><br><span class="line"></span><br><span class="line">if [ &quot;$?&quot; -eq 0 ]; then</span><br><span class="line">  # Count the number of NVIDIA controllers found.</span><br><span class="line">  NVDEVS=`lspci | grep -i NVIDIA`</span><br><span class="line">  N3D=`echo &quot;$NVDEVS&quot; | grep &quot;3D controller&quot; | wc -l`</span><br><span class="line">  NVGA=`echo &quot;$NVDEVS&quot; | grep &quot;VGA compatible controller&quot; | wc -l`</span><br><span class="line"></span><br><span class="line">  N=`expr $N3D + $NVGA - 1`</span><br><span class="line">  for i in `seq 0 $N`; do</span><br><span class="line">    mknod -m 666 /dev/nvidia$i c 195 $i</span><br><span class="line">  done</span><br><span class="line"></span><br><span class="line">  mknod -m 666 /dev/nvidiactl c 195 255</span><br><span class="line"></span><br><span class="line">else</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">/sbin/modprobe nvidia-uvm</span><br><span class="line"></span><br><span class="line">if [ &quot;$?&quot; -eq 0 ]; then</span><br><span class="line">  # Find out the major device number used by the nvidia-uvm driver</span><br><span class="line">  D=`grep nvidia-uvm /proc/devices | awk &apos;&#123;print $1&#125;&apos;`</span><br><span class="line"></span><br><span class="line">  mknod -m 666 /dev/nvidia-uvm c $D 0</span><br><span class="line">else</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="安装fusuma控制触摸板"><a href="#安装fusuma控制触摸板" class="headerlink" title="安装fusuma控制触摸板"></a>安装fusuma控制触摸板</h4><ul>
+<li><p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo gpasswd -a $USER input #需要管理员权限执行，配置开机启动也可以不用</span><br><span class="line">sudo apt-get install libinput-tools</span><br><span class="line">sudo apt-get install xdotool</span><br><span class="line">gem install fusuma #使用ruby安装</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#确保开启多点触控</span><br><span class="line">gsettings set org.gnome.desktop.peripherals.touchpad send-events enabled</span><br><span class="line">#创建配置文件</span><br><span class="line">mkdir -p ~/config/fusum &amp;&amp; touch ~/.config/fusuma/config.yml</span><br><span class="line">#vi ~/.config/fusuma/config.yml</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">swipe:</span><br><span class="line">  3:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key alt+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key alt+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key ctrl+t&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key ctrl+w&apos;</span><br><span class="line">  4:</span><br><span class="line">    left:</span><br><span class="line">      command: &apos;xdotool key super+Left&apos;</span><br><span class="line">    right:</span><br><span class="line">      command: &apos;xdotool key super+Right&apos;</span><br><span class="line">    up:</span><br><span class="line">      command: &apos;xdotool key super+a&apos;</span><br><span class="line">    down:</span><br><span class="line">      command: &apos;xdotool key super+s&apos;</span><br><span class="line">pinch:</span><br><span class="line">  in:</span><br><span class="line">    command: &apos;xdotool key ctrl+plus&apos;</span><br><span class="line">  out:</span><br><span class="line">    command: &apos;xdotool key ctrl+minus&apos;</span><br><span class="line"></span><br><span class="line">threshold:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br><span class="line"></span><br><span class="line">interval:</span><br><span class="line">  swipe: 1</span><br><span class="line">  pinch: 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置开机启动， 参考下面的shadowsocks配置</p>
+</li>
+</ul>
+<h4 id="wifi驱动安装后无法启动"><a href="#wifi驱动安装后无法启动" class="headerlink" title="wifi驱动安装后无法启动"></a>wifi驱动安装后无法启动</h4><ul>
+<li><p>方式一</p>
+<ul>
+<li><p>查看网络信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ rfkill list</span><br><span class="line">  0:ideapad_wlan: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:yes				表示硬件阻塞没有开启</span><br><span class="line">  1:ideapad_bluetooth: Bluetooth</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked: yes</span><br><span class="line">  2:phy0: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:no</span><br><span class="line">  3:hci0: Bluetooth</span><br><span class="line">  Soft blocked: yes				表示软件阻塞没有安装驱动</span><br><span class="line">  Hard blocked: no</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>移除ideapad模块， 后面的没有阻塞的模块可以启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ modprobe -r ideapad_laptop</span><br><span class="line">$ rfkill list</span><br><span class="line">  2:phy0: Wireless LAN</span><br><span class="line">  Soft blocked: no</span><br><span class="line">  Hard blocked:no</span><br><span class="line">  3:hci0: Bluetooth</span><br><span class="line">  Soft blocked: yes</span><br><span class="line">  Hard blocke</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置开机启动禁止ideapad模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">创建/etc/modprobe.d/my_blacklist.conf文件block掉ideapad模块，这样没有重启就不用手动block</span><br><span class="line">blacklist ideapad_laptop</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>方法二</p>
+<ul>
+<li><p>直接添加ideap_wlan的模块到内核当中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install git dkms build-essential</span><br><span class="line">git clone https://github.com/jeremyb31/ideapad-laptop.git</span><br><span class="line">sudo dkms add ./ideapad-laptop</span><br><span class="line">sudo dkms install ideapad-laptop/1.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装iwlwifi驱动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install build-essential git</span><br><span class="line">git clone https://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/backport-iwlwifi.git</span><br><span class="line">cd backport-iwlwifi</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line">sudo -i</span><br><span class="line">echo &quot;options iwlwifi disable_msix=1&quot;  &gt;&gt;  /etc/modprobe.d/iwlwifi.conf</span><br><span class="line">exit</span><br><span class="line">如果需要升级kernel需要重新安装</span><br><span class="line">cd backport-iwlwifi</span><br><span class="line">sudo make clean</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="开机自动启动"><a href="#开机自动启动" class="headerlink" title="开机自动启动"></a>开机自动启动</h4><ul>
+<li><p>方式一</p>
+<ul>
+<li><p>以systemctl创建shadowsockets开机启动为例子</p>
+</li>
+<li><p>sudo vim /etc/systemd/system/shadowsocks.service</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Shadowsocks Client Service</span><br><span class="line">After=network.target</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=root</span><br><span class="line">Restart=on-failure</span><br><span class="line">RestartSec=5s</span><br><span class="line">ExecStart=/usr/bin/sslocal -c /home/xx/Software/ShadowsocksConfig/shadowsocks.json</span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把/home/xx/Software/ShadowsocksConfig/shadowsocks.json修改为你的shadowsocks.json路径，如：/etc/shadowsocks.json</p>
+</li>
+<li><p>生效配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable /etc/systemd/system/shadowsocks.service</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>方式二</p>
+<ul>
+<li>直接启动Startup Applications程序， 填写需要执行的命令和参数</li>
+</ul>
+</li>
+</ul>
+<h4 id="系统问题修复"><a href="#系统问题修复" class="headerlink" title="系统问题修复"></a>系统问题修复</h4><ol>
+<li><p>查看dmesg日志， 并且google错误信息</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dmesg	查看系统日志</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>系统卡死现象</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + F1 ~ F6    进入tty1 ~ tty6模式</span><br><span class="line">Ctrl + Alt + F7         恢复到桌面模式</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="快捷键冲突问题"><a href="#快捷键冲突问题" class="headerlink" title="快捷键冲突问题"></a>快捷键冲突问题</h4><ol>
+<li><p>设置fcitx 网易云音乐</p>
+</li>
+<li><p>更改系统快捷键， 不常用的建议都去掉，保留下列即可</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Ctrl + Alt + t        打开终端</span><br><span class="line">Ctrl + Super + up     放大应用</span><br><span class="line">Ctrl + Super + down   缩小应用</span><br><span class="line">Super + d             关闭/显示桌面</span><br><span class="line">Super + l             锁住桌面</span><br><span class="line">Super + w             显示打开的应用</span><br><span class="line">Super                 显示左边栏并打开搜索</span><br><span class="line">Super + Tab           显示左边栏并上下切换打开应用</span><br><span class="line">Alt [+ SHift] +       [向前]向后切换应用</span><br><span class="line">Alt + F4              关闭应用</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装compizconfig-settings-manager继续修改快捷键(可选)</p>
+</li>
+<li><p>关闭关闭tty防止ctrl + alt + F1-12的影响</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># sudo vi /usr/share/X11/xorg.conf.d/50-novtswitch.conf</span><br><span class="line">Section &quot;ServerFlags&quot;</span><br><span class="line">  Option &quot;DontVTSwitch&quot; &quot;true&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置idea <a href="http://yangbingdong.com/2017/note-of-learning-idea-under-ubuntu/" target="_blank" rel="noopener">博客</a></p>
+</li>
+</ol>
+<h4 id="其它可选选项"><a href="#其它可选选项" class="headerlink" title="其它可选选项"></a>其它可选选项</h4><ol>
+<li><p>安装限制程序</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt-get install ubuntu-restricted-extras ubuntu-restricted-addons</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li><p>安装字体</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install ttf-mscorefonts-installer</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.7_all.deb -P ~/Downloads</span><br><span class="line">sudo gdebi ~/Downloads/ttf-mscorefonts-installer_3.7_all.deb</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/fangwentong/dotfiles/raw/master/ubuntu-gui/fonts/Monaco.ttf</span><br><span class="line">sudo mkdir -p /usr/share/fonts/custom</span><br><span class="line">sudo mv Monaco.ttf /usr/share/fonts/custom</span><br><span class="line">sudo chmod 744 /usr/share/fonts/custom/Monaco.ttf</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir /usr/share/fonts/WindowsFonts</span><br><span class="line">cp /Windowsdrive/Windows/Fonts/* /usr/share/fonts/WindowsFonts 复制windows中的字体</span><br><span class="line">chmod 755 /usr/share/fonts/WindowsFonts/*</span><br></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkfontscale  #生成核心字体信息</span><br><span class="line">sudo mkfontdir</span><br><span class="line">sudo fc-cache -f -v</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 <code>sudoer</code> 的环境变量 PATH， 在 <code>.bashrc</code> 中添加方法</p>
+<ul>
+<li><p>使用其它命令代替sudo命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psudo() &#123; sudo env PATH=&quot;$PATH&quot; &quot;$@&quot;; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>完全覆盖sudo命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo() &#123; command sudo env PATH=&quot;$PATH&quot; &quot;$@&quot;; &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>说明： </strong> command 命令防止命令自身递归调用</p>
+</li>
+</ul>
+</li>
+<li><p>温度监控</p>
+<ol>
+<li>sudo apt-get install lm-sensors hddtemp</li>
+<li>sudo sensors-detect</li>
+<li>sensors（查看硬件实时温度）</li>
+<li>sudo apt-get install psensor</li>
+<li>安装成功后，打开psensor，在Sensor Preferences中选择需要的硬件勾选Display sensor in the label</li>
+</ol>
+</li>
+</ol>
 
-显卡安装
-完全卸载nvida显卡
-1sudo apt-get remove --purge nvidia*
-
-禁止加载 /etc/modprobe.d/blacklist-nouveau.conf
-12blackli
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/28/linux-ubuntu-setup/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -1292,17 +1791,139 @@ git存在工作区， 暂存区， 本地仓库， 远程仓库
       
         
           
-          概述
-MapReduce是一个简单的计算处理框架, 它能够在一个廉价的大型集群上以一种容错的方式并行的处理TB级的数据。
-一个MapRecude任务通常讲输入数据集进行分块, 并且以完全并行的方式处理map任务, 框架对map任务输出进行。排序, 并作为reduce任务的输入, 通常任务的输入和输出
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/26/hadoop-map-reduce/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><ol>
+<li>MapReduce是一个简单的计算处理框架, 它能够在一个廉价的大型集群上以一种容错的方式并行的处理TB级的数据。</li>
+<li><p>一个MapRecude任务通常讲输入数据集进行分块, 并且以完全并行的方式处理map任务, 框架对map任务输出进行。排序, 并作为reduce任务的输入, 通常任务的输入和输出都存储在文件系统, 框架负责处理协调、监控并重运行失败的任务。</p>
+</li>
+<li><p>通常情况下计算节点和存储节点都是在同一个HDFS(如果MapReduce以HDFS作为文件系统)的datenode中， 这种<br>配置允许框架能够有效的协调任务在已经存在数据的节点中运行，这通常在集群中对网络带宽非常友好。</p>
+</li>
+<li>MapReduce也可以通过yarn（分布式资源协调工具）来运行， 并且为每一个MapReduce任务创建一个MRAppMaster负责从yarn的ResourceManager申请协调资源和对MapReduce任务进行监控和管理。</li>
+<li>最小的一个MapReduce任务由一个输入输出、实现特定接口的map和reduce方法、以及一个job配置， job客户端提交任务， ResouceManager对任务进行协调监控并提供诊断信息给客户端。</li>
+<li>虽然Hadoop框架是使用java运行， 但是MapReduce应用却不要求一定使用java编写， 如Hadoop Streaming允许用户使用任何可执行的shell（能够在shell命令中执行） 创建并运行mapper或者reducer， Hadoop Pipes以一个SWIG兼容的C++ API来实现MapReduce任务（而不是基于JNI）</li>
+</ol>
+<h4 id="输入和输出"><a href="#输入和输出" class="headerlink" title="输入和输出"></a>输入和输出</h4><ol>
+<li>MapReduce框架操作唯一的&lt;key, value&gt;对，框架输入&lt;key, value&gt;对， 并产生&lt;key, value&gt;对作为输出，key和value需要在框架中通过RPC或者文件的方式进行传输， 所以必须序列化， 框架提供Writable接口作为序列化的基础， 另外框架需要通过key来对&lt;key, value&gt;对进行排序， 所以必须实现WritableComparable接口， 虽然key没有要求必须实现hashcode方法， 但是map任务后的reduce任务通常需要对&lt;key, value&gt;行partition， 而通过hash来进行partition却是默认的方式。</li>
+</ol>
+<h4 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCount</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TokenizerMapper</span></span></span><br><span class="line"><span class="class">       <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Object</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//创建单实例的对象， 减少对象的创建</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> IntWritable one = <span class="keyword">new</span> IntWritable(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">private</span> Text word = <span class="keyword">new</span> Text();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Object key, Text value, Context context</span></span></span><br><span class="line"><span class="function"><span class="params">                    )</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">      <span class="comment">//输入的key其实是一个相对于文件的偏移量， value为每一行的数据</span></span><br><span class="line">      <span class="comment">//所以读取文件必须有一个格式， 并且讲文件split给每个map任务，这里由InputFormat提供</span></span><br><span class="line">      StringTokenizer itr = <span class="keyword">new</span> StringTokenizer(value.toString());</span><br><span class="line">      <span class="keyword">while</span> (itr.hasMoreTokens()) &#123;</span><br><span class="line">        word.set(itr.nextToken());</span><br><span class="line">        context.write(word, one);<span class="comment">//将split的单词和数量输出&lt;workd, count&gt;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntSumReducer</span></span></span><br><span class="line"><span class="class">       <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>,<span class="title">IntWritable</span>,<span class="title">Text</span>,<span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> IntWritable result = <span class="keyword">new</span> IntWritable();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;IntWritable&gt; values,</span></span></span><br><span class="line"><span class="function"><span class="params">                       Context context</span></span></span><br><span class="line"><span class="function"><span class="params">                       )</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span> (IntWritable val : values) &#123;</span><br><span class="line">        sum += val.get();</span><br><span class="line">      &#125;</span><br><span class="line">      result.set(sum);</span><br><span class="line">      context.write(key, result);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">    Job job = Job.getInstance(conf, <span class="string">"word count"</span>);</span><br><span class="line">    job.setJarByClass(WordCount.class);</span><br><span class="line">    job.setMapperClass(TokenizerMapper.class);</span><br><span class="line">    <span class="comment">//指定Combiner进行本地Reducer任务执行， 主要是这里的reducer任务具有操作无序性质， 所以</span></span><br><span class="line">    <span class="comment">//本地的reducer一般用来减小mapper到reducer的带宽， 对于速度上可能并不明显</span></span><br><span class="line">    job.setCombinerClass(IntSumReducer.class);</span><br><span class="line">    job.setReducerClass(IntSumReducer.class);</span><br><span class="line">    job.setOutputKeyClass(Text.class);</span><br><span class="line">    job.setOutputValueClass(IntWritable.class);</span><br><span class="line">    FileInputFormat.addInputPath(job, <span class="keyword">new</span> Path(args[<span class="number">0</span>]));</span><br><span class="line">    FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(args[<span class="number">1</span>]));</span><br><span class="line">    <span class="comment">//等待任务完成， 返回job客户端， 也可以执行返回</span></span><br><span class="line">    System.exit(job.waitForCompletion(<span class="keyword">true</span>) ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行应用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bin/hadoop jar wc.jar WordCount /user/joe/wordcount/input /user/joe/wordcount/output</span><br></pre></td></tr></table></figure></p>
+<p>为MapReduce任务提供ClassPath和work dir提供资源<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bin/hadoop jar hadoop-mapreduce-examples-&lt;ver&gt;.jar wordcount -files dir1/dict.txt#dict1,dir2/dict.txt#dict2 -archives mytar.tgz#tgzdir input output</span><br></pre></td></tr></table></figure></p>
+<p><em>说明：</em> -files 提供文件到任务work dir中， 通过逗号分割， 使用#号取别名, -archives 提供文件并且解压缩到work dir， 通过都好分割， 使用#号取别名， 两者指定的文件可以在MapReduce任务中获取</p>
+<h4 id="Mapper"><a href="#Mapper" class="headerlink" title="Mapper"></a>Mapper</h4><ol>
+<li>Hadoop MapReduce通过InputFormat将输入的files进行split并创建一任意个InputSplit，并为每个InputSplit创建一个map任务用来执行这个InputSplit表示的逻辑文件， map任务通过RecordReader来读取InputSplit这个逻辑文件， 并生成map的输入对&lt;key1, value1&gt;, InputSplit和RecordReader都是由InputFormat创建。</li>
+<li><p>Mapper类是执行map任务的核心， 它循环的执行RecordReader产生的&lt;key1, value1&gt;对， 并且在执行任何的&lt;key1, value1&gt;对之前可以对Mapper进行初始化操作，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Mapper.setup(Context)</span><br><span class="line">Mapper.run(Context) # 用于提供map操作的模板方法， Mapper调用的方法</span><br><span class="line">Mapper.map(key, value, Context)</span><br><span class="line">Mapper.cleanup(Context)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MapReduce 输出对不需要和输入对有任何的联系， 输入对可以map出零个或者多个输出对， 通过<code>context.write()</code>输出。</p>
+</li>
+<li>用户可以指定combiner对mapper产生的输出进行聚合， 这样可能会加快速度和减少网络带宽， 其实combiner就是一个reducer， 只是它单纯的对当前map任务的所有输出进行reduce任务操作， 操作完成之后再传给总的reduce来进行处理， 所以可以看到此处的reduce任务必须具有无序性， 其次reducer也可以接受并非只是mapper的中间结果&lt;key2, value2&gt;, 也可以接受&lt;key2, [value2, vlaue3…]&gt;</li>
+<li>map任务的个数通常是通过输入文件的总大小，也就是总的输入文件的块， 正确的并发map任务通常每个节点10-100个， 通常对于轻量级cpu任务开启300个map任务， 因为一般情况下map需要从磁盘获取数据， 并进行简单操作， 所以通常都是io密集型而对cpu不敏感， map任务的创建需要时间， 所以最好map任务执行超过一分钟。</li>
+</ol>
+<h4 id="Partitioner"><a href="#Partitioner" class="headerlink" title="Partitioner"></a>Partitioner</h4><ol>
+<li>Partitioner是用map产生的中间结果&lt;key1, value1&gt;的key空间来对每个map任务的的中间结果进行分区的， 通常情况下是通过hash来进行分区， 总的分区数量和reduce任务的分区数量是一样的。</li>
+</ol>
+<h4 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h4><p>Reducer 用来reduce Mapper任务产生的中间结果， 当Mapper产生结果后， 通过Partitioner将具体&lt;key2, value2&gt;或者是&lt;key2, [vlaue2, value3…]&gt;(经过combiner之后的结果)传输到具体的Reducer当中， 具体的某个Reducer收到所有Mapper需要传输到自己的&lt;key2, value2/[value2, value3…]&gt;之后， 对其进行shuffle、sort和最终的reduce</p>
+<ol>
+<li>Shuffle 讲所有从Mapper中获取的结果进行shuffle成&lt;value2, [value2, value3…]&gt;</li>
+<li>Sort 对shuffle结果进行排序，shuffle和sort是同时进行的， 排序方式可以通过<code>Job.setSortComparatorClass(Class)</code>来提供， 此处是对key进行排序</li>
+<li>Secondary Sort 如果需要对相同key的values进行排序可以指定<code>Job.setGroupingComparatorClass(Class)</code>来对value进行排序</li>
+<li>Reduce 对当前Reducer收到并处理的&lt;key2, [value2, value3…]&gt;进行reduce操作， 用来产生&lt;key3, value3&gt;输出到文件系统中，reduce输出没有排序。reduce在操作之前和之后可以和map进行相同的初始化或者结束回调。</li>
+<li>reduce的数量通常在[0.95~1.75] <em> <num of="" nodes=""> </num></em> <num of="" max="" container="" per="" node=""> 之间， 当maps任务执行完后， 指定倍数为0.95时所有的reducers可以立即启动并且执行传输map的输出， 当为1.75时最快的节点将会完成它们第一轮并且执行第二轮， 有助于负载均衡。 增加的reduces的数量虽然增加了负载， 但是增加了负载均衡的能力， 并且减小了失败造成的消耗。</num></li>
+</ol>
+<h4 id="Counter"><a href="#Counter" class="headerlink" title="Counter"></a>Counter</h4><p>Counter 是一个用来报告统计的基础设施， Mapper和Reducer实现可以使用Counter来报告统计信息。</p>
+<h4 id="Job-Configuration"><a href="#Job-Configuration" class="headerlink" title="Job Configuration"></a>Job Configuration</h4><ol>
+<li>Job代表一个MapReduce的任务配置， 通常用来配置InputFormat、Mapper、combiner（如果有）、Partitioner、Reducer、OutputFormat的实现</li>
+<li><p>FileInputFormat和FileOutpuFormat配置输入和输出格式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FileInputFormat.setInputPaths(Job, Path…) FileInputFormat.addInputPath(Job, Path)</span><br><span class="line">FileInputFormat.setInputPaths(Job, String…) FileInputFormat.addInputPaths(Job, String)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Job通常需要指定先进的参数， 如Comparator、文件put到DistributedCache、是否使用compressed、是否speculative执行以及map和reduce最大的attempts</p>
+</li>
+<li>当然Job还可以使用Configuration的get/set来获取和设置更多的参数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Configuration.set(String, String)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="任务执行和环境变量"><a href="#任务执行和环境变量" class="headerlink" title="任务执行和环境变量"></a>任务执行和环境变量</h4><ol>
+<li>MRAppMaster使用隔离jvm的一个子进程去执行Mapper/Reducer任务， 子进程继承父进程的环境变量， 用户可以指定额外的子进程虚拟机启动参数，如下：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- @taskid@ 表示MapReduce任务id--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.map.java.opts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">  -Xmx512M -Djava.library.path=/home/mycompany/lib -verbose:gc -Xloggc:/tmp/@taskid@.gc</span><br><span class="line">  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</span><br><span class="line">  <span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.reduce.java.opts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span></span><br><span class="line">  -Xmx1024M -Djava.library.path=/home/mycompany/lib -verbose:gc -Xloggc:/tmp/@taskid@.gc</span><br><span class="line">  -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false</span><br><span class="line">  <span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="任务提交和监控"><a href="#任务提交和监控" class="headerlink" title="任务提交和监控"></a>任务提交和监控</h4><ol>
+<li>Job是一个原始的接口， 用于用户job与ResourceManager交互， Job提供的基本功能是提交任务、跟踪任务进程、访问任务的报告和日志和获取MapRecude集群状态等信息， job提交任务涉及到下面几个方面：<ul>
+<li>检查任务的输入输出</li>
+<li>计算InputFormat的InputSplit</li>
+<li>为任务分布式缓存设置必要的账号信息</li>
+<li>复制任务jar和配置信息到MapReduce系统目录</li>
+<li>提交任务到ResourceManager并选择是否监控它的状态</li>
+</ul>
+</li>
+<li><p>任务历史日志记录在两个指定的目录当中， 如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mapreduce.jobhistory.intermediate-done-dir</span><br><span class="line">mapreduce.jobhistory.done-dir</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用户可以查看任务运行历史日志总览</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mapred job -history [all] output.jhist</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="Job-输入"><a href="#Job-输入" class="headerlink" title="Job 输入"></a>Job 输入</h4><ol>
+<li>InputFormat 描述MapReduce任务的输入，主要功能如下：<ul>
+<li>验证任务输入</li>
+<li>split 所有的输入文件为逻辑的InputSplit实例， 每一个InputSplit相当于一个Mapper任务</li>
+<li>提供RecordReader实现， 用于Mapper任务启动时从InputSplit中获取单个&lt;key1, value1&gt;记录</li>
+</ul>
+</li>
+<li>默认基于文件的输入是FileInputFortmat， 它通过总文件大小来split出逻辑的InputSplit， 显然通过总大小来分割有时候是无效的， 因为RecordReader无法获取记录的边界</li>
+</ol>
+<h4 id="Job输出"><a href="#Job输出" class="headerlink" title="Job输出"></a>Job输出</h4><ol>
+<li>OutputFormat 描述MapReduce任务的输出， 主要功能如下：<ul>
+<li>验证任务输出， 如：检查输出文件是否存在</li>
+<li>提供RecorderWriter实现， 用于写入任务输出， Output文件存储到文件系统</li>
+</ul>
+</li>
+<li>OutputCommiter 描述MapReduce任务输出提交， OutputCommiter的主要功能如下：<ul>
+<li>初始化设置， 如：为任务创建临时输出目录， 任务的初始化设置是在单独的任务中完成的， 初始化之前任务处在<code>PREP</code>状态， 初始化完成后处在<code>RUNNING</code>状态</li>
+<li>任务完成后的清理动作， 如：删除零时输出目录， 任务的清理工作也是在单独的任务中， 清理工作完成后任务可能出现<code>SUCCEDED/FAILED/KILLED</code>状态</li>
+<li>检查任务是否需要提交</li>
+<li>一旦任务完成就提交任务的输出</li>
+<li>如果任务失败， 任务输出将会被清理， 并且丢弃任务提交， 如果任务不能清理， 一个相同attempt-id的任务将会单独启动并执行清理动作</li>
+</ul>
+</li>
+<li>RecordWriter 负责讲Reducer的输出&lt;key3, value3&gt;输出到文件系统， 并且负责讲job的outputs输出到文件系统</li>
+</ol>
+<h4 id="提交Job到队列"><a href="#提交Job到队列" class="headerlink" title="提交Job到队列"></a>提交Job到队列</h4><ol>
+<li>用户提交任务到队列当中， 队列作为一个任务集合允许系统提供指定的功能， 如队列使用ACLs控制那个用户可以提交任务到队列， 在Hadoop中默认就是使用队列作为调度器来调度任务。</li>
+<li>Hadoop中存在一个叫做default的队列用于用户默认的任务提交队列， 用户也可以通过<code>Configuration.set(MRJobConfig.QUEUE_NAME, String)</code>指定将任务提交到特定名字的队列当中， 并且Hadoop还提供了一个可插拔的<code>Capacity Scheduler</code>用来支持多租户， 提供资源的隔离， 所以它存在多个队列。</li>
+</ol>
+<h4 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h4><ol>
+<li>Counters代表全局的计数器， 可以被MapReduce框架或者应用定义， 每一个Counter可以是一个Enum， 特定的Enum的Counter被集中到特定的Counters.Group当中， 应用可以定义任意的Enum并且<code>Counter.incrCounter(Enum, long)</code>或者<code>Counter.incrCounter(String, String, long)</code>到map或者reduce方法当中， 这些counters被框架自动聚合。</li>
+</ol>
+<h4 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h4><ol>
+<li>分布式的缓存用于有效的存储特定应用大型只读的文件， 它是被MapReduce框架提供的基础设施用于缓存应用需要的文本、归档和jar文件等等</li>
+<li>Job中的应用通过<code>hdfs://</code>指定被缓的文件， 分布式的缓存假设被指定<code>hdfs://</code>的文件已经存在于文件系统当中</li>
+<li>框架将会在任何任务被执行之前，复制必须的文件到worker节点， 事实上它是相当有效的， 文件只会被复制一次， 并且un-archive到work节点</li>
+<li>分布式的缓存跟踪缓存文件的修改时间戳， 显然分布式的缓存文件是不能被任何的修改</li>
+<li>文件、归档、jar/native lib都可以被缓存， 可以通过property设置， 或者通过Job添加， 如：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Job.addCacheFile(URI) / Job.addCacheArchive(URI)</span><br><span class="line">Job.AddArchiveToClassPath(Path) / JOb.addFileToClassPath(Path)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>URI: hdfs://host:port/absolute-path#link-name</p>
+<ol start="6">
+<li>分布式的缓存文件可以是私有或公用， 这决定了它们是怎样被worker节点所共享的， 主要是通过分布式文件的用户和文件的可见性来决定</li>
+</ol>
+<p>####　Debugging</p>
+<ol>
+<li>MapReduce框架提供当任务失败时执行用户指定脚本的功能， 脚本可以访问任务的标准输出、标准错误、系统日志和任务配置， 脚本处理访问的信息并输出错误信息到控制台或者任务UI</li>
+<li>Debugging脚本的使用步骤：<ul>
+<li>提交脚本到分布式缓存中</li>
+<li>提交脚本到map或者reduce当中， 使用property或者Configuration</li>
+<li>脚本访问 $script $stdout $stderr $syslog $jobconf</li>
+</ul>
+</li>
+</ol>
+<h4 id="数据压缩"><a href="#数据压缩" class="headerlink" title="数据压缩"></a>数据压缩</h4><ol>
+<li>MapReduce提供map和reduce应用输出压缩功能， 为了性能它使用本地实现</li>
+</ol>
+<h4 id="跳过错误的记录"><a href="#跳过错误的记录" class="headerlink" title="跳过错误的记录"></a>跳过错误的记录</h4><ol>
+<li>Hadoop可以通过<code>ShipBadRecords</code>类来控制map输入的错误记录， 对于某些应用来说如果少量的错误记录是可以接受的那么可以开启此功能， 使用<code>SkipBadRecords.set[Mapper|Reducer]MaxSkipGroups(Configuration, long)</code>来设置最大的错误记录数量。</li>
+</ol>
+<h4 id="复杂的例子"><a href="#复杂的例子" class="headerlink" title="复杂的例子"></a>复杂的例子</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.FileReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.URI;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"><span class="keyword">import</span> java.util.StringTokenizer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Counter;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.GenericOptionsParser;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.StringUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCount2</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TokenizerMapper</span></span></span><br><span class="line"><span class="class">       <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Object</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt;</span>&#123;</span><br><span class="line">    <span class="comment">// 提供counter功能</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">enum</span> CountersEnum &#123; INPUT_WORDS &#125;</span><br><span class="line">    <span class="comment">// 减少对象的创建</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> IntWritable one = <span class="keyword">new</span> IntWritable(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">private</span> Text word = <span class="keyword">new</span> Text();</span><br><span class="line">    <span class="comment">// 提供单词大小写敏感和模式忽略功能</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> caseSensitive;</span><br><span class="line">    <span class="keyword">private</span> Set&lt;String&gt; patternsToSkip = <span class="keyword">new</span> HashSet&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Configuration conf;</span><br><span class="line">    <span class="keyword">private</span> BufferedReader fis;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在setup中处理Mapper的初始化动作</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">(Context context)</span> <span class="keyword">throws</span> IOException,</span></span><br><span class="line"><span class="function">        InterruptedException </span>&#123;</span><br><span class="line">      <span class="comment">// 获取配置</span></span><br><span class="line">      conf = context.getConfiguration();</span><br><span class="line">      <span class="comment">// 获取Job中设置的环境变量</span></span><br><span class="line">      caseSensitive = conf.getBoolean(<span class="string">"wordcount.case.sensitive"</span>, <span class="keyword">true</span>);</span><br><span class="line">      <span class="comment">// 解析配置</span></span><br><span class="line">      <span class="keyword">if</span> (conf.getBoolean(<span class="string">"wordcount.skip.patterns"</span>, <span class="keyword">false</span>)) &#123;</span><br><span class="line">        <span class="comment">//获取并解析缓存</span></span><br><span class="line">        URI[] patternsURIs = Job.getInstance(conf).getCacheFiles();</span><br><span class="line">        <span class="keyword">for</span> (URI patternsURI : patternsURIs) &#123;</span><br><span class="line">          Path patternsPath = <span class="keyword">new</span> Path(patternsURI.getPath());</span><br><span class="line">          String patternsFileName = patternsPath.getName().toString();</span><br><span class="line">          parseSkipFile(patternsFileName);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">parseSkipFile</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        fis = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> FileReader(fileName));</span><br><span class="line">        String pattern = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">while</span> ((pattern = fis.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">          patternsToSkip.add(pattern);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException ioe) &#123;</span><br><span class="line">        System.err.println(<span class="string">"Caught exception while parsing the cached file '"</span></span><br><span class="line">            + StringUtils.stringifyException(ioe));</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Object key, Text value, Context context</span></span></span><br><span class="line"><span class="function"><span class="params">                    )</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">      <span class="comment">// 处理单词大小写敏感和模式忽略功能</span></span><br><span class="line">      String line = (caseSensitive) ?</span><br><span class="line">          value.toString() : value.toString().toLowerCase();</span><br><span class="line">      <span class="keyword">for</span> (String pattern : patternsToSkip) &#123;</span><br><span class="line">        line = line.replaceAll(pattern, <span class="string">""</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      StringTokenizer itr = <span class="keyword">new</span> StringTokenizer(line);</span><br><span class="line">      <span class="keyword">while</span> (itr.hasMoreTokens()) &#123;</span><br><span class="line">        word.set(itr.nextToken());</span><br><span class="line">        context.write(word, one);</span><br><span class="line">        <span class="comment">// counter计数， 会在日志中打印</span></span><br><span class="line">        Counter counter = context.getCounter(CountersEnum.class.getName(),</span><br><span class="line">            CountersEnum.INPUT_WORDS.toString());</span><br><span class="line">        counter.increment(<span class="number">1</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">IntSumReducer</span></span></span><br><span class="line"><span class="class">       <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>,<span class="title">IntWritable</span>,<span class="title">Text</span>,<span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> IntWritable result = <span class="keyword">new</span> IntWritable();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;IntWritable&gt; values,</span></span></span><br><span class="line"><span class="function"><span class="params">                       Context context</span></span></span><br><span class="line"><span class="function"><span class="params">                       )</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span> (IntWritable val : values) &#123;</span><br><span class="line">        sum += val.get();</span><br><span class="line">      &#125;</span><br><span class="line">      result.set(sum);</span><br><span class="line">      context.write(key, result);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    <span class="comment">// 配置解析</span></span><br><span class="line">    Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">    GenericOptionsParser optionParser = <span class="keyword">new</span> GenericOptionsParser(conf, args);</span><br><span class="line">    String[] remainingArgs = optionParser.getRemainingArgs();</span><br><span class="line">    <span class="keyword">if</span> ((remainingArgs.length != <span class="number">2</span>) &amp;&amp; (remainingArgs.length != <span class="number">4</span>)) &#123;</span><br><span class="line">      System.err.println(<span class="string">"Usage: wordcount &lt;in&gt; &lt;out&gt; [-skip skipPatternFile]"</span>);</span><br><span class="line">      System.exit(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    Job job = Job.getInstance(conf, <span class="string">"word count"</span>);</span><br><span class="line">    <span class="comment">// 基本设置</span></span><br><span class="line">    job.setJarByClass(WordCount2.class);</span><br><span class="line">    job.setMapperClass(TokenizerMapper.class);</span><br><span class="line">    job.setCombinerClass(IntSumReducer.class);</span><br><span class="line">    job.setReducerClass(IntSumReducer.class);</span><br><span class="line">    job.setOutputKeyClass(Text.class);</span><br><span class="line">    job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; otherArgs = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i &lt; remainingArgs.length; ++i) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="string">"-skip"</span>.equals(remainingArgs[i])) &#123;</span><br><span class="line">        <span class="comment">// 设置缓存</span></span><br><span class="line">        job.addCacheFile(<span class="keyword">new</span> Path(remainingArgs[++i]).toUri());</span><br><span class="line">        <span class="comment">// 设置环境变量</span></span><br><span class="line">        job.getConfiguration().setBoolean(<span class="string">"wordcount.skip.patterns"</span>, <span class="keyword">true</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        otherArgs.add(remainingArgs[i]);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 设置输入与输出</span></span><br><span class="line">    FileInputFormat.addInputPath(job, <span class="keyword">new</span> Path(otherArgs.get(<span class="number">0</span>)));</span><br><span class="line">    FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(otherArgs.get(<span class="number">1</span>)));</span><br><span class="line"></span><br><span class="line">    System.exit(job.waitForCompletion(<span class="keyword">true</span>) ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>命令行执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ bin/hadoop fs -ls /user/joe/wordcount/input/</span><br><span class="line">/user/joe/wordcount/input/file01</span><br><span class="line">/user/joe/wordcount/input/file02</span><br><span class="line"></span><br><span class="line">$ bin/hadoop fs -cat /user/joe/wordcount/input/file01</span><br><span class="line">Hello World, Bye World!</span><br><span class="line"></span><br><span class="line">$ bin/hadoop fs -cat /user/joe/wordcount/input/file02</span><br><span class="line">Hello Hadoop, Goodbye to hadoop.</span><br><span class="line"></span><br><span class="line">$ bin/hadoop fs -cat /user/joe/wordcount/patterns.txt</span><br><span class="line">\.</span><br><span class="line">\,</span><br><span class="line">\!</span><br><span class="line">to</span><br><span class="line"></span><br><span class="line">$ bin/hadoop jar wc.jar WordCount2 -Dwordcount.case.sensitive=false /user/joe/wordcount/input /user/joe/wordcount/output -skip /user/joe/wordcount/patterns.txt</span><br><span class="line"></span><br><span class="line">$ bin/hadoop fs -cat /user/joe/wordcount/output/part-r-00000</span><br><span class="line">bye 1</span><br><span class="line">goodbye 1</span><br><span class="line">hadoop 2</span><br><span class="line">hello 2</span><br><span class="line">horld 2</span><br></pre></td></tr></table></figure></p>
+
+          
         
       
     </div>
@@ -1464,17 +2085,34 @@ MapReduce是一个简单的计算处理框架, 它能够在一个廉价的大型
       
         
           
-          原理
-docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像
-当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerig
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/26/docker-dockerfile/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h5 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h5><ol>
+<li>docker 每一条命令都会创建一层， 并且会使用上一层的镜像运行一个docker容器， 再执行本层的命令，执行完成之后就提交停止容器， 并提交当前容器的修改为一个镜像</li>
+<li>当容器开始构建的时候， 第一步会将指定的context目录下的所有的文件都传递给docker守护进程（除了.dockerignore文件标识的文件除外), 第二步启动FROM image指定的镜像的容器， 并执行下面一条命令，关闭当前容器并提交一层镜像， 以后各层都是如此，以上一层的镜像运行一个容器并执行命令后提交镜像<br>所以我们可以看到命令越多则层数越多， 建议尽量使用最少的层， 并且将相关的动作描述清晰使其容易维护</li>
+</ol>
+<p><em>注意</em> 妥善使用下面点： 基础镜像选择， 使用两种环境变量， 组合命令</p>
+<h5 id="设置基础镜像"><a href="#设置基础镜像" class="headerlink" title="设置基础镜像"></a>设置基础镜像</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu</span><br></pre></td></tr></table></figure>
+<h5 id="设置LABEL"><a href="#设置LABEL" class="headerlink" title="设置LABEL"></a>设置LABEL</h5><p>LABEL用来标示当前镜像， 作为一种元数据存在与镜像当中， 作为一种描述<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LABEL com.ilivoo.game=&quot;fengxiang&quot; \</span><br><span class="line">      version=&quot;1.0&quot; \</span><br><span class="line">      description=&quot;this is my first game!&quot;</span><br></pre></td></tr></table></figure></p>
+<h5 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h5><p>设置docker容器运行时的环境变量， 并且可以在构建的过程中使用这些命令， 其实道理很简单， 以后的构建过程中都是使用上一个镜像层作为基础， 而运行的时候启动容器这个<br>环境变量就已经生成了， 所以后面的RUN 等命令当然也是可以获取到这个环境变量的， 所以脚本引用方式与正查的脚本完全一样, 可以看到巧妙的设计环境变量可以使得构建过程<br>非常灵活， 并且运行时容器也非常灵活<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENV VERSION=1.0 \</span><br><span class="line">    DEBUG=on</span><br></pre></td></tr></table></figure></p>
+<h5 id="设置ARG参数"><a href="#设置ARG参数" class="headerlink" title="设置ARG参数"></a>设置ARG参数</h5><p>ARG命令也是用来设置环境变量的， 但是ARG设置的环境变量不会保留到最终容器运行的层当中, 其实实现也非常简单当运行容器的时候设置环境变量， 并且在容器退出的时候就将环境变量删除就可以达到此目的了, 并且此参数可以通过–build-arg参数在构建的时候进行覆盖，这样就可以达到非常灵活的效果了虽然ARG环境变量不会保存到运行是环境变量， 但是也不能使用敏感数据， 因为使用history会查看到其值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ARG REDIS_VERSION=3.2.10</span><br></pre></td></tr></table></figure></p>
+<h5 id="环境变量与ARG参数结合使用"><a href="#环境变量与ARG参数结合使用" class="headerlink" title="环境变量与ARG参数结合使用"></a>环境变量与ARG参数结合使用</h5><ol>
+<li><p>通过在构建的时候覆盖当前–build-arg NAME=FENGXIANG此时后面设置的环境变量FENG就变成了FENGXIANG, 可以看到虽然环境变量不能通过参数的形式进行改变但是这里确提供了灵活的方式<br>来达到环境变量的不同， 所以通过脚本来构建就可以达到非常灵活的效果， 所以在我们的代码当中需要进行灵活变化的变量应该使用环境变量来进行设置， 这样就可以达到任何<br>代码都不需要更改确有一个灵活的生产 测试 线上环境， 这个非常重要</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ARG NAME=XIANG</span><br><span class="line">ENV FENG=$&#123;NAME&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>建议将那些需要进行覆盖的ARG使用这种方式给出， 并且在使用的时候通过字符串获取的方式来获得， 此处标示如果COMPANY不存在那么默认值就是ilivoo<br>通过这种方式能够非常明显标示当前ARG用来进行占位的， 真正使用的时候可以进行指定， 并且最好是通过注释的方式标示可以指定的值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ARG COMPANY</span><br><span class="line">ENV COMPANY $&#123;COMPANY:-ilivoo&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h5 id="指定工作目录"><a href="#指定工作目录" class="headerlink" title="指定工作目录"></a>指定工作目录</h5><p>指定docker构建的以后的各层当中都使用指定的这个目录作为工作目录， 也就是以后命令执行的当前目录都是这个目录，如：CMD [“./start.sh”], 这个命令默认就去查找这个目录下<br>对应的脚本， 如果不存在则报错， 并且每次设置都会更改以后的所有层， 可以覆盖。 所以建议再构建镜像的时候只有在最终执行命令的时候再去指定这个目录， 构建最终层镜像的<br>时候显示的指定每个工作的目录是一个非常不错的选择<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR /app</span><br></pre></td></tr></table></figure></p>
+<h5 id="指定执行用户"><a href="#指定执行用户" class="headerlink" title="指定执行用户"></a>指定执行用户</h5><p>USER和WORKDIR命令类似， 都是改变环境状态并影响以后的层， 而USER则是更改RUN CMD ENTRYPOINT这类动作命的身份， 用户必须事先建立好。<br>如果以root执行脚本， 在执行容器的时候希望使用特定的身份执行容器， 不建议使用sudo命令， 这样会非常麻烦，而且容易出错，建议使用gosu来控制， 借鉴redis的做法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USER root</span><br></pre></td></tr></table></figure></p>
+<h5 id="ADD命令"><a href="#ADD命令" class="headerlink" title="ADD命令"></a>ADD命令</h5><p>当使用ADD添加本地文件时， 如果是单个文件才会进行解压缩(如果多个文件不会解压缩)如： ADD hello.tar.gz /app<br>如果原路径是一个URL那么docker会试图区下载这个文件， 下载后权限自动设置为600，并且不会解压文件，如果需要更改还需要添加<br>可以看到ADD命令其实限制非常多， 并且语义也并不明确， 如果需要从网络下载还不如使用RUN命令，再使用curl gzip chmod等一次更改当前修改， 这样只需要创建一层就可以完成了。<br>所以在项目中尽量不要使用这个命令来添加文件， 仅当需要解压时才使用， 如将所有的项目文件压缩为一个zip包， 再通过一条ADD命令将其添加到项目目录当中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ADD http://download.redis.io/releases/redis-$&#123;REDIS_VERSION&#125;.tar.gz /app</span><br><span class="line">ADD hello.tar.gz /app</span><br></pre></td></tr></table></figure></p>
+<h5 id="COPY命令"><a href="#COPY命令" class="headerlink" title="COPY命令"></a>COPY命令</h5><p>注意docker构建的context， 也就是docker构建的上下文<br>再docker构建的过程中是没有当前目录的概念的，比如：不能指定../clear.sh， 因为docker引擎不知道这个目录是哪里，所以获取不到这个文件<br>当使用docker build进行构建的时候， 会设置Dockerfile和Context上下文对于的路径， 如果没有设置Dockerfile的位置， 那么默认会在context中查找Dockerfile, 如果没有那么构建失败<br>而当指定Context的时候，docker客户端会将context指定的目录下所有的文件都传送给docker引擎， docker引擎再根据dockerfile中指定的需要的文件从context中去查找， 如果找不到构建失败<br>由此可见Dockerfile中指定的原路径都是指定当前docker引擎的context路径<br>docker引擎每向下构建一层需要的依赖文件就从docker引擎的context路径传送到启动的docker容器当中， 再提交容器生成一层镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">COPY . /app</span><br></pre></td></tr></table></figure></p>
+<h5 id="RUN命令"><a href="#RUN命令" class="headerlink" title="RUN命令"></a>RUN命令</h5><p>在构建的过程中运行当前命令， 存在两种形式shell格式和exec形式, shell格式就像直接运行shell命令一样执行  而exec格式则是只按照当前给出的命令和参数的形式进行执行<br>此处必须写成./start.sh， 而不能直接写成start.sh， 因为在shell下直接写成start.sh也是不能运行的<br>RUN ./start.sh<br>而此处exec格式，必须添加上执行的shell<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN [&quot;/bin/bash&quot;, &quot;start.sh&quot;]</span><br></pre></td></tr></table></figure></p>
+<h5 id="CMD命令"><a href="#CMD命令" class="headerlink" title="CMD命令"></a>CMD命令</h5><p>指定容器启动的主进程启动命令， 也就是操作系统挂载文件系统之后启动的init进程， 而此处的主进程就是类似init进程, 当且仅当主进程推出那么此时容器内所有的进程都退出， 并且我们<br>知道主进程init是所有的进程的父进程，当产生僵尸进程的时候当父进程死后，而子进程没有死那么为了防止僵尸进程，此时就需要init进程来寄养子进程。这里完全和linux操作系统是一样的。<br>在使用shell格式的时候， 系统会默认为其添加sh -c的参数形式执行<br>容器在其启动的时候可以重新覆盖CMD命令，从而启动其他的命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD echo $HOME</span><br></pre></td></tr></table></figure></p>
+<h5 id="ENTRYPOINT命令"><a href="#ENTRYPOINT命令" class="headerlink" title="ENTRYPOINT命令"></a>ENTRYPOINT命令</h5><p>ENTRYPOINT, 当使用了ENTRYPOINT之前的CMD和ENTRYPOINT就被覆盖， 而定义在ENTRYPOINT后面的CMD则作为ENTRYPOINT的参数, 而且在容器运行的时候还可以覆盖CMD参数， 这样就可以达到一种<br>默认命令， 并且可以更改参数的用途， 这样某些场景会非常有用， 比如redis的启动， ENTRYPOINT指定启动脚本， 并且在真正的主进程启动之间进行一些环境的修改， 如执行用户等等，并且<br>可以设置参数。 第二可以把容器当作命令来执行， 并且可以为其指定参数。<br>容器启动的时候也可以使用 –entrypoint 来覆盖这里的entrypoint命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENTRYPOINT [&quot;/bin/bash&quot;, &quot;start.sh&quot;]</span><br><span class="line">CMD [&quot;3&quot;]</span><br></pre></td></tr></table></figure></p>
+<h5 id="存储卷"><a href="#存储卷" class="headerlink" title="存储卷"></a>存储卷</h5><p>VOLUME定义匿名卷， 容器运行时应该尽量（必须）保证容器存储层不发生写操作， 任何的数据要么保存到卷当中， 要么通过数据库服务保存在其它的地方<br>为了防止用户忘记运行时将需要使用的目录挂载为卷， 我们可以在Dockerfile中定义匿名的卷， 如果用户不挂载那么运行是容器自动挂载当前卷， 使用docker守护进程在本地创建一个目录作为<br>此匿名卷的挂载目录， 这样就可以保证容器的存储层不会被写入了. 所以任何时候我们都应该为一个需要写入数据的容器声明卷， 而在docker中， 最终这个卷被挂载到具体那个位置是未知的，<br>docker提供了一个灵活的处理方式， docker的卷可以使用任何第三方实现的插件， 将其保存在分布式文件系统或者云或者本地系统等等， 这样卷就可以作为一种资源来供容器使用了， 这也<br>swarm kubernetes等工具的实现方式。<br>运行时挂载 -v mydata:/data<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VOLUME /data</span><br><span class="line">VOLUME [&quot;/pass1&quot;, &quot;/pass2&quot;]</span><br></pre></td></tr></table></figure></p>
+<h5 id="端口映射"><a href="#端口映射" class="headerlink" title="端口映射"></a>端口映射</h5><p>EXPOSE 声明运行时容器提供服务的端口， 仅仅只是一个声明而已， 运行是并不会因为这个声明就会开启这个端口的服务， 其实容器也是完全做不到这一点的， 主要有两个意图， 第一帮助镜像<br>使用者理解这个镜像的服务的守护端口， 方便配置映射， 另一个用户则是运行时使用随机端口映射， 也就是docker run -P时， 会自动随机映射EXPOSE的端口， 不管当前端口是否有服务在监听<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE 9092</span><br></pre></td></tr></table></figure></p>
+
+          
         
       
     </div>
@@ -1636,16 +2274,10 @@ docker 每一条命令都会创建一层， 并且会使用上一层的镜像运
       
         
           
-          常见问题分类和标签统计错误1234cd $HEXO_HOMErm db.jsonhexo cleanhexo generate
-markdown转义12345678910111213141516171819202122! &amp;#33; — 惊叹号 Exclamation mark” &amp;
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/25/hexo/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><h4 id="分类和标签统计错误"><a href="#分类和标签统计错误" class="headerlink" title="分类和标签统计错误"></a>分类和标签统计错误</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd $HEXO_HOME</span><br><span class="line">rm db.json</span><br><span class="line">hexo clean</span><br><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
+<h4 id="markdown转义"><a href="#markdown转义" class="headerlink" title="markdown转义"></a>markdown转义</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">! &amp;#33; — 惊叹号 Exclamation mark</span><br><span class="line">” &amp;#34; &amp;quot; 双引号 Quotation mark</span><br><span class="line"># &amp;#35; — 数字标志 Number sign</span><br><span class="line">$ &amp;#36; — 美元标志 Dollar sign</span><br><span class="line">% &amp;#37; — 百分号 Percent sign</span><br><span class="line">&amp; &amp;#38; &amp;amp; Ampersand</span><br><span class="line">‘ &amp;#39; — 单引号 Apostrophe</span><br><span class="line">( &amp;#40; — 小括号左边部分 Left parenthesis</span><br><span class="line">) &amp;#41; — 小括号右边部分 Right parenthesis</span><br><span class="line">* &amp;#42; — 星号 Asterisk</span><br><span class="line">+ &amp;#43; — 加号 Plus sign</span><br><span class="line">&lt; &amp;#60; &amp;lt; 小于号 Less than3</span><br><span class="line">= &amp;#61; — 等于符号 Equals sign</span><br><span class="line">&gt; &amp;#62; &amp;gt; 大于号 Greater than</span><br><span class="line">? &amp;#63; — 问号 Question mark</span><br><span class="line">@ &amp;#64; — Commercial at</span><br><span class="line">[ &amp;#91; --- 中括号左边部分 Left square bracket</span><br><span class="line">\ &amp;#92; --- 反斜杠 Reverse solidus (backslash)</span><br><span class="line">] &amp;#93; — 中括号右边部分 Right square bracket</span><br><span class="line">&#123; &amp;#123; — 大括号左边部分 Left curly brace</span><br><span class="line">| &amp;#124; — 竖线Vertical bar</span><br><span class="line">&#125; &amp;#125; — 大括号右边部分 Right curly brace</span><br></pre></td></tr></table></figure>
+
+          
         
       
     </div>
@@ -1818,205 +2450,214 @@ markdown转义12345678910111213141516171819202122! &amp;#33; — 惊叹号 Excla
       
         
           
-          定义
-正则表达式是一种用来匹配字符串的强有力的武器。它的设计思想是用一种描述性的语言来给字符串定义一个规则，凡是符合规则的字符串，我们就认为它“匹配”了，否则，该字符串就是不合法的。
-
-正则表达式的强大之处在于引入特殊字符来定义字符集、字符集位置、匹配子组、重复模式和扩展表示法。
-
-
-字符集定义:
-
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/25/python-re/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    <div>
-        
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/25/python-help/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ilivoo">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my-icon.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ilivoo`s blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/25/python-help/" itemprop="url">python 帮助命令</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T17:46:18+08:00">
-                2018-04-25
-              </time>
-            
-
-            
-
-            
-          </span>
+            <h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5><ol>
+<li><p>正则表达式是一种用来匹配字符串的强有力的武器。它的设计思想是用一种描述性的语言来给字符串定义一个规则，凡是符合规则的字符串，我们就认为它“匹配”了，否则，该字符串就是不合法的。</p>
+</li>
+<li><p>正则表达式的强大之处在于引入特殊字符来定义字符集、字符集位置、匹配子组、重复模式和扩展表示法。</p>
+</li>
+</ol>
+<h5 id="字符集定义"><a href="#字符集定义" class="headerlink" title="字符集定义:"></a>字符集定义:</h5><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>正则表达式</th>
+<th>匹配案例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>literal</td>
+<td>匹配字符串的字面值</td>
+<td>foo</td>
+<td>foo  </td>
+</tr>
+<tr>
+<td>re1&#124;re2</td>
+<td>匹配正则表达式re1或者re2</td>
+<td>foo&#124;bar</td>
+<td>foo或者bar</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配任何字符(除了\n之外)</td>
+<td>b.b</td>
+<td>bab</td>
+</tr>
+<tr>
+<td>[…]</td>
+<td>匹配来自字符集的任意单个字符</td>
+<td>[aeiou]</td>
+<td>a</td>
+</tr>
+<tr>
+<td>[^…]</td>
+<td>匹配非来自字符集的任何单个字符</td>
+<td>[^aeiou]</td>
+<td>0</td>
+</tr>
+<tr>
+<td>[x-ym-n]</td>
+<td>匹配任意来自x~y和m~n范围内的单个字符</td>
+<td>[A-Za-z]</td>
+<td>b</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配任何十进制数字，与[0-9]相同(与\D相反)</td>
+<td>data\d.txt</td>
+<td>data1.txt</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配字母数字数字字符,与[A-Za-z0-9]相同(与\w相反)</td>
+<td>data\w.txt</td>
+<td>dataa.txt</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任何空格字符, 与[\n\t\r\v\f]相同(与\S相反)</td>
+<td>of\sthe</td>
+<td>of the</td>
+</tr>
+<tr>
+<td>\x</td>
+<td>对特殊字符进行转移</td>
+<td>\.</td>
+<td>.</td>
+</tr>
+</tbody>
+</table>
+<h5 id="字符集位置："><a href="#字符集位置：" class="headerlink" title="字符集位置："></a>字符集位置：</h5><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>正则表达式</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>匹配字符串起始位置</td>
+<td>^Dear</td>
+<td>Dear  </td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配字符串终止位置</td>
+<td>/bin/*sh$</td>
+<td>/bin/bash  </td>
+</tr>
+<tr>
+<td>\A(\Z)</td>
+<td>匹配字符串起始(结束)位置</td>
+<td>\ADear</td>
+<td>Dear</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配任何单词边界(与\S相反)</td>
+<td>\bthe\b</td>
+<td>the</td>
+</tr>
+</tbody>
+</table>
+<h5 id="重复模式："><a href="#重复模式：" class="headerlink" title="重复模式："></a>重复模式：</h5><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>正则表达式</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>匹配０次或者多次</td>
+<td>[A-Za-z0-9]*</td>
+<td>abcde</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配１次或者多次</td>
+<td>[a-z]+.com</td>
+<td>baidu.com</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配０次或者多次</td>
+<td>goo?</td>
+<td>go</td>
+</tr>
+<tr>
+<td>{N}</td>
+<td>精确匹配Ｎ次</td>
+<td>[0-9]3</td>
+<td>333</td>
+</tr>
+<tr>
+<td>{M,N}</td>
+<td>匹配M~N次</td>
+<td>[0-9]{5,9}</td>
+<td>123456  </td>
+</tr>
+<tr>
+<td>(*&#124;+&#124;?&#124;{})</td>
+<td>匹配上面重复出现的非贪婪版本</td>
+<td>.*?[a-z]</td>
+<td>abcc</td>
+</tr>
+</tbody>
+</table>
+<h5 id="匹配子组："><a href="#匹配子组：" class="headerlink" title="匹配子组："></a>匹配子组：</h5><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>正则表达式</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(…)</td>
+<td>匹配封闭的正则表达式，　然后另存为子组</td>
+<td>([0-9]{3}-)?[0-9]{7-8}</td>
+<td>020-888888</td>
+</tr>
+<tr>
+<td>\N</td>
+<td>配皮上面已经保存的分组</td>
+<td>([0-9]{3})-(\d{7-8}) post is \1</td>
+<td>020-12345678 post is 020</td>
+</tr>
+</tbody>
+</table>
+<h5 id="扩展表示法："><a href="#扩展表示法：" class="headerlink" title="扩展表示法："></a>扩展表示法：</h5><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>描述</th>
+<th>正则表达式</th>
+<th>匹配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h5 id="贪婪模式"><a href="#贪婪模式" class="headerlink" title="贪婪模式"></a>贪婪模式</h5><p>正则表达式的默认为贪婪模式，表示竟可能多的匹配，　非贪婪是如果后面正则表达式能够匹配则尽可能少的匹配，　给后面表达式匹配的机会，　如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; re.match(r&apos;^(\d+)(0*)$&apos;, &apos;102300&apos;).groups() #贪婪</span><br><span class="line">(&apos;102300&apos;, &apos;&apos;)</span><br><span class="line">&gt;&gt;&gt; re.match(r&apos;^(\d+?)(0*)$&apos;, &apos;102300&apos;).groups() #非贪婪</span><br><span class="line">(&apos;1023&apos;, &apos;00&apos;)</span><br></pre></td></tr></table></figure></p>
+<h5 id="re-模块"><a href="#re-模块" class="headerlink" title="re 模块"></a>re 模块</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">基础方法</span><br><span class="line">compile(pattern, flags = 0) 用任何可选的标记来编译正则表达式，然后返回正则表达式对象</span><br><span class="line">match(pattern, string, flags = 0) 尝试使用带可选标记的正则表达式的模式来匹配字符串，如果匹配成功返回匹配对象，否则返回None</span><br><span class="line">search(patter, string, flags = 0) 使用可选的标记搜索字符串中第一次出现正则表达式模式，如果匹配成功返回匹配对象，否则返回None，search是逐个逐个字符的往下匹配</span><br><span class="line">findall/finditer(pattern, string[,flags]) 查找字符串中所有(非重复)出现的正则表达式模式，并返回匹配列表</span><br><span class="line">split(pattern, string, max = 0) 使用正则表达式分割模式分割字符串，并返回最大max次操作的列表</span><br><span class="line">sub(pattern, repl, string, count = 0) 使用repl替换正则表达式的模式在字符串中出现的位置，除非定义count，否则替换所有的位置</span><br><span class="line">purge()　清楚隐式编译的正则表达式模式</span><br><span class="line"></span><br><span class="line">标记</span><br><span class="line">re.I | re.IGNORECASE    不区分大小写匹配</span><br><span class="line">re.L | re.Locale        根据所使用的本地语言环境通过\w、\W、\b、\B、\s、\S实现匹配</span><br><span class="line">re.M | re.MULTILINE     ^和$分别匹配目标字符串中行的起始和结束，而不是严格匹配整个字符串本身的起始和结尾</span><br><span class="line">re.S | re.DOTALL        .号可以匹配所有的字符，包括\n</span><br><span class="line">re.X | re.VERBOSE       所有的空格加上#都会被忽略</span><br><span class="line">re.T | re.TEMPLATE      ...</span><br><span class="line"></span><br><span class="line">匹配对象的方法</span><br><span class="line">group(num = 0)          返回整个匹配对象或者编号为num的特定子组</span><br><span class="line">groups(default = None)    返回包含所有匹配子组的元组</span><br><span class="line">groupdict(defalt = None)    返回包含所有匹配子组的字典，子组名称作为键</span><br></pre></td></tr></table></figure>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/帮助/" itemprop="url" rel="index">
-                    <span itemprop="name">帮助</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  311
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          获取内建信息123dir()                   打印当前scopedir(__builtins__)       打印内建scopedir(object)             打印对象scope
-获取帮助1help(object)
-获取类继承层次1Class.mro()    
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/04/25/python-help/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
         
       
     </div>
@@ -2057,7 +2698,7 @@ markdown转义12345678910111213141516171819202122! &amp;#33; — 惊叹号 Excla
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2107,7 +2748,7 @@ markdown转义12345678910111213141516171819202122! &amp;#33; — 惊叹号 Excla
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2286,13 +2927,6 @@ markdown转义12345678910111213141516171819202122! &amp;#33; — 惊叹号 Excla
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
-
-
 
   
 
