@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:39:23.841Z">
+<meta property="og:updated_time" content="2020-04-20T03:56:58.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kerberos的使用以及各种权限说明">
 <meta name="twitter:description" content="kerberos客户端配置 krb5.conf配置选项参考： https://linux.die.net/man/5/krb5.conf  配置kerberos多用户ticket缓存名字 12#vi /etc/profiledefault_ccache_name = DIR:/tmp/kerberos 说明：  也可以设置环境变量达到相同的效果export KRB5CCNAME=DIR:/tmp/">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,386
+                  2,709
                 </span>
               
 
@@ -494,6 +494,9 @@
 </li>
 </ul>
 <h4 id="ambari、kerberos、service、host-权限"><a href="#ambari、kerberos、service、host-权限" class="headerlink" title="ambari、kerberos、service、host 权限"></a>ambari、kerberos、service、host 权限</h4><ul>
+<li>通常情况下来说为了方便， 我们会在kerberos中创建一个admin用户， 以后使用admin账户就可以访问所有的hadoop服务， 而在hadoop中也建立一个admin用户，并加入到hadoop组当中， 让其和kerberos中的admin用户对应， 但是实际上它们没有任何的关系。</li>
+<li><p>kerberos权限仅仅用来判定AB问题， 也就是说如何证明自己是自己所申称的人， 所以它需要引入一个受信的第三方来作为验证。 但是对于hadoop中的各组件来说， 通常都是每个组件一个用户， 并且把所有的组件用户加入到一个hadoop用户组当中。所以对于kerberos的admin用户仅仅只是能够声明我是一个管理员用户，它可以访问所store the credentials有的启动kerberos的hadoop服务， 但是hadoop通常来说每个用户都有自己的用户访问权限， 也就是说kerberos只是作为第一个访问这个服务的权限， 而服务自身的权限就和kerberos没有任何关系了。如hdfs当中， 所有的用户权限是根据本地linux模型来管理的， 所以必须要有linux本地用户的权限才可以进行访问。</p>
+</li>
 <li><p>对于ambari来说它是一个集群的管理着， 它有自己权限管理， 通常分为集群管理者、集群使用者、服务管理者、服务操作者、服务开发者等等。 并且它的权限用户通常也是可以和host的权限进行对应上的。如：在主机上创建了 admin 用户， 并且在ambari中创建了admin用户， 并且把admin用户配置成为集群管理者。</p>
 </li>
 <li><p>kerberos主要是用来验证某个人就是自己所声称的那个人， 所以通常情况下也是和主机的用户对于的， 也就是说根据需要是否在kerberos中创建主机用户的principal。通常情况下， service使用principal验证能够访问自己的用户， 那么对应用户访问的时候就必须为自己获取票证。</p>
@@ -688,7 +691,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -699,7 +702,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -710,7 +713,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -770,7 +773,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

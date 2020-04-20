@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:38:59.929Z">
+<meta property="og:updated_time" content="2020-04-02T12:02:02.233Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hbase、phoenix 创建表">
 <meta name="twitter:description" content="创建日志表 创建test表 123create &amp;apos;test&amp;apos;, \&amp;#123;NAME =&amp;gt; &amp;apos;f&amp;apos;, COMPRESSION =&amp;gt; &amp;apos;SNAPPY&amp;apos;&amp;#125;, \&amp;#123;SPLITS =&amp;gt; [&amp;apos;40&amp;apos;,&amp;apos;80&amp;apos;,&amp;apos;c0&amp;apos;], SPLIT_POLICY">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,088
+                  1,288
                 </span>
               
 
@@ -433,7 +433,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table TEST(prefix char(2) not null, time bigint not null, id char(10) not null,  message varchar, constraint pk primary key(prefix, time desc row_timestamp, id)) IMMUTABLE_ROWS=true SPLIT ON (&apos;40&apos;, &apos;80&apos;, &apos;c0&apos;) COMPRESSION=&apos;GZ&apos;;</span><br></pre></td></tr></table></figure>
 <p><strong>说明：</strong></p>
 <ul>
-<li><code>IMMUTABLE_ROWS</code> 不可变表不能进行更新，主要是用来创建索引的时候，如果是不可变的那么所以就不需要进行实时维护，对于全局索引如果是不可变的，那么写到索引表是在客户端完成的，而可变的索引是在服务端完成的。不可变索引写性能要高些。</li>
+<li><code>IMMUTABLE_ROWS</code> 不可变表(每一次表的操作都会影响整行，如update会直接替换原来一行，delete会删除整行)，对于创建索引的时候，如果是不可变的那么所以就不需要进行实时维护，对于全局索引如果是不可变的，那么写到索引表是在客户端完成的，而可变的索引是在服务端完成的。不可变索引写性能要高些。</li>
 <li><code>row_timestamp</code> 指定主键中的某个字段为行的timestamp, 那么在插入的时候就指定这个时间为数据的真实timestamp（列上的timestamp都为这个时间， 这个时间可以指定也可以是服务端自动生成，由于是rowkey中的一部分，所以这个时间一定不可能发生变化，以后所有的upsert语句都不会更改这个时间）, 此处必须注意，如果数据删除之后, 再不能插入主键为相同的数据（因为主键相同，那么意味着列的timestamp并没有发生任何变化， 此时hbase已经将此timestamp的版本设置为了删除标识，所以即使插入数据版本也没有发生变化，还是删除的）， 所以对于这样的表，数据一定不能删除。不建议在表中使用这个字段，除非自己知道自己在干什么。此方式并不会减少数据存储，timestamp也会存在与主键之中，仅仅更改了列的版本的处理方式。</li>
 <li>phoenix为每一行添加了一个空的列， 别去列mapping可以设置mapping字节数，下面有讲解。</li>
 </ul>
@@ -469,7 +469,21 @@
 </li>
 <li><p>动态列，由于hbase的列的灵活性，所以phoenix也提供了这种动态添加列的方式， 也就是在create schema初期并不会提供列名，而是在插入和查询的时候指定需要查询的列和列对应的类型。从这里可以看到后期绑定也是非常实用的功能。</p>
 </li>
-<li>修改表类型 <code>ALTER TABLE my_table SET IMMUTABLE_ROWS=true,DISABLE_WAL=true;</code></li>
+<li><p>修改表类型 <code>ALTER TABLE my_table SET IMMUTABLE_ROWS=true,DISABLE_WAL=true;</code></p>
+</li>
+<li><p>HBase minor compact只进行文件的合并，Major compact除了文件的合并还包括让HFile和RegionServer本地化(这通常是因为Region迁徙造成的)</p>
+</li>
+<li><p>hbase读优化</p>
+<ol>
+<li>Get本质上也是Scan来进行操作</li>
+<li>在进行数据获取的时候，尽量只获取需要的数据</li>
+<li>控制Scan之后RegionServer是否缓存Block，默认缓存，但对于MapReduce应用来说通常不需要缓存块</li>
+<li>可以设置Cache用来客户端缓存数据</li>
+<li>可以设置Batch用来控制每次从服务端获取的数量，减少rpc</li>
+<li>开启集群自动负载均衡，设置Compact策略</li>
+<li>控制BlockCache的比率 <code>hfile.block.cache.size</code> 默认0.4</li>
+</ol>
+</li>
 </ol>
 
       
@@ -601,7 +615,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -612,7 +626,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -623,7 +637,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -683,7 +697,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

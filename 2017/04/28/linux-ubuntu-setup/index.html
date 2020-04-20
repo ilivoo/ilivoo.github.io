@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="基本安装 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  显卡安装 完全卸载nvida显卡 1sudo apt-get remove --purge nvidia*  禁止加载 /etc/modprobe.d/blacklist-nouveau.conf 12blacklist nouveauoptions nouveau modeset=0  官网选择合适的cuda版本">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:43:14.807Z">
+<meta property="og:updated_time" content="2019-12-22T10:48:23.934Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux安装配置">
 <meta name="twitter:description" content="基本安装 安装的时候一定要使用网络安装， 用iphone提供网络， 安装网卡驱动  显卡安装 完全卸载nvida显卡 1sudo apt-get remove --purge nvidia*  禁止加载 /etc/modprobe.d/blacklist-nouveau.conf 12blacklist nouveauoptions nouveau modeset=0  官网选择合适的cuda版本">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,479
+                  1,556
                 </span>
               
 
@@ -506,6 +506,15 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># sudo vi /usr/share/X11/xorg.conf.d/50-novtswitch.conf</span><br><span class="line">Section &quot;ServerFlags&quot;</span><br><span class="line">  Option &quot;DontVTSwitch&quot; &quot;true&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>配置idea <a href="http://yangbingdong.com/2017/note-of-learning-idea-under-ubuntu/" target="_blank" rel="noopener">博客</a></p>
+</li>
+<li><p>使用gsetting设置快捷键, 如更改全局快捷键 <code>ctrl alt s</code>键</p>
+<ol>
+<li><p>找到快捷键的使用key值 <code>gsettings list-recursively | grep -i \&gt;s\&#39;</code></p>
+</li>
+<li><p>设置key绑定的快捷键为空</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gsettings set org.gnome.shell.extensions.screenshot-window-sizer cycle-screenshot-sizes [&apos;&apos;]</span><br><span class="line">gsettings set org.gnome.shell.extensions.screenshot-window-sizer cycle-screenshot-sizes-backward [&apos;&apos;]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
 </li>
 </ol>
 <h4 id="其它可选选项"><a href="#其它可选选项" class="headerlink" title="其它可选选项"></a>其它可选选项</h4><ol>
@@ -670,7 +679,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -681,7 +690,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -692,7 +701,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -752,7 +761,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

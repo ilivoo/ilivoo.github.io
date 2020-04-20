@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="phoenix 读写考虑 phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计  关注读性能，通常是创建多个global index, http://phoenix.apache.org/secondary_indexin">
+<meta name="description" content="phoenix 读写考虑 phoenix 不可变表，可以进行更新，但是是整体的一行进行替换，如果创建不可变表的索引那么在更新数据之后，会导致索引表中存在脏数据（以往索引的数据），这是因为索引是通过row key进行创建的，无法自动删除，所以对于不可变表最好就是不要进行更新。  phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、s">
 <meta name="keywords" content="hadoop,phoenix">
 <meta property="og:type" content="article">
 <meta property="og:title" content="phoenix使用">
 <meta property="og:url" content="http://yoursite.com/2018/08/01/hadoop-phoenix/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="phoenix 读写考虑 phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计  关注读性能，通常是创建多个global index, http://phoenix.apache.org/secondary_indexin">
+<meta property="og:description" content="phoenix 读写考虑 phoenix 不可变表，可以进行更新，但是是整体的一行进行替换，如果创建不可变表的索引那么在更新数据之后，会导致索引表中存在脏数据（以往索引的数据），这是因为索引是通过row key进行创建的，无法自动删除，所以对于不可变表最好就是不要进行更新。  phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、s">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:39:40.125Z">
+<meta property="og:updated_time" content="2020-02-18T02:39:32.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="phoenix使用">
-<meta name="twitter:description" content="phoenix 读写考虑 phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、salt 表(http://phoenix.apache.org/salted.html)以及schema设计  关注读性能，通常是创建多个global index, http://phoenix.apache.org/secondary_indexin">
+<meta name="twitter:description" content="phoenix 读写考虑 phoenix 不可变表，可以进行更新，但是是整体的一行进行替换，如果创建不可变表的索引那么在更新数据之后，会导致索引表中存在脏数据（以往索引的数据），这是因为索引是通过row key进行创建的，无法自动删除，所以对于不可变表最好就是不要进行更新。  phoenix 在每一行中添加一个默认的列，并且设置为 x，每次更新都会自动更新这一列  性能影响最大的因素一定是主键、s">
 
 
 
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,126
+                  1,215
                 </span>
               
 
@@ -419,6 +419,8 @@
 
       
         <h4 id="phoenix-读写考虑"><a href="#phoenix-读写考虑" class="headerlink" title="phoenix 读写考虑"></a>phoenix 读写考虑</h4><ul>
+<li><p>phoenix 不可变表，可以进行更新，但是是整体的一行进行替换，如果创建不可变表的索引那么在更新数据之后，会导致索引表中存在脏数据（以往索引的数据），这是因为索引是通过row key进行创建的，无法自动删除，所以对于不可变表最好就是不要进行更新。</p>
+</li>
 <li><p>phoenix 在每一行中添加一个默认的列，并且设置为 <code>x</code>，每次更新都会自动更新这一列</p>
 </li>
 <li><p>性能影响最大的因素一定是主键、salt 表(<code>http://phoenix.apache.org/salted.html</code>)以及schema设计</p>
@@ -429,7 +431,7 @@
 </li>
 <li><p>为了保证读性能，可以考虑使用覆盖索引， <code>CREATE INDEX index ON table（...）INCLUDE(...)</code></p>
 </li>
-<li><p>对于不可变表或者只插入的表创建设置 <code>IMMUTABLE_ROWS=true</code></p>
+<li><p>可选设置 <code>IMMUTABLE_ROWS=true</code></p>
 </li>
 <li><p>如果速度更加重要，设置 <code>DISABLE_WAL</code>， 注意可能会丢失数据</p>
 </li>
@@ -614,7 +616,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -625,7 +627,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -636,7 +638,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -696,7 +698,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="bash -x教程 PS4是在调试的时候脚本打印出的信息前缀 1export PS4=&amp;apos;($&amp;#123;BASH_SOURCE&amp;#125;:$&amp;#123;LINENO&amp;#125;): $&amp;#123;FUNCNAME[0]&amp;#125; - [$&amp;#123;SHLVL&amp;#125;,$&amp;#123;BASH_SUBSHELL&amp;#125;, $?]&amp;apos;   bashdb教程安装1sudo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:35:23.724Z">
+<meta property="og:updated_time" content="2020-03-26T23:31:15.491Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="shell单步调试">
 <meta name="twitter:description" content="bash -x教程 PS4是在调试的时候脚本打印出的信息前缀 1export PS4=&amp;apos;($&amp;#123;BASH_SOURCE&amp;#125;:$&amp;#123;LINENO&amp;#125;): $&amp;#123;FUNCNAME[0]&amp;#125; - [$&amp;#123;SHLVL&amp;#125;,$&amp;#123;BASH_SUBSHELL&amp;#125;, $?]&amp;apos;   bashdb教程安装1sudo">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  835
+                  845
                 </span>
               
 
@@ -423,6 +423,13 @@
 </li>
 </ol>
 </li>
+</ol>
+<ol>
+<li><p>进入调试</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bashdb --debug bashdb.sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
 <li><p>断点</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#断点, 指定行号或者当前行号</span><br><span class="line">break [LINENO]</span><br><span class="line">#瞬时断点, 指定行号或者当前行号， 断点一次后失效</span><br><span class="line">tbreak</span><br><span class="line">#条件断点, 断点编号， 断点条件</span><br><span class="line">condition BRKPT-NUM condition</span><br><span class="line">#删除一个或多个断点</span><br><span class="line">delete &#123;BRKPT-NUM&#125;...</span><br><span class="line">#清除某行所有断点</span><br><span class="line">clear LINENO</span><br><span class="line">#开启一个或多个断点</span><br><span class="line">enable BPNUM1 [BPNUM2 ...]</span><br><span class="line">#关闭一个或多个断点</span><br><span class="line">disable BPNUM1 [BPNUM2 ...]</span><br><span class="line">#显示断点</span><br><span class="line">info b[reakpoints]</span><br></pre></td></tr></table></figure>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#继续执行到断点</span><br><span class="line">continue [LINENO | - ]</span><br><span class="line">#1. 执行到下一个断点</span><br><span class="line">continue</span><br><span class="line">#2. 执行到指定的行(首先给指定的行加零时断点，再执行continue命令)</span><br><span class="line">continue LINENO</span><br><span class="line">#关闭debug并执行脚本</span><br><span class="line">continue -</span><br></pre></td></tr></table></figure>
@@ -450,15 +457,14 @@
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">shell [options]</span><br><span class="line"></span><br><span class="line">options:</span><br><span class="line">   --no-fns  | -F  : don&apos;t copy in function definitions from parent shell</span><br><span class="line">   --no-vars | -V  : don&apos;t copy in variable definitions</span><br><span class="line">   --shell SHELL_NAME</span><br><span class="line">   --posix         : corresponding shell option</span><br><span class="line">   --login | l     : corresponding shell option</span><br><span class="line">   --noprofile     : corresponding shell option</span><br><span class="line">   --norc          : corresponding shell option</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>执行一个命令</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval CMD</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eval CMD</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>设置环境变量</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export VAR1 [VAR2 ...]</span><br></pre></td></tr></table></figure>
+<p> #####</p>
 </li>
-</ol>
-<p>#####</p>
-<ol>
-<li>通过shell来</li>
+<li><p>通过shell来</p>
+</li>
 </ol>
 
       
@@ -588,7 +594,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-count">48</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -599,7 +605,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -610,7 +616,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -670,7 +676,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
