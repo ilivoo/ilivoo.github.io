@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="浏览器配置kerberos访问  firefox中输入 about:config，搜索并设置 1network.negotiate-auth.trusted-uris = .domain.com  chrome 直接添加命令行参数 1google-chrome --auth-server-whitelist=&amp;quot;*.domain.com&amp;quot; --auth-negotiate-de">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-20T08:21:40.569Z">
+<meta property="og:updated_time" content="2020-04-26T07:01:02.516Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hortonwork的使用以及常见问题">
 <meta name="twitter:description" content="浏览器配置kerberos访问  firefox中输入 about:config，搜索并设置 1network.negotiate-auth.trusted-uris = .domain.com  chrome 直接添加命令行参数 1google-chrome --auth-server-whitelist=&amp;quot;*.domain.com&amp;quot; --auth-negotiate-de">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,974
+                  3,399
                 </span>
               
 
@@ -585,10 +585,29 @@
 </li>
 </ul>
 </li>
-<li><p>nifi多网卡绑卡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nifi.web.http.host = 0.0.0.0</span><br><span class="line">nifi.web.https.host = 0.0.0.0</span><br></pre></td></tr></table></figure>
-<p>nifi registry 多网卡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nifi.registry.web.http.host = 0.0.0.0</span><br><span class="line">nifi.registry.web.https.host = 0.0.0.0</span><br></pre></td></tr></table></figure>
+<li><p>nifi 开启SSL，nifi 自带 NiFi Certificate Authority 授权程序，不推荐使用，直接选择独立安装即可</p>
+<ul>
+<li><p>首先按照正常方式添加nifi服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nifi.allow.explicit.keytab = false</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入ranger plugin页面关闭nifi，并重启nifi（先关闭ranger认证，后期按需添加）</p>
+</li>
+<li><p>进入nifi-toolkit中，生成nifi认证文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/tls-toolkit.sh standalone -n &quot;hdp1.tepia.com,hdp2.tepia.com,hdp3.tepia.com&quot; --nifiDnPrefix &quot;CN=&quot; --nifiDnSuffix &quot;, OU=TEPIA.COM&quot; -d 10950 -C &quot;CN=feng, OU=TEPIA.COM&quot; -f ../nifi/conf/nifi.properties -o nifi -K admin123 -P admin123 -S admin123 -B admin123</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制生成的 <code>keystore.jks</code> 和 <code>truststore.jks</code> 到nifi中的conf目录中</p>
+</li>
+<li><p>修改nifi配置文件 <code>nifi-ambari-ssl-config</code> 中如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Initial Admin Identity = feng@TEPIA.COM</span><br><span class="line">Enable SSL? = true</span><br><span class="line">Key password = pass</span><br><span class="line">Keystore password = pass</span><br><span class="line">Truststore password = pass</span><br><span class="line">Keystore type = jks</span><br><span class="line">Truststore type = jks</span><br><span class="line">NiFi CA DN suffix = , OU=TEPIA.COM</span><br><span class="line">Node Identities = </span><br><span class="line">	&lt;property name=&quot;Node Identity 1&quot;&gt;CN=hdp1.tepia.com, OU=TEPIA.COM&lt;/property&gt;</span><br><span class="line">	&lt;property name=&quot;Node Identity 2&quot;&gt;CN=hdp2.tepia.com, OU=TEPIA.COM&lt;/property&gt;</span><br><span class="line">	&lt;property name=&quot;Node Identity 3&quot;&gt;CN=hdp3.tepia.com, OU=TEPIA.COM&lt;/property&gt; </span><br><span class="line">nifi.security.identity.mapping.pattern.dn = ^CN=(.*?), OU=(.*?)$</span><br><span class="line">nifi.security.identity.mapping.pattern.kerb = ^(.*?)@(.*?)$</span><br><span class="line">nifi.security.identity.mapping.value.dn = $1@$2</span><br><span class="line">nifi.security.identity.mapping.value.kerb = $1@$2</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>配置 Node Identities 时候，注意 <code>, OU</code> 中间的空格</p>
+</li>
+<li><p>重启nifi，注意authorizations.xml必须没有策略，可以直接删掉 <code>/var/lib/nifi/conf</code> 下的authorizations.xml和users.xml文件。</p>
+</li>
+<li><p>将p12证书导入到浏览器当中，此时就可以进入nifi中，如果此时报如下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cannot replicate request to Node hdp2.tepia.com:9090 because the node is not connected</span><br></pre></td></tr></table></figure>
+<p><strong>注意：</strong>这不是认证的错误，而是集群从不安全切换到安全集群的时候，集群状态的文件，此时需要删除 <code>/var/lib/nifi/conf</code> 下的authorizations.xml和users.xml文件，并重新启动nifi，如果实在不行就直接删除 <code>/var/lib/nifi/*</code> 再次重启，每次重启必须保证 <code>/var/lib/nifi/conf</code> 下没有authorizations.xml和users.xml 这两个文件</p>
+</li>
+</ul>
 </li>
 </ol>
 
