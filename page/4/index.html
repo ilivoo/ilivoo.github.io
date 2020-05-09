@@ -298,6 +298,203 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/mysql-select/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/03/mysql-select/" itemprop="url">mysql 查询顺序</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T18:54:27+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,178
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="笛卡尔乘积"><a href="#笛卡尔乘积" class="headerlink" title="笛卡尔乘积"></a>笛卡尔乘积</h4><ul>
+<li>使用join执行笛卡尔乘积， 并且使用on来对笛卡尔乘积之前进行过滤操作, 这也称作显示的连接操作</li>
+<li>使用from连接多个表执行笛卡尔乘积， 并且使用where进行过滤， 但是由于先执行笛卡尔乘积再过滤， 所以有效率问题， 这也称作隐式的连接操作</li>
+</ul>
+<h4 id="定义变化的表"><a href="#定义变化的表" class="headerlink" title="定义变化的表"></a>定义变化的表</h4><ul>
+<li>可以使用(select @rank := 0) as ranker 来定义一张只有一个字段@rank的表ranker， 并且@rank字段也会作为用户自定义字段而存在， 所以相当于对@rank进行初始化。</li>
+</ul>
+<h4 id="笛卡尔乘积给一个表添加一个字段，-并且该字段自增"><a href="#笛卡尔乘积给一个表添加一个字段，-并且该字段自增" class="headerlink" title="笛卡尔乘积给一个表添加一个字段， 并且该字段自增"></a>笛卡尔乘积给一个表添加一个字段， 并且该字段自增</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select p.id, p.name, @rank := @rank + 1 as rank from person as p join (select @rank := 0) as ranker;</span><br></pre></td></tr></table></figure>
+<h4 id="查询步骤"><a href="#查询步骤" class="headerlink" title="查询步骤"></a>查询步骤</h4><ul>
+<li><p>查询操作是关系数据库中使用最为频繁的操作，也是构成其他SQL语句（如DELETE、UPDATE）的基础。查询处理的顺序如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(7) SELECT (8) DISTINCT </span><br><span class="line">(1) FROM </span><br><span class="line">(3) JOIN </span><br><span class="line">(2) ON </span><br><span class="line">(4) WHERE </span><br><span class="line">(5) GROUP BY </span><br><span class="line">(6) HAVING </span><br><span class="line">(9) ORDER BY </span><br><span class="line">(10) LIMIT</span><br></pre></td></tr></table></figure>
+<ul>
+<li>1）FROM：对FROM子句中的所有的表一次左右执行笛卡儿积（Cartesian product），产生虚拟表VT1。 </li>
+<li>2，3）JOIN和ON应该是一个整体作为一个连接操作： 如果存在ON就先对VT1和JOIN后面的表进行过滤， 并且执行连接操作,  如果还有JOIN和ON继续接着进行连接， 如果此时又出现表则表示FROM后还有表进行笛卡尔乘积， 定义所有的这一连串操作产生VT3mysql不支持全连接， 并且它的连接与外连接是等价的， 跨连接与内连接是等价的</li>
+<li>4）WHERE：对虚拟表VT3应用WHERE过滤条件，只有符合的记录才被插入虚拟表VT4中。此时数据还没有分组，所以不能在where中出现对统计的过滤 where: &lt;，&lt;=，=，!=或者&lt;&gt;，&gt; ，&gt;=， like (% 通配任意字符, _通配一个字符),exist(判空), beteeen(在某范围内)，any/som(集合中任意元素), all(集合中所有的元素), in(在某集合内), not !  逻辑非, or ||  逻辑或, and &amp;&amp;  逻辑与</li>
+<li>5）GROUP BY：根据GROUP BY子句中的列，对VT4中的记录进行分组操作，产生VT5。在GROUP BY阶段，数据库认为两个NULL值是相等的，因此会将NULL值分到同一个分组中。</li>
+<li>6）CUBE|ROLLUP：对表VT5进行CUBE或ROLLUP操作，产生表VT6。 </li>
+<li>7）HAVING：对虚拟表VT6应用HAVING过滤器，只有符合的记录才被插入虚拟表VT7中。count(expr) 会返回expr不为NULL的行数，count(1)、count(*)会返回包括NULL值在内的所有数量 </li>
+<li>8）SELECT：执行SELECT操作，选择指定的列，插入到虚拟表VT8中。 </li>
+<li>9）DISTINCT：去除重复数据，产生虚拟表VT9。 </li>
+<li>10）ORDER BY：将虚拟表VT9中的记录按照进行排序操作，产生虚拟表VT10。如果不指定排序，数据并非总是按照主键顺序进行排序的。NULL被视为最小值 </li>
+<li>11）LIMIT：取出指定行的记录，产生虚拟表VT11，并返回给查询用户。LIMIT n, m的效率是十分低的,一般可以通过在where条件中指定范围来优化 where id&gt; ? limit 10</li>
+<li>12)  UNION [ALL] (联合两个查询的结果), INTERSECT(交集)， EXCEPT(差集)</li>
+</ul>
+</li>
+<li><p>注意：</p>
+<ul>
+<li>从上面的执行流程可以看出， 上面有很多过滤操作， 如： on where having distinct limit, 而每一个过滤操作都依赖前面的执行结果， 所以我们在前面的结果中如果能够尽量过滤掉不需要的结果那么对于后面的结果操作会简单很多。</li>
+<li>所有的这些地方使用表的地方都可以使用子查询来建立新表， 如果数据量比较大尽量不适用子查询， 使用连接来优化。</li>
+<li>对于要查询的结果来说， 从上面可以看到， 到第八步才开始进行真正的投影的， 所以不用担心查询出来结果信息。</li>
+<li>可以看到limit是在最后执行的， 所以如果前期查询出大量结果， 再进行limit n,m可能会造成性能问题， 因为在limit之前以及进行了投影动作， 也就是所有的结果都以及查询出来了，如果此时我们只需要使用索引先搜索出满足limit的结果的主键id， 再通过主键id去查询结果， 那么此时会优化速度， 因为完全不用先查询出结果， 只需要最终去拿结果就可了。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    <div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/linux-awk/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2132,7 +2329,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,399
+                  4,149
                 </span>
               
 
@@ -2350,8 +2547,69 @@
 </li>
 </ul>
 </li>
+<li><p>nifi开启SSL并使用ranger进行权限管理</p>
+<ul>
+<li><p>首先按照正常方式添加nifi服务，不需要添加NiFi Certificate Authority 授权程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nifi.allow.explicit.keytab = false</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入nifi-toolkit中，生成nifi认证文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/tls-toolkit.sh standalone -n &quot;hdp1.tepia.com,hdp2.tepia.com,hdp3.tepia.com&quot; --nifiDnPrefix &quot;CN=&quot; --nifiDnSuffix &quot;, OU=TEPIA.COM&quot; -d 10950 -C &quot;CN=feng, OU=TEPIA.COM&quot; -f ../nifi/conf/nifi.properties -o nifi -K admin123 -P admin123 -S admin123 -B admin123</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制生成的 <code>keystore.jks</code> 和 <code>truststore.jks</code> 到nifi中的conf目录中</p>
+</li>
+<li><p>修改nifi配置文件 <code>nifi-ambari-ssl-config</code> 中如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Enable SSL? = true</span><br><span class="line">Key password = pass</span><br><span class="line">Keystore password = pass</span><br><span class="line">Truststore password = pass</span><br><span class="line">Keystore type = jks</span><br><span class="line">Truststore type = jks</span><br><span class="line">NiFi CA DN suffix = , OU=TEPIA.COM</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 <code>Advanced nifi-authorizers-env</code> 中如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;property name=&quot;Ranger Admin Identity&quot;&gt;CN=feng, OU=TEPIA.COM&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 <code>Advanced nifi-properties</code> 中的配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nifi.remote.input.socket.port = 1026</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 <code>Advanced ranger-nifi-plugin-properties</code> 中的配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Authentication = SSL</span><br><span class="line">Keystore for Ranger Service Accessing NiFi = /usr/hdf/current/nifi-toolkit/nifi/keystore.jks</span><br><span class="line">Keystore Type = jks</span><br><span class="line">Truststore for Ranger Service Accessing NiFi = /usr/hdf/current/nifi-toolkit/nifi/truststore.jks</span><br><span class="line">Truststore Type = jks</span><br><span class="line">Owner for Certificate = CN=feng, OU=TEPIA.COM</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改ranger web配置页面中的 <code>tepia_nifi</code> ，让其能够连接到nifi中，并对nifi进行权限控制，配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">NiFi URL = https://hdp2.tepia.com:9091/nifi-api/resources</span><br><span class="line">Authentication Type = SSL</span><br><span class="line">Keystore = /home/ranger/keystore.jks</span><br><span class="line">Keystore Type = jks</span><br><span class="line">Keystore Password = keypass</span><br><span class="line">Truststore = /home/ranger/truststore.jks</span><br><span class="line">Truststore Password = trustpass</span><br><span class="line">commonNameForCertificate = CN=feng, OU=TEPIA.COM</span><br><span class="line">tag.download.auth.users = nifi</span><br><span class="line">policy.download.auth.users = nifi</span><br><span class="line">ambari.service.check.user = nifi</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong></p>
+<ul>
+<li><p>需要测试直至连接成功，连接的过程中可能需要先添加权限，并且此时可以看ranger的access访问</p>
+</li>
+<li><p>此处的keystore 和 truststore是通过 <code>tls-toolkit.sh</code> 生成的客户端秘钥和证书，但生成的是 <code>CN=feng_OU=TEPIA.COM.p12</code> 文件，需要转换成jks文件，并加入服务端证书到客户端truststore中。</p>
+<ul>
+<li><p>转换p12证书为jks的keystone</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore -srckeystore CN\=feng_OU\=TEPIA.COM.p12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ol>
+<pre><code>    - 导出 `hdp1.tepia.com, hdp2.tepia.com, hdp3.tepia.com` 的证书
 
+      <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -export -alias  nifi-key -keystore hdp1.tepia.com/keystore.jks -rfc -file hdp1.cer</span><br><span class="line">keytool -export -alias  nifi-key -keystore hdp2.tepia.com/keystore.jks -rfc -file hdp2.cer</span><br><span class="line">keytool -export -alias  nifi-key -keystore hdp3.tepia.com/keystore.jks -rfc -file hdp3.cer</span><br></pre></td></tr></table></figure>
+
+
+    - 将三个证书导入到truststore中
+
+      <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -import -alias feng  -file hdp1.cer  -keystore truststore.jks</span><br><span class="line">keytool -import -alias feng  -file hdp2.cer  -keystore truststore.jks</span><br><span class="line">keytool -import -alias feng  -file hdp3.cer  -keystore truststore.jks</span><br></pre></td></tr></table></figure>
+
+
+    - 注意我们这里ranger连接nifi直接使用了，自动生产的客户端的证书，所以我们并不需要将客户端证书导入到nifi中，这是因为 `tls-toolkit.sh` 已经自动导入过了，所以如果我们需要使用不同的用户名，需要自行证书导入即可。
+
+- 修改ranger web配置页面，添加权限，不存在的用户需要在ranger中添加用户
+
+  - 添加all权限到 `CN=feng, OU=TEPIA.COM` 账号
+
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/flow /system /controller /counters /provenance /policies /tenants /proxy /resources /site-to-site /restricted-components / /*</span><br></pre></td></tr></table></figure>
+
+
+  - 添加proxy权限到 `hdp1.tepia.com,hep2.tepia.com,hdp3.tepia.com` 当中
+
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/proxy /data/* /*</span><br></pre></td></tr></table></figure>
+</code></pre>
           
         
       
@@ -2651,211 +2909,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/linux-wifi/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ilivoo">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my-icon.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ilivoo`s blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/02/linux-wifi/" itemprop="url">linux wifi配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T20:44:10+08:00">
-                2018-01-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  192
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li><p>首先下载iw工具。</p>
-<p>yum -y install iw</p>
-</li>
-<li><p>获取无线网卡的名称</p>
-<p>执行iw dev，假设获得名称为 wlp3s0（示例）</p>
-</li>
-<li><p>激活无线网络接口</p>
-<p>执行ip link set wlp3s0 up</p>
-</li>
-<li><p>扫描当前环境中的无线网络</p>
-<p>执行iw wlp3s0 scan|grep SSID，假设你能够连接的网络名称是TP-LINK-1（示例）</p>
-</li>
-<li><p>登录指定网络</p>
-<p>执行wpa_supplicant -B -i wlp3s0 -c &lt;(wpa_passphrase “TP-LINK-1” “此网络的密码”)</p>
-</li>
-<li><p>主动请求动态地址</p>
-<p>dhclient wlp3s0</p>
-</li>
-<li><p>查看获取的网络地址</p>
-<p>执行ip addr show wlp3s0</p>
-</li>
-<li><p>设置自动启动</p>
-<ul>
-<li><p>设置NetworkManager自动启动</p>
-<p>chkconfig NetworkManager on</p>
-</li>
-<li><p>安装NetworkManager-wifi</p>
-<p>yum -y install NetworkManager-wifi </p>
-</li>
-<li><p>开启WiFi </p>
-<p>nmcli r wifi on</p>
-</li>
-<li><p>测试（扫描信号）</p>
-<p>nmcli dev wifi</p>
-</li>
-<li><p>连接 </p>
-<p>nmcli dev wifi connect wifi_name password wifi_password</p>
-</li>
-</ul>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-    <div>
-        
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2910,7 +2963,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">49</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2921,7 +2974,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2932,7 +2985,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

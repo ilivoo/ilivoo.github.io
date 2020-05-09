@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-04-20T06:24:26.775Z</updated>
+  <updated>2020-05-09T09:32:57.075Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>hadoop-ssl</title>
+    <link href="http://yoursite.com/2020/05/09/hadoop-ssl/"/>
+    <id>http://yoursite.com/2020/05/09/hadoop-ssl/</id>
+    <published>2020-05-09T07:01:01.000Z</published>
+    <updated>2020-05-09T09:32:57.075Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;常见SSL认知&quot;&gt;&lt;a href=&quot;#常见SSL认知&quot; class=&quot;headerlink&quot; title=&quot;常见SSL认知&quot;&gt;&lt;/a&gt;常见SSL认知&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;双认证形式，如：nifi，双方都生产各自的keystone，并导出包含自己证书的trus
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="ssl" scheme="http://yoursite.com/categories/hadoop/ssl/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="ssl" scheme="http://yoursite.com/tags/ssl/"/>
+    
+  </entry>
   
   <entry>
     <title>hadoop-hortonwork-sandbox</title>
@@ -488,31 +516,6 @@
       
         &lt;h5 id=&quot;mysql-日志&quot;&gt;&lt;a href=&quot;#mysql-日志&quot; class=&quot;headerlink&quot; title=&quot;mysql 日志&quot;&gt;&lt;/a&gt;mysql 日志&lt;/h5&gt;&lt;ul&gt;
 &lt;li&gt;主要包括： 错误日志、查询日志、慢查询日志、事务日志、二进制日志、回放日志&lt;/l
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql索引导出</title>
-    <link href="http://yoursite.com/2018/04/28/mysql-index-dump/"/>
-    <id>http://yoursite.com/2018/04/28/mysql-index-dump/</id>
-    <published>2018-04-28T09:00:37.000Z</published>
-    <updated>2018-04-28T09:06:54.314Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;打印删除所有的索引的语句， 包括Primary key&lt;/p&gt;
- &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;
       
     
     </summary>
