@@ -298,6 +298,199 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/23/mongo-spark-partitioner/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/23/mongo-spark-partitioner/" itemprop="url">mongo spark partitioner 详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-23T16:06:21+08:00">
+                2018-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mysql/" itemprop="url" rel="index">
+                    <span itemprop="name">mysql</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  660
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p><code>DefaultMongoPartitioner</code> 默认partitioner使用mongodb的抽样聚合操作( mongo版本需要大于3.2)，通过抽样来确定分区点, 对所有的mongo部署方式都可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小（没有太多实质性的意义,所以并不准）</span><br><span class="line">samplesPerPartition 每个分区抽样个数</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一步通过 <code>collStats</code> 聚合命令获取集合的统计信息</li>
+<li>如果有 <code>match</code> 聚合操作就使用 <code>countDocuments(match)</code> 方法获取集合的数量</li>
+<li>抽样获取集合分区键，并对集合进行分区</li>
+</ul>
+</li>
+<li><p><code>MongoSplitVectorPartitioner</code>  通过 <code>SplitVector</code>命令来进行分区，需要 <code>ClusterManager</code> 权限， 这个命令的最初意图是对集合进行split，也就是对集群生成chunk分裂计划，所以mongo spark就借鉴这个命令进行分区划分， 主要对单节点或者复制集群使用</p>
+<p>注意：适合 <code>match</code> 聚合中只使用 <code>$gt</code> 和 <code>$lt</code> 类型的比较符, 如果不是的那么它使用最小和最大键作为分区，这样分区之后由于它不会使用 <code>match</code> 所以可能导致分区并不是特别合适</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小（比较准确的值）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoShardedPartitioner</code> 直接对sharded集合进行分区，因为sharded集合本身就是分区的，所以mongo spark直接使用 <code>chunk</code> 大小作为分区大小，只能对shard集群使用，并且它还会给出 <code>chunk</code> 的具体位置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shardKey shard键</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoPaginateByCountPartitioner</code> 通过分页数量来对分区，由于需要多次执行分页操作，而且越到大的分区其实是越慢的，所以没什么用，可以对任何部署方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">numberOfPartitions 每个分区数量</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>MongoPaginateBySizePartitioner</code> 通过分页集合大小来进行分区，和上面道理差不错多</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">partitionKey 分区键</span><br><span class="line">partitionSizeMB 每个分区大小</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从上面的集中分区方式可以，<code>DefaultMongoPartitioner</code> 之所以被当着默认的是因为它满足分和部署方式，并且性能一般也还可以。但是对于平时使用的过程中建议还是根据集群的部署方式以及 <code>match</code> 条件进行选择合适的 <code>partitioner</code> </p>
+<ul>
+<li>如果集群是单机或这复制集群，并且 <code>match</code> 中只有使用 <code>$gt</code> 和 <code>$lt</code> 类型的比较符， 那么推荐使用 <code>MongoSplitVectorPartitioner</code></li>
+<li>如果是shard机器，那么直接使用 <code>MongoShardedPartitioner</code> ，并推荐看看 <code>chunk</code> 的具体位置怎么使用, 在现在mongo spark中并没有使用到这个参数</li>
+<li>如果不是上面两种情况，那么直接使用使用 <code>DefaultMongoPartitioner</code> 就好了</li>
+</ul>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    <div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/05/hadoop-hbase-admin/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -653,7 +846,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,529
+                  2,990
                 </span>
               
 
@@ -684,22 +877,46 @@
 <li><p>由于sqoop需要执行MapReduce任务，并且通常指定输出为 <code>/user/sqoop</code> 目录，所以需要创建并指定权限</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -mkdir /user/sqoop</span><br><span class="line">hdfs dfs -chown sqoop:hdfs /user/sqoop</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>由于sqoop需要访问有hive数据库权限，所以通常需要使用ranger指定sqoop访问被写入的hive数据库</p>
+<li><p>建议使用需要访问目录的用户去执行sqoop命令</p>
 </li>
-<li>建议使用需要访问目录的用户去执行sqoop命令，这样上面两步都可以省略</li>
-<li>所有的sqoop import需要指定参数 <code>-Dorg.apache.sqoop.splitter.allow_text_splitter=true</code></li>
-<li>每次执行MapReduce任务可能需要删除MapReduce任务输出目录</li>
-<li>官网连接：<code>https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html</code></li>
-<li>hortonwork 教程： <code>https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.1.0/migrating-data/content/hive_moving_data_from_hdfs_to_hive.html</code></li>
+<li><p>所有的sqoop import需要指定参数 <code>-Dorg.apache.sqoop.splitter.allow_text_splitter=true</code></p>
+</li>
+<li><p>每次执行MapReduce任务可能需要删除MapReduce任务输出目录</p>
+</li>
+<li><p>一般RDBMS的导出速度控制在60~80MB/s，每个 map 任务的处理速度5~10MB/s 估算，即 -m 参数一般设置4~8，表示启动 4~8 个map 任务并发抽取。</p>
+</li>
+<li><p>官网连接：<code>https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html</code></p>
+</li>
+<li><p>hortonwork 教程： <code>https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.1.0/migrating-data/content/hive_moving_data_from_hdfs_to_hive.html</code></p>
+</li>
+<li><p>使用 <code>--skip-dist-cache</code> 防止每次需要将sqoop/lib中的jars上传到分布式缓存，所以如果sqoop/lib中的jars没有变化，那么每次都应该携带这个参数。</p>
+</li>
+<li><p>sqoop metastore 用来保存用户元数据信息，如使用sqoop job时候，创建job需要配置相关信息，并且需要保存last value。通常情况下每个用户一个metastore，通过文件的方式存储在 <code>~/.sqoop</code>目录当中。如果我们根据需要希望启动一个或者多个单独的metastore，那么只需要使用配置 <code>sqoop-site.xml</code> 并启动即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqoop.metastore.server.location=/var/lib/sqoop/metastore.db</span><br><span class="line">sqoop.metastore.server.port=15999</span><br></pre></td></tr></table></figure>
+<p>服务端启动</p>
+<ul>
+<li>创建 <code>/var/lib/sqoop</code> 和 <code>/var/log/sqoop</code> 文件夹，并分配权限</li>
+<li>启动: <code>bin/start-metastore.sh -p /var/log/sqoop/metastore.pid -l /var/log/sqoop</code></li>
+</ul>
+<p>客户端使用</p>
+<ul>
+<li><p>方式一：通过命令行参数 <code>--meta-connect</code></p>
+</li>
+<li><p>方式二：在sqoop-site.xml中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop.metastore.client.autoconnect.url=jdbc:hsqldb:hsql://metaserver:15999/sqoop</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
 </ul>
 <h4 id="sqoop-import-参数说明"><a href="#sqoop-import-参数说明" class="headerlink" title="sqoop import 参数说明"></a>sqoop import 参数说明</h4><ul>
 <li><p>MySQL连接参数</p>
 <ul>
 <li><code>--connect</code> 指定连接地址</li>
 <li><code>--username, -P|--password|--password-file</code> 关系型数据库密码选项</li>
+<li>注意sqoop是分布式方式运行，那么mysql连接需要在各个机器上都能够访问mysql服务器</li>
 </ul>
 </li>
-<li><p>导入控制，默认情况下使用 <code>select min(&lt;split-by&gt;), max(&lt;split-by&gt;) from &lt;table name&gt; where &lt;split-by&gt;</code>  来进行并行度控制，如果没有指定split-by则使用主键作为分区并行键</p>
+<li><p>导入形式</p>
 <ul>
 <li><p>基本形式导入</p>
 <ul>
@@ -708,7 +925,7 @@
 <li><p>此处可以不用指定 <code>--target-dir</code> 是因为模式使用 <code>--table</code> 作为 MapReduce输出目录</p>
 </li>
 <li><p>示例</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table r_cond_info</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table r_cond_info</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -719,8 +936,9 @@
 <li><p><code>--split-limit</code>  限制分区最大值，防止MapReduce数据发送倾斜</p>
 </li>
 <li><p>示例</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query 'select * from r_cond_info where $CONDITIONS' --split-by stcd --target-dir '/user/sqoop/r_cond_info_dir'</span><br></pre></td></tr></table></figure>
-<p><strong>说明： </strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query &apos;select * from r_cond_info where $CONDITIONS&apos; --split-by stcd --target-dir &apos;/user/sqoop/r_cond_info_dir&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>说明</strong></p>
 <ul>
 <li>此处必须指定 <code>$CONDITIONS</code> ，并且它会在运行的时候进行替换成 <code>--split-by</code> 的条件</li>
 <li>这种形式不能使用 <code>--as-orcfile</code></li>
@@ -728,6 +946,14 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li><p>并行控制</p>
+<ul>
+<li>默认情况下使用 <code>select min(&lt;split-by&gt;), max(&lt;split-by&gt;) from &lt;table name&gt; where &lt;split-by&gt;</code>  来进行并行度控制，如果没有指定split-by则使用主键作为分区并行键，如果主键是分布不均匀的最好用split-by指定一个分区键，如果没有主键也没有指定分区键，那么默认情况下会报错，除非强制指定<code>--num-mappers 1</code> 或 <code>--autoreset-to-one-mapper</code> 使用单个mapper。</li>
+<li>选择好分区键后，就是指定使用多少分区来运行，使用 <code>--num-mapers</code> 指定，如果存在数据倾斜的情况，可以指定 <code>--split-limit</code> 控制单个分区最大的量，从而影响并行度。</li>
+<li><code>--autoreset-to-one-mapper</code> 通常用在import-all-tables工具中全库导入，没有主键使用单个mapper</li>
+<li>基本形式和查询形式都可以进行并行度控制</li>
 </ul>
 </li>
 <li><p>导入hive参数</p>
@@ -749,21 +975,73 @@
 </li>
 </ul>
 </li>
-<li><p>增量迁移</p>
+<li><p>类型转换</p>
 <ul>
-<li><p><code>--incremental</code> 增量模式，append 和 lastmodified</p>
-<ul>
-<li>append 表示添加模式（单调递增主键不断添加数据）</li>
-<li>lastmodified 最后修改模式 （存在一个单调递增值，修改数据后会自动增加，如表中存在最后修改时间字段）</li>
+<li><code>--map-column-java</code> 转换sql类型到java类型，如：<code>id=String,value=Integer</code></li>
+<li><code>--map-column-hive</code> 转换sql类型到hive类型，转换的过程中需要转义，如：<code>DECIMAL(1%2C%201)</code> 代替 <code>DECIMAL(1, 1)</code></li>
 </ul>
 </li>
-<li><p><code>--check-column</code> 指定检查的列，列不能为字符类型</p>
+<li><p>导出类型控制</p>
+<ul>
+<li><code>--as-textfile</code> 默认为text类型</li>
+<li><code>--as-avrodatafile</code>、<code>--as-orcfile</code>、<code>--as-parquetfile</code>、<code>--as-sequencefile</code></li>
+<li>SequenceFile、text和Avro可以进行压缩，通过指定 <code>--compress</code> 或 <code>-z</code> 指定使用gzip进行压缩，或者指定 <code>--compression-codec</code> 设置hadoop的压缩格式</li>
+</ul>
 </li>
-<li><code>--last-value</code> 指定最后增量值，或者最后修改的值</li>
+<li><p>text和sequence文件导出和导入格式（定界符），默认的定界符：字段 <code>,</code> ，行 <code>\n</code> ，无引号，无转码，这可能会导致字段或者行无法准确区分清楚，如某个String字段中存在逗号或者换行符，那么整个的定界就是错误的，所以为了明确的解析，必须指定定界符。</p>
+<ul>
+<li><p>字段含义</p>
+<ul>
+<li><code>--enclosed-by &lt;char&gt;</code> 必填字段包围符，如：通常会使用 <code>&#39;</code> 单引号或者 <code>&quot;</code> 双引号将字符串包围起来</li>
+<li><code>--escaped-by &lt;char&gt;</code> 转义字符，如通常某些字符需要转义，转义字符通常是 <code>\</code></li>
+<li><code>--fields-terminated-by</code> 在一行中，字段和字段之间的分隔符，如cvs文件中使用 <code>|</code> 或 <code>,</code></li>
+<li><code>--lines-terminated-by</code> 行之间的分隔符，通常使用换行符 <code>\n</code> </li>
+<li><code>--optionally-enclosed-by &lt;char&gt;</code> 可选字段包围符</li>
+</ul>
+</li>
+<li><p>转义和包围符，如数据库中存在，如下数据</p>
+<p>| String                       | int  | int  |<br>| —————————- | —- | —- |<br>| Some string, with a comma.   | 1    | 2    |<br>| Another “string with quotes” | 4    | 5    |</p>
+<ul>
+<li><p>明确定义符号 <code>sqoop import --fields-terminated-by , --escaped-by \\ --enclosed-by &#39;\&quot;&#39;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;Some string, with a comma.&quot;,&quot;1&quot;,&quot;2&quot;</span><br><span class="line">&quot;Another \&quot;string with quotes\&quot;&quot;,&quot;4&quot;,&quot;5&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用可选包围符 <code>sqoop import --optionally-enclosed-by &#39;\&quot;&#39;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;Some string, with a comma.&quot;,1,2</span><br><span class="line">&quot;Another \&quot;string with quotes\&quot;&quot;,4,5</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>hive默认是支持转义的，所以如果直接导入到hive当中，就不需要显示指定转义</p>
+</li>
+<li><code>--mysql-delimiters</code> 使用 <code>mysqldump</code> 默认的定界符，并使用direct模式，指定 <code>--direct</code> ，那么导入会非常快速，mysql默认的定界符 ，字段 <code>,</code> ，行 <code>\n</code> ， 转义 <code>\</code> ，可选包围符 <code>&#39;</code></li>
 </ul>
 </li>
 </ul>
 <h4 id="sqoop增量迁移数据到hive中"><a href="#sqoop增量迁移数据到hive中" class="headerlink" title="sqoop增量迁移数据到hive中"></a>sqoop增量迁移数据到hive中</h4><ul>
+<li>增量导入，数据通常分为事实数据、可变维度数据、缓慢渐变维数据、快照表数据<ul>
+<li>对于事实数据通常不会更改，只是简单递增，那么数据每次将最新的数据添加到已有的数据即可，使用append模式，通常append列为自增列</li>
+<li>对于可变维度数据<ul>
+<li>数据量比较小直接每次全量导出，不需要增量导出</li>
+<li>如果数据量比较大，初始全量导出，以后每次增量导出新增和变化的数据即可，有两种合并方式<ul>
+<li>方法一：直接使用 lastmodified + merge-key 合并新旧数据</li>
+<li>方法而：直接使用hive的merge语句</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>缓慢渐变维度数据（如：数据T+1），首先初始化一次，后面每次导出T-1的数据，再将老的数据进行过期（更新的数据），再直接添加新的数据，所以只需要使用append模式即可，但append的列是时间列。</li>
+</ul>
+</li>
+<li><p>sqoop增量迁移</p>
+<ul>
+<li><code>--incremental</code> 增量模式，append 和 lastmodified<ul>
+<li>append 表示添加模式（单调递增主键不断添加数据），递增键可以是时间</li>
+<li>lastmodified 最后修改模式 （存在一个单调递增值，修改数据后会自动增加，如表中存在最后修改时间字段），不支持hive，主要是hive默认是不支持更新。所以通常情况下先将数据进入hdfs当中，再创建hive external表进行管理。此模式通常需要合并原先的数据和新数据（新添加和修改的数据），所以通常需要指定 <code>--merge-key</code> 来合并新旧数据，如果在这个过程没有合并，那么也可以后面单独调用 <code>sqoop merge</code> 来进行合并操作。 </li>
+</ul>
+</li>
+<li><code>--check-column</code> 指定检查的列，列不能为字符类型</li>
+<li><code>--last-value</code> 指定最后增量值，或者最后修改的值</li>
+</ul>
+</li>
 <li><p>MySQL中的表</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `id` int(11) NOT NULL,</span><br><span class="line">  `name` varchar(20) DEFAULT NULL,</span><br><span class="line">  `last_modify` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8</span><br></pre></td></tr></table></figure>
 </li>
@@ -814,6 +1092,19 @@
 <li><p>现在也可以直接使用hive的 <code>JdbcStorageHandler</code> 直接访问关系型数据库中的数据，这样更加简单</p>
 </li>
 </ul>
+</li>
+</ul>
+<h4 id="导入案例"><a href="#导入案例" class="headerlink" title="导入案例"></a>导入案例</h4><ul>
+<li><p>sqoop job 使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --create default_sales_order \</span><br><span class="line">-- \</span><br><span class="line">import \</span><br><span class="line">--connect &quot;jdbc:mysql://hdp1.tepia.com:3306/source?useSSL=false&amp;user=feng&amp;password=feng@123&quot; \</span><br><span class="line">--table sales_order \</span><br><span class="line">--where &quot;entry_date &lt; current_date()&quot; \</span><br><span class="line">--hive-import \</span><br><span class="line">--hive-table default.sales_order \</span><br><span class="line">--incremental append \</span><br><span class="line">--check-column entry_date \</span><br><span class="line">--last-value &apos;1900-01-01&apos;</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong></p>
+<ul>
+<li>日期类型也可以作为一个自增字段</li>
+<li>where添加后面控制，不会导入当前一天的数据，也就是说是通过一天为单位进行递增导入</li>
+</ul>
+</li>
+<li><p>查看job信息，如 <code>last_value</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --show default_sales_order|grep last.value</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
@@ -886,7 +1177,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/08/01/hadoop-hive/" itemprop="url">hive的使用与集成</a></h1>
+                <a class="post-title-link" href="/2018/08/01/hadoop-hive/" itemprop="url">hive集成其它系统</a></h1>
         
 
         <div class="post-meta">
@@ -963,7 +1254,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,990
+                  2,044
                 </span>
               
 
@@ -1027,6 +1318,8 @@
 </li>
 <li><p>在创建hive时，需要添加访问hbase的权限，根据创建或者访问添加具体权限</p>
 </li>
+<li><p>hive可以设置hbase不需要写wal<code>set hive.hbase.wal.enabled=false</code></p>
+</li>
 <li><p>hbase表不存在，需要添加hbase的创建表权限（设置当前用户有创建hbase_table表的权限）</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> hive_table (<span class="keyword">key</span> <span class="built_in">int</span>, <span class="keyword">value</span> <span class="keyword">string</span>) </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span></span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,cf1:val"</span>)</span><br><span class="line">TBLPROPERTIES (<span class="string">"hbase.table.name"</span> = <span class="string">"default:hbase_table"</span>);</span><br></pre></td></tr></table></figure>
 <p><strong>说明： </strong></p>
@@ -1055,7 +1348,7 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> kafka_table(<span class="string">`message_type`</span> <span class="keyword">string</span>, <span class="string">`stcd`</span> <span class="keyword">string</span>, <span class="string">`tm`</span> <span class="keyword">string</span>) <span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span> TBLPROPERTIES (<span class="string">"kafka.topic"</span> = <span class="string">"cmsw"</span>, <span class="string">"kafka.bootstrap.servers"</span>=<span class="string">"cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667"</span>);</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>显示表的信息 <code>show create table kafka_table</code></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> <span class="string">`kafka_table`</span>(               </span><br><span class="line">  <span class="string">`message_type`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,  </span><br><span class="line">  <span class="string">`stcd`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,       </span><br><span class="line">  <span class="string">`tm`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,         </span><br><span class="line">  <span class="string">`__key`</span> <span class="built_in">binary</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,      </span><br><span class="line">  <span class="string">`__partition`</span> <span class="built_in">int</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__offset`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__timestamp`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>) </span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> SERDE                                   </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaSerDe'</span>        </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span>                                          </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span>  </span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (                             </span><br><span class="line">  <span class="string">'serialization.format'</span>=<span class="string">'1'</span>)                      </span><br><span class="line">LOCATION                                           </span><br><span class="line">  <span class="string">'hdfs://tepia/warehouse/tablespace/external/hive/kafka_table'</span> </span><br><span class="line">TBLPROPERTIES (                                    </span><br><span class="line">  <span class="string">'bucketing_version'</span>=<span class="string">'2'</span>,                         </span><br><span class="line">  <span class="string">'hive.kafka.max.retries'</span>=<span class="string">'6'</span>,                    </span><br><span class="line">  <span class="string">'hive.kafka.metadata.poll.timeout.ms'</span>=<span class="string">'30000'</span>,   </span><br><span class="line">  <span class="string">'hive.kafka.optimistic.commit'</span>=<span class="string">'false'</span>,          </span><br><span class="line">  <span class="string">'hive.kafka.poll.timeout.ms'</span>=<span class="string">'5000'</span>,             </span><br><span class="line">  <span class="string">'kafka.bootstrap.servers'</span>=<span class="string">'cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667'</span>,  </span><br><span class="line">  <span class="string">'kafka.serde.class'</span>=<span class="string">'org.apache.hadoop.hive.serde2.JsonSerDe'</span>,  </span><br><span class="line">  <span class="string">'kafka.topic'</span>=<span class="string">'cmsw'</span>,                            </span><br><span class="line">  <span class="string">'kafka.write.semantic'</span>=<span class="string">'AT_LEAST_ONCE'</span>,          </span><br><span class="line">  <span class="string">'transient_lastDdlTime'</span>=<span class="string">'1565258896'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> <span class="string">`kafka_table`</span>(               </span><br><span class="line">  <span class="string">`message_type`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,  </span><br><span class="line">  <span class="string">`stcd`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,       </span><br><span class="line">  <span class="string">`tm`</span> <span class="keyword">string</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,         </span><br><span class="line">  <span class="string">`__key`</span> <span class="built_in">binary</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,      </span><br><span class="line">  <span class="string">`__partition`</span> <span class="built_in">int</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__offset`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>,   </span><br><span class="line">  <span class="string">`__timestamp`</span> <span class="built_in">bigint</span> <span class="keyword">COMMENT</span> <span class="string">'from deserializer'</span>) </span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> SERDE                                   </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaSerDe'</span>        </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span>                                          </span><br><span class="line">  <span class="string">'org.apache.hadoop.hive.kafka.KafkaStorageHandler'</span>  </span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (                             </span><br><span class="line">  <span class="string">'serialization.format'</span>=<span class="string">'1'</span>)                      </span><br><span class="line">LOCATION    <span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> o.*, u.* <span class="keyword">from</span> ops_oder <span class="keyword">as</span> o <span class="keyword">join</span> dwd_dim_user <span class="keyword">as</span> u <span class="keyword">on</span> o.user_id = u.user_id) <span class="keyword">where</span> create_time &gt;= start_date <span class="keyword">and</span> create_time &lt;= end_date                                       </span><br><span class="line">  <span class="string">'hdfs://tepia/warehouse/tablespace/external/hive/kafka_table'</span> </span><br><span class="line">TBLPROPERTIES (                                    </span><br><span class="line">  <span class="string">'bucketing_version'</span>=<span class="string">'2'</span>,                         </span><br><span class="line">  <span class="string">'hive.kafka.max.retries'</span>=<span class="string">'6'</span>,                    </span><br><span class="line">  <span class="string">'hive.kafka.metadata.poll.timeout.ms'</span>=<span class="string">'30000'</span>,   </span><br><span class="line">  <span class="string">'hive.kafka.optimistic.commit'</span>=<span class="string">'false'</span>,          </span><br><span class="line">  <span class="string">'hive.kafka.poll.timeout.ms'</span>=<span class="string">'5000'</span>,             </span><br><span class="line">  <span class="string">'kafka.bootstrap.servers'</span>=<span class="string">'cmsw1.tepia.com:6667,cmsw2.tepia.com:6667,cmsw3.tepia.com:6667'</span>,  </span><br><span class="line">  <span class="string">'kafka.serde.class'</span>=<span class="string">'org.apache.hadoop.hive.serde2.JsonSerDe'</span>,  </span><br><span class="line">  <span class="string">'kafka.topic'</span>=<span class="string">'cmsw'</span>,                            </span><br><span class="line">  <span class="string">'kafka.write.semantic'</span>=<span class="string">'AT_LEAST_ONCE'</span>,          </span><br><span class="line">  <span class="string">'transient_lastDdlTime'</span>=<span class="string">'1565258896'</span>)</span><br></pre></td></tr></table></figure>
 <p><strong>说明： </strong></p>
 <ul>
 <li>可以看到此处多了几个kafka记录元数据，并且每个元数据都可以用来作为条件过滤</li>
@@ -1080,9 +1373,10 @@
 </ul>
 <h4 id="hive使用JdbcStorageHandler"><a href="#hive使用JdbcStorageHandler" class="headerlink" title="hive使用JdbcStorageHandler"></a>hive使用JdbcStorageHandler</h4><ul>
 <li><p>创建表</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> user_jdbc(</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>,</span><br><span class="line">  <span class="keyword">name</span> <span class="keyword">string</span>,</span><br><span class="line">  age <span class="built_in">int</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hive.storage.jdbc.JdbcStorageHandler'</span></span><br><span class="line">TBLPROPERTIES (</span><br><span class="line">  <span class="string">"hive.sql.database.type"</span> = <span class="string">"MYSQL"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.driver"</span> = <span class="string">"com.mysql.jdbc.Driver"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.url"</span> = <span class="string">"jdbc:mysql://cmsw1.tepia.com/cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.username"</span> = <span class="string">"cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.password"</span> = <span class="string">"Cmsw@123"</span>,</span><br><span class="line">  <span class="string">"hive.sql.table"</span> = <span class="string">"user"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.maxActive"</span> = <span class="string">"1"</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> user_jdbc(</span><br><span class="line">  <span class="keyword">id</span> <span class="built_in">int</span>,</span><br><span class="line">  <span class="keyword">name</span> <span class="keyword">string</span>,</span><br><span class="line">  age <span class="built_in">int</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hive.storage.jdbc.JdbcStorageHandler'</span></span><br><span class="line">TBLPROPERTIES (</span><br><span class="line">  <span class="string">"hive.sql.database.type"</span> = <span class="string">"MYSQL"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.driver"</span> = <span class="string">"com.mysql.jdbc.Driver"</span>,</span><br><span class="line">  <span class="string">"hive.sql.jdbc.url"</span> = <span class="string">"jdbc:mysql://cmsw1.tepia.com/cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.username"</span> = <span class="string">"cmsw"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.password"</span> = <span class="string">"Cmsw@123"</span>,</span><br><span class="line">  <span class="string">"hive.sql.table"</span> = <span class="string">"user"</span>,</span><br><span class="line">  <span class="string">"hive.sql.dbcp.maxActive"</span> = <span class="string">"1"</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
-
+<h4 id="Hive-与-ElasticSearch-的数据交互"><a href="#Hive-与-ElasticSearch-的数据交互" class="headerlink" title="Hive 与 ElasticSearch 的数据交互"></a>Hive 与 ElasticSearch 的数据交互</h4><h4 id="Hive-与-druid-的数据交互"><a href="#Hive-与-druid-的数据交互" class="headerlink" title="Hive 与 druid 的数据交互"></a>Hive 与 druid 的数据交互</h4>
           
         
       
@@ -2015,6 +2309,201 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/tools-fzf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/28/tools-fzf/" itemprop="url">fzf安装与使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T17:28:57+08:00">
+                2018-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  400
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><ul>
+<li><p>参考github <code>https://github.com/junegunn/fzf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf</span><br><span class="line">~/.fzf/install</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置vim插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Plug &apos;junegunn/fzf&apos;, &#123; &apos;dir&apos;: &apos;~/.fzf&apos;, &apos;do&apos;: &apos;./install --all&apos; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置oh-my-zsh插件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fzf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
+<li><p>快捷键</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CTRL-T - 粘贴选择的文件或者文件夹到命令行</span><br><span class="line">Set FZF_CTRL_T_COMMAND to override the default command</span><br><span class="line">Set FZF_CTRL_T_OPTS to pass additional options</span><br><span class="line">CTRL-R - 粘贴选择历史命令到命令行</span><br><span class="line">Set FZF_CTRL_R_OPTS to pass additional options</span><br><span class="line">ALT-C - cd到选择的文件夹</span><br><span class="line">Set FZF_ALT_C_COMMAND to override the default command</span><br><span class="line">Set FZF_ALT_C_OPTS to pass additional options</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>zsh中配置快捷键命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export FZF_DEFAULT_OPTS=&apos;--height 60% --reverse --border&apos;</span><br><span class="line">export FZF_CTRL_T_OPTS=&quot;--preview &apos;(highlight -O ansi -l &#123;&#125; 2&gt; /dev/null || cat &#123;&#125; || tree -C &#123;&#125;) 2&gt; /dev/null | head -200&apos;&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>fzf终端快捷键</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CTRL-J / CTRL-K (or CTRL-N / CTRL-P) 条目的选择</span><br><span class="line">Enter key to select the item, CTRL-C / CTRL-G / ESC to 退出</span><br><span class="line">On multi-select mode (-m), TAB and Shift-TAB to 标记多条目</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>fzf终端中进行过滤条件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sbtrkt		模糊匹配包含字符</span><br><span class="line">^music		以music开头</span><br><span class="line">mp3$		以mp3结尾</span><br><span class="line">&apos;wild		精确匹配包含wild</span><br><span class="line">!fire		不保护fire</span><br><span class="line">!^music		不以music开头</span><br><span class="line">!mp3$		不以mp3结尾</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>**</code> 进入fzf模式，并使用Tab键进入命令行选择</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim .oh-my-zsh/**		vim查看 .oh-my-zsh 中的文件，但是忘记文件名字</span><br><span class="line">kill -9 				直接进入命令行</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>命令说明</p>
+<p>fzf是一个模糊搜索工具，它可以接受任何输入，包括ag的数据，所以我们在使用的时候一定要灵活适应</p>
+<p>fzf的输出可以使用  xargs 进行接收并做操作</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    <div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/tools-git/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2218,420 +2707,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/tools-fzf/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ilivoo">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my-icon.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ilivoo`s blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/28/tools-fzf/" itemprop="url">fzf安装与使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T17:28:57+08:00">
-                2018-04-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/tools/" itemprop="url" rel="index">
-                    <span itemprop="name">tools</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  400
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><ul>
-<li><p>参考github <code>https://github.com/junegunn/fzf</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf</span><br><span class="line">~/.fzf/install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置vim插件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Plug &apos;junegunn/fzf&apos;, &#123; &apos;dir&apos;: &apos;~/.fzf&apos;, &apos;do&apos;: &apos;./install --all&apos; &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置oh-my-zsh插件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fzf</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h4><ul>
-<li><p>快捷键</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CTRL-T - 粘贴选择的文件或者文件夹到命令行</span><br><span class="line">Set FZF_CTRL_T_COMMAND to override the default command</span><br><span class="line">Set FZF_CTRL_T_OPTS to pass additional options</span><br><span class="line">CTRL-R - 粘贴选择历史命令到命令行</span><br><span class="line">Set FZF_CTRL_R_OPTS to pass additional options</span><br><span class="line">ALT-C - cd到选择的文件夹</span><br><span class="line">Set FZF_ALT_C_COMMAND to override the default command</span><br><span class="line">Set FZF_ALT_C_OPTS to pass additional options</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>zsh中配置快捷键命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export FZF_DEFAULT_OPTS=&apos;--height 60% --reverse --border&apos;</span><br><span class="line">export FZF_CTRL_T_OPTS=&quot;--preview &apos;(highlight -O ansi -l &#123;&#125; 2&gt; /dev/null || cat &#123;&#125; || tree -C &#123;&#125;) 2&gt; /dev/null | head -200&apos;&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>fzf终端快捷键</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CTRL-J / CTRL-K (or CTRL-N / CTRL-P) 条目的选择</span><br><span class="line">Enter key to select the item, CTRL-C / CTRL-G / ESC to 退出</span><br><span class="line">On multi-select mode (-m), TAB and Shift-TAB to 标记多条目</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>fzf终端中进行过滤条件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sbtrkt		模糊匹配包含字符</span><br><span class="line">^music		以music开头</span><br><span class="line">mp3$		以mp3结尾</span><br><span class="line">&apos;wild		精确匹配包含wild</span><br><span class="line">!fire		不保护fire</span><br><span class="line">!^music		不以music开头</span><br><span class="line">!mp3$		不以mp3结尾</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用 <code>**</code> 进入fzf模式，并使用Tab键进入命令行选择</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim .oh-my-zsh/**		vim查看 .oh-my-zsh 中的文件，但是忘记文件名字</span><br><span class="line">kill -9 				直接进入命令行</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>命令说明</p>
-<p>fzf是一个模糊搜索工具，它可以接受任何输入，包括ag的数据，所以我们在使用的时候一定要灵活适应</p>
-<p>fzf的输出可以使用  xargs 进行接收并做操作</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    <div>
-        
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/28/mysql-log/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ilivoo">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/my-icon.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ilivoo`s blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/28/mysql-log/" itemprop="url">mysql 日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-28T17:08:40+08:00">
-                2018-04-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/mysql/" itemprop="url" rel="index">
-                    <span itemprop="name">mysql</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,832
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h5 id="mysql-日志"><a href="#mysql-日志" class="headerlink" title="mysql 日志"></a>mysql 日志</h5><ul>
-<li>主要包括： 错误日志、查询日志、慢查询日志、事务日志、二进制日志、回放日志</li>
-</ul>
-<h5 id="错误日志："><a href="#错误日志：" class="headerlink" title="错误日志："></a>错误日志：</h5><ul>
-<li>错误日志是用来记录mysql系统在运行的过程中所发生的错误， 如启动过程中存在的问题， 系统在配置主从是报的错误等待</li>
-<li>错误日志默认是开启的，并且错误日志无法被禁止， 默认情况下错误日日志存储在mysql数据库的数据文件目录当中， 以主机名作为名字， 并且以.err结尾， 一般情况下</li>
-<li>建议更改日志的名字，这样在统一维护的时候会更加方便</li>
-<li>配置方式: log_error=error.log</li>
-</ul>
-<h5 id="查询日志"><a href="#查询日志" class="headerlink" title="查询日志"></a>查询日志</h5><ul>
-<li>查询日志是用来记录用户的所有操作， 其中包括增删改查等所有信息</li>
-<li>查询日志默认是关闭的， 一般如果不是为了调试数据库都不会开启查询日志， 会产生大量的磁盘io</li>
-<li>配置方式： general_log=log.log</li>
-</ul>
-<h5 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h5><ul>
-<li>慢查询日志是用来记录执行时间超过指定的时间的查询语句， 通过慢查询可以找出运行效率低下需要优化的语句</li>
-<li>慢查询默认关闭的， 一般它对服务器的性能微乎其微， 所以建议线上根据需要开启</li>
-<li><p>配置方式</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slow_query_log=on</span><br><span class="line">slow_query_log_file=slow.log</span><br><span class="line">long_query_time=0.000001</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>手动开启：</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set global slow_query_log=on;</span><br><span class="line">set global long_query_time=0.000001;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>可以看到虽然这里设置了， 但是严格它对于当前的session是无法生效的， 如果仅仅只是想对当前session生效， 可以设置，</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set global slow_query_log=on;</span><br><span class="line">set long_query_time=0.000001;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果想对所有的连接有效， 包括已经启动的连接和后面加入的连接有效， 可以设置，</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set global slow_query_log=on;</span><br><span class="line">set global long_query_time=0.000001;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>查看当前session的配置情况</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from performance_schema.variables_by_thread as a, (select THREAD_ID,PROCESSLIST_ID,PROCESSLIST_USER,PROCESSLIST_HOST,PROCESSLIST_COMMAND,PROCESSLIST_STATE from performance_schema.threads where PROCESSLIST_USER&lt;&gt;&apos;NULL&apos;) as b where a.THREAD_ID = b.THREAD_ID and a.VARIABLE_NAME = &apos;long_query_time&apos;;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>可以查看所有的连接是否生效， 再通过kill PROCESSLIST_ID来杀手不生效的连接（一般都是使用连接池来连接的所以问题不大）， 也可以通过笨的方法， 对每一个现有的连接执行一次</p>
-</li>
-<li><p>注意：</p>
-<ol>
-<li>通过这里设置全局变量我们可以看到， mysql设置全局变量未必会对现有的连接生效， 所以我们如果想要进行验证， 最简单的办法就是通过上面的语句进行查询。</li>
-<li>设置线上慢查询日志时最好指定毫秒数， 这样可以用于长期线上开启</li>
-</ol>
-</li>
-</ul>
-<h5 id="事务日志"><a href="#事务日志" class="headerlink" title="事务日志"></a>事务日志</h5><ul>
-<li>事务日志（InnoDB特有的日志）可以帮助提高事务的效率。使用事务日志，存储引擎在修改表的数据时只需要修改其内存拷贝，再把改修改行为记录到持久在硬盘上的事务日志中，而不用每次都将修改的数据本身持久到磁盘。事务日志采用追加的方式，因此写日志的操作是磁盘上一小块区域内的顺序I/O，而不像随机I/O需要在磁盘的多个地方移动磁头，所以采用事务日志的方式相对来说要快得多。事务日志持久以后，内存中被修改的数据在后台可以慢慢的刷回到磁盘。目前大多数的存储引擎都是这样实现的，我们通常称之为预写式日志，修改数据需要写两次磁盘。</li>
-<li>如果数据的修改已经记录到事务日志并持久化，但数据本身还没有写回磁盘，此时系统崩溃，存储引擎在重启时能够自动恢复这部分修改的数据。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">innodb_flush_log_at_timeout=1  事务日志如果没有每一次从缓冲区中刷新到磁盘， 那么每隔一秒刷新一次</span><br><span class="line">innodb_flush_log_at_trx_commit=1  为1表示事务一提交就刷新到磁盘中， 为2表示只有在事务提交时才同步， 有可能丢失整个事务</span><br><span class="line">innodb_log_files_in_group=2 至少两个日志组</span><br><span class="line">innodb_log_group_home_dir=./	日志组的位置</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h5 id="二进制日志"><a href="#二进制日志" class="headerlink" title="二进制日志"></a>二进制日志</h5><ul>
-<li>二进制日志是MySQL服务器用来记录数据修改事件的，比如INSERT、UPDATE、DELETE等会导致数据发生变化的语句，SELECT语句不会被记录在内。MySQL必须先执行完一条语句才能知道它是否修改了数据，因此写入二进制日志文件的时间是语句执行完成的时间。写入顺序是按语句执行完成的先后顺序，事务中的语句会先被缓存起来，成功提交后才会被写入，回滚则不会被写入。非事务的存储引擎，所有的修改会立刻写入到二进制日志中。</li>
-<li>二进制日志顾名思义不是文本而是一种更有效率的二进制格式，它比文本占用更少的空间，但是可读性就很差了，必须使用mysqlbinlog工具才能转换为可读的文本。二进制日志主要用于数据库备份和故障时恢复数据，配置MySQL主从复制必须启用二进制日志。</li>
-<li>二进制日志索引文件中会列出所有二进制日志文件，此文件是文本的因此可以直接查看，文件的最后一行就是当前正在使用的二进制日志文件。</li>
-<li>配置  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">log_bin=on</span><br><span class="line">log_bin_basename=bin.log //指定bin log的名字， 后面会自动生成xxxxx的数字</span><br><span class="line">log_bin_index=bin.log.index //所有bin log文件名的索引</span><br><span class="line">// 通过flush logs会导致当前bin log写完， 并刷新出一个新的log</span><br><span class="line">// 并且在 index中记录这个文件的名字</span><br><span class="line">binlog_do_db //表示只记录指定数据库的二进制日志</span><br><span class="line">binlog_ignore_db //表示不记录指定的数据库的二进制日志</span><br><span class="line">//不建议使用 do/ignore来进行控制, 安全的替换方案是 在 slave上配置过滤,</span><br><span class="line">//使用基于查询中真正涉及到的表的选项, 例如replicate-wild-* 选项</span><br><span class="line">replicate-wild-do-table=ljzxdb.%</span><br><span class="line">sync_binlog //直接影响mysql的性能和完整性</span><br><span class="line">sync_binlog=0：当事务提交后，Mysql仅仅是将binlog_cache中的数据写入</span><br><span class="line">Binlog文件，但不执行fsync之类的磁盘 同步指令通知文件系统将缓存刷新到磁盘，而让Filesystem自行决定什么时候来做同步，性能最好。</span><br><span class="line">sync_binlog=n，在进行n次事务提交以后，Mysql将执行一次fsync之类的磁盘同步指令，同志文件系统将Binlog文件缓存刷新到磁盘。</span><br><span class="line">binglog_format //值有statement（记录逻辑sql语句）、row（记录表的行更动情况）、mixed混合使两种，</span><br><span class="line">// row的存在是因为存在很多不确定性的函数， 如果直接使用， 会导致数据不一致， 如 current_time(), 所以直接将值记录下来就更正确</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h4 id="回放日志"><a href="#回放日志" class="headerlink" title="回放日志"></a>回放日志</h4><ul>
-<li>bin log从master发送到slave的时候， slave就变成了reply log， 用于回放master中数据发生的变化</li>
-</ul>
-
-          
-        
-      
-    </div>
-    <div>
-        
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2686,7 +2761,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

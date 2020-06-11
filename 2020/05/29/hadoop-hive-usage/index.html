@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hadoop,hive," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Ilivoo`s blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="hive基本使用 hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。  事务表为了CUD必须设置动态分区为 nonstrict  事务每次修改都会导致产生大量小文件，默认hive会自动compact小文件，但是也可以手动进行compact 1ALTER">
+<meta name="keywords" content="hadoop,hive">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hive基本使用">
+<meta property="og:url" content="http://yoursite.com/2020/05/29/hadoop-hive-usage/index.html">
+<meta property="og:site_name" content="Ilivoo`s blog">
+<meta property="og:description" content="hive基本使用 hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。  事务表为了CUD必须设置动态分区为 nonstrict  事务每次修改都会导致产生大量小文件，默认hive会自动compact小文件，但是也可以手动进行compact 1ALTER">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-09T07:40:23.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hive基本使用">
+<meta name="twitter:description" content="hive基本使用 hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。  事务表为了CUD必须设置动态分区为 nonstrict  事务每次修改都会导致产生大量小文件，默认hive会自动compact小文件，但是也可以手动进行compact 1ALTER">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/29/hadoop-hive-usage/"/>
+
+
+
+
+
+  <title>hive基本使用 | Ilivoo`s blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ilivoo`s blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/29/hadoop-hive-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ilivoo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/my-icon.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ilivoo`s blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hive基本使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-29T10:06:48+08:00">
+                2020-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hadoop/hive/" itemprop="url" rel="index">
+                    <span itemprop="name">hive</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,980
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="hive基本使用"><a href="#hive基本使用" class="headerlink" title="hive基本使用"></a>hive基本使用</h4><ul>
+<li><p>hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。</p>
+<ul>
+<li><p>事务表为了CUD必须设置动态分区为 <code>nonstrict</code></p>
+</li>
+<li><p>事务每次修改都会导致产生大量小文件，默认hive会自动compact小文件，但是也可以手动进行compact</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE tablename [PARTITION (partition_key=&apos;partition_value&apos; [,...])] COMPACT &apos;compaction_type&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>DISTRIBUTE BY、SORT BY、CLUSTER BY</p>
+<ul>
+<li><p>如果想要把具有相同 Key 值的数据分发到同一个 Reducer 进行处理，这可以使用 DISTRIBUTE BY 字句。需要注意的是，DISTRIBUTE BY 虽然能把具有相同 Key 值的数据分发到同一个 Reducer，但是不能保证数据在 Reducer 上是有序的。</p>
+</li>
+<li><p>如果想让 单个Reducer 上的数据时有序的，可以结合 <code>SORT BY</code> 使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT empno, deptno, sal FROM emp DISTRIBUTE BY deptno SORT BY deptno ASC;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果 <code>SORT BY</code> 和 <code>DISTRIBUTE BY</code> 指定的是相同字段，且 SORT BY 排序规则是 ASC，此时可以使用 <code>CLUSTER BY</code> 进行替换，同时 <code>CLUSTER BY</code> 可以保证数据在全局是有序的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT empno, deptno, sal FROM emp CLUSTER  BY deptno;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>with 查询，Hive 可以通过with查询来提高查询性能。先通过with语法将重复使用的数据查询到内存，后面其它查询可以直接使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">with tmp as (select * from employee where name=&apos;ted&apos;)</span><br><span class="line">select * from tmp;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive存在内部、外部、临时、分区、分桶和倾斜表，倾斜表是通过指定一个或者多个列经常出现的值（严重偏斜），Hive 会自动将涉及到这些值的数据拆分为单独的文件。在查询时，如果涉及到倾斜值，它就直接从独立文件中获取数据，而不是扫描所有文件，这使得性能得到提升。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE EXTERNAL TABLE emp_skewed(</span><br><span class="line">  empno INT,</span><br><span class="line">  ename STRING,</span><br><span class="line">  job STRING,</span><br><span class="line">  )</span><br><span class="line">  SKEWED BY (empno) ON (66,88,100)  --指定 empno 的倾斜值 66,88,100</span><br><span class="line">  ROW FORMAT DELIMITED FIELDS TERMINATED BY &quot;\t&quot;</span><br><span class="line">  LOCATION &apos;/hive/emp_skewed&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive merge语法，对于事务表通过定时的ETL，可以将kafka或其它数据源中的数据迁移到hive当中，如增量获取维度数据，先用sqoop导入关系型数据到临时表，再执行下面语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">merge into base_table using incremental_table on base.id = incremental_table.id</span><br><span class="line">  when matched then update set</span><br><span class="line">       fieldl1=incremental_table.email,</span><br><span class="line">       modified_date=incremental_table.state</span><br><span class="line">  when not matched then insert</span><br><span class="line">       values(incremental_table.id, incremental_table.field1, incremental_table.modified_data);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive索引在3.0中已经取消，并且官方建议使用物化视图和列式存储来对表进行加速，其实对于数据仓库而言索引没有存在的必要，都是全表扫描。</p>
+</li>
+<li><p>hive调试 <code>hive --hiveconf hive.root.logger=INFO,console</code></p>
+</li>
+<li><p>表制作函数和lateral view，lateral view 与用户自定义表生成函数（UDTF）（例如 explode）结合使用，UDTF 为每个输入行生成零个或多个输出行。lateralview 首先将 UDTF 应用于基础表的每一行，然后将结果输出行与输入行连接起来形成具有所提供表别名的虚拟表。from 子句可以具有多个 lateralview 子句，多个laterval view进行笛卡尔乘积。如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">select explode(array(&apos;A&apos;,&apos;B&apos;,&apos;C&apos;)) as col; //直接生成多行，列名为col</span><br><span class="line">select tf.* from (select 0) t lateral view explode(array(&apos;A&apos;,&apos;B&apos;,&apos;C&apos;)) tf;//tf虚拟表名</span><br><span class="line">select explode(map(&apos;A&apos;,10,&apos;B&apos;,20,&apos;C&apos;,30)) as (key,value);//直接生产多行，列名为key和value</span><br><span class="line">select tf.* from (select 0) t lateral view explode(map(&apos;A&apos;,10,&apos;B&apos;,20,&apos;C&apos;,30)) tf;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive增强聚合grouping sets、cube、rollup，在通常的group by中只是对当前指定的维度进行聚合，但是通常情况下可能需要同时对多个维度一次性聚合，那么就可以使用增强聚合，如维度为a和b，如下</p>
+<p>| gruoping sets                                                | group                                                        |<br>| ———————————————————— | ———————————————————— |<br>| SELECT a, b, SUM( c ) FROM tab1 GROUP BY a, b GROUPING SETS ( (a, b), a, b, ( ) ) | SELECT a, b, SUM( c ) FROM tab1 GROUP BY a, b UNION SELECT a, null, SUM( c ) FROM tab1 GROUP BY a, null UNION SELECT null, b, SUM( c ) FROM tab1 GROUP BY null, b UNION SELECT null, null, SUM( c ) FROM tab1 |<br>| SELECT a, b, SUM( c ) FROM tab1 GROUP BY a, b GROUPING SETS ( (a,b), a) | SELECT a, b, SUM( c ) FROM tab1 GROUP BY a, b UNION SELECT a, null, SUM( c ) FROM tab1 GROUP BY a |<br>| SELECT a, b, SUM(c) FROM tab1 GROUP BY a, b GROUPING SETS ( (a,b) ) | SELECT a, b, SUM(c) FROM tab1 GROUP BY a, b                  |<br>| SELECT a,b, SUM( c ) FROM tab1 GROUP BY a, b GROUPING SETS (a,b) | SELECT a, null, SUM( c ) FROM tab1 GROUP BY a UNION SELECT null, b, SUM( c ) FROM tab1 GROUP BY b |</p>
+<p><strong>说明：</strong>对于cube是直接进行笛卡尔乘积，如grouping sets ( (a, b), a, b, ( ) ) = cube(a, b)，而rollup是向上，如</p>
+<p>grouping sets ( (a, b), a, ( ) ) = rollup(a, b)</p>
+</li>
+<li><p>cost-based optimizer (CBO)，hive默认开启CBO优化，并且自动生成表级别的统计信息，但是hive并不会使用CBO优化，知道为表生成了列统计信息，hive并没有默认执行列统计信息，因为统计列信息可能需要大量的计算。</p>
+</li>
+</ul>
+<h4 id="窗口和分析函数"><a href="#窗口和分析函数" class="headerlink" title="窗口和分析函数"></a>窗口和分析函数</h4><ul>
+<li><p>窗口函数和分组group最大的区别在于，分组只是为当前分区计算出单个值，而窗口函数是对窗口进行分组，并且分析函数计算出窗口中每一行的一个值，这个值通常是一个累加的结果。</p>
+</li>
+<li><p>窗口函数over是为了对数据划分窗口，over(partition by 列名 order by 列名 rows between 开始位置 and 结束位置)</p>
+<ul>
+<li><p>over()函数中的分区、排序、指定窗口范围可组合使用也可以不指定，根据不同的业务需求结合使用</p>
+</li>
+<li><p>over()函数中如果不指定分区，窗口大小是针对查询产生的所有数据，如果指定了分区，窗口大小是针对每个分区的数据</p>
+</li>
+<li><p>范围</p>
+<ul>
+<li><p>current row：当前行</p>
+</li>
+<li><p>unbounded：起点，unbounded preceding 表示从前面的起点， unbounded following表示到后面的终点</p>
+</li>
+<li><p>n preceding ：往前n行数据</p>
+</li>
+<li><p>n following：往后n行数据</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>常用的分析函数</p>
+<ul>
+<li>聚合类<br> avg()、sum()、max()、min()</li>
+<li>排名类<br> row_number()  按照值排序时产生一个自增编号，不会重复<br> rank() 按照值排序时产生一个自增编号，值相等时会重复，会产生空位<br> dense_rank() 按照值排序时产生一个自增编号，值相等时会重复，不会产生空位</li>
+<li>其他类<br> lag(列名,往前的行数,[行数为null时的默认值，不指定为null])<br> lead(列名,往后的行数,[行数为null时的默认值，不指定为null])<br> ntile(n) 把有序分区中的行分发到指定数据的组中，各个组有编号，编号从1开始，对于每一行，ntile返  回此行所属的组的编号</li>
+</ul>
+</li>
+</ul>
+<h4 id="物化视图"><a href="#物化视图" class="headerlink" title="物化视图"></a>物化视图</h4><ul>
+<li><p>物化视图是一种预计算的优化方式，通过预先计算并保存表连接或聚合等耗时较多的操作的结果，这样在查询的时候就可以避免进行这些耗时的操作，从而快速得到结果。</p>
+</li>
+<li><p>物化视图使用的是查询语句重写机制，不需要修改原有的查询语句，优化引擎自动选择合适的物化视图进行查询，对用户完全透明。它和视图的区别在于，物化视图将存储实际的数据，而视图只是存储SQL语句。</p>
+</li>
+<li><p>物化视图的使用</p>
+<ul>
+<li><p>创建物化视图，类似创建表可以指定handler，将物化视图存储在其它存储设备，如druid</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">CREATE MATERIALIZED VIEW [IF NOT EXISTS] [db_name.]materialized_view_name</span><br><span class="line">  [DISABLE REWRITE]</span><br><span class="line">  [COMMENT materialized_view_comment]</span><br><span class="line">  [PARTITIONED ON (col_name, ...)]</span><br><span class="line">  [</span><br><span class="line">    [ROW FORMAT row_format]</span><br><span class="line">    [STORED AS file_format]</span><br><span class="line">      | STORED BY &apos;storage.handler.class.name&apos; [WITH SERDEPROPERTIES (...)]</span><br><span class="line">  ]</span><br><span class="line">  [LOCATION hdfs_path]</span><br><span class="line">  [TBLPROPERTIES (property_name=property_value, ...)]</span><br><span class="line">AS SELECT ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改物化视图对优化器重写优化plan（全局默认是开启）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET hive.materializedview.rewriting=true;</span><br><span class="line">ALTER MATERIALIZED VIEW [db_name.]materialized_view_name ENABLE|DISABLE REWRITE;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>源数据表增加数据时，物化视图也需要更新以保持数据一致性，目前需要用户主动触发rebuild</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER MATERIALIZED VIEW [db_name.]materialized_view_name REBUILD;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>物化视图生命周期，可以设定指定的窗口时间内物化视图会起到优化作用，超过时间就设置物化视图无效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET hive.materializedview.rewriting.time.window=10min;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>物化视图和视图的在数据仓库的使用</p>
+<ul>
+<li>DM通常情况下视图使用在DM（数据集市层），下层的DW（DWD/DWS）数据仓库层使用的是维度建模，这样在DM层就是一个完整的视图层，可以通过反范式的方式将DW层的数据进行合并到一张表，从而形成一个数据集市的主体域。由此可见物化视图在消除连接和进行提前聚合方面是非常有用的。</li>
+</ul>
+</li>
+</ul>
+<h4 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h4><ul>
+<li><p>hive支持隐式连接，也就是在from后面添加多张表进行连接操作，并且从hive2.2开始已经支持不等值连接。</p>
+</li>
+<li><p>hive目前存在三种join实现方式，shuffle join、broadcast join、sort-merge-bucket join，分别对于关系型数据库中的三种join，hash join、nested-loop join、sort-merge join（先排序再merge join），当然hive中的sort-merge-bucket join稍微有些扩展，因为hive中支持bucket（每个bucket就可以看做是一个小表），所以如果两个表相同的cluster列的bucket成倍数，那么就可以完全将两个表的bucket对应上，这样就想到于各个小表进行sort-merge排序，当然必须保证bucket上已经进行了排序，设置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set hive.auto.convert.sortmerge.join=true;</span><br><span class="line">set hive.optimize.bucketmapjoin = true;</span><br><span class="line">set hive.optimize.bucketmapjoin.sortedmerge = true;</span><br><span class="line">set hive.auto.convert.sortmerge.join.bigtable.selection.policy </span><br><span class="line">    = org.apache.hadoop.hive.ql.optimizer.TableSizeBasedBigTableSelectorForAutoSMJ(d);</span><br><span class="line">    = org.apache.hadoop.hive.ql.optimizer.LeftmostBigTableSelectorForAutoSMJ</span><br><span class="line">    = org.apache.hadoop.hive.ql.optimizer.TableSizeBasedBigTableSelectorForAutoSMJ</span><br></pre></td></tr></table></figure>
+<p>当然每种属性都可以独立设置，可以只进行bucketmapjoin等等</p>
+</li>
+<li><p>hive只能进行等值连接（hive 2.2 之后可以不等值连接），不能进行不等值连接，只支持等值链接，支持 and，不支持 or，这是因为MapReduce实现不等值连接非常困难，所以对于连接中的不等条件只能提取出来，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from (select o.*, u.* from ops_oder as o join dwd_dim_user as u on o.user_id = u.user_id) where create_time &gt;= start_date and create_time &lt;= end_date</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HiveJoin 分三种：inner join, outer join, semi join，outer join 包括 left join，right join 和 full outer join,主要用来处理 join 中空记录的情况，semi join是用来判断存在的，是in/exist的一种高效实现方式，也就是投影只包含左边表，右边表只是用来等值判断的</p>
+</li>
+<li><p>hive多表连接时，如果on后面的条件是同样的字段，则会自动优化为一个MapReduce任务</p>
+</li>
+<li><p>等值连接的每个值都可以使用函数进行返回值（包括不等值函数），如解决数据倾斜</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM log a LEFT OUTER </span><br><span class="line">JOIN bmw_users b ON </span><br><span class="line">CASE WHEN a.user_id IS NULL THEN CONCAT(‘dp_hive’,RAND()) ELSE a.user_id END =b.user_id;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在编写带有 join 操作的代码语句时，应该将条目少的表/子查询放在 Join 操作符的左边。 因为在 Reduce 阶段，位于 Join 操作符左边的表的内容会被加载进内存，载入条目较少的表 可以有效减少 OOM（out of memory）即内存溢出。所以对于同一个 key 来说，对应的 value 值小的放前，大的放后，这便是“小表放前”原则。 hive也提供了<code>STREAMTABLE</code>大表标识，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT /*+ STREAMTABLE(d) */  e.*,d.* FROM emp e JOIN dept d ON e.no = d.no</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>map Join 操作在 Map 阶段完成，不再需要Reduce，前提条件是需要的数据在 Map 的过程中可以访问到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">INSERT OVERWRITE TABLE pv_users </span><br><span class="line">   SELECT /*+ MAPJOIN(pv) */ pv.pageid, u.age </span><br><span class="line">   FROM page_view pv JOIN user u ON (pv.userid = u.userid);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  map join还可以设置成自动优化，就不需要设置map join了，配置如下：</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set hive.auto.convert.join.noconditionaltask = true;</span><br><span class="line">set hive.auto.convert.join.noconditionaltask.size = 10000000;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>cross join 笛卡尔乘积，笛卡尔乘积不需要指定连接键，因为两张表会做一个乘积。通常情况下笛卡尔乘积不会使用到，但是对于想要为某个表查询的时候添加一个列，此时就可以使用到了，如生产自增id。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">insert into tbl_dim </span><br><span class="line">        select row_number() over (order by tbl_stg.tm) + t2.sk_max, tbl_stg.* from tbl_stg</span><br><span class="line">        cross join </span><br><span class="line">        (select coalesce(max(sk),0) sk_max from tbl_dim) t2;</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong>此处是给维度表添加新增加的维度数据，自增的id就是维度表的代理键。</p>
+</li>
+</ul>
+<h4 id="数据倾斜"><a href="#数据倾斜" class="headerlink" title="数据倾斜"></a>数据倾斜</h4><ul>
+<li><p>问题1，日志中常会出现信息丢失，比如每日约为 20 亿的全网日志，其中的 user_id 为主 键，在日志收集过程中会丢失，出现主键为 null 的情况，如果取其中的 user_id 和 bmw_users 关联，就会碰到数据倾斜的问题。原因是 Hive 中，主键为 null 值的项会被当做相同的 Key 而分配进同一个计算 Map</p>
+<ul>
+<li><p>解决方法 1：user_id 为空的不参与关联，子查询过滤 null</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM log a </span><br><span class="line">JOIN bmw_users b ON a.user_id IS NOT NULL AND a.user_id=b.user_id </span><br><span class="line">UNION All SELECT * FROM log a WHERE a.user_id IS NULL</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解决方法 2 如下所示：函数过滤 null </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM log a LEFT OUTER </span><br><span class="line">JOIN bmw_users b ON </span><br><span class="line">CASE WHEN a.user_id IS NULL THEN CONCAT(‘dp_hive’,RAND()) ELSE a.user_id END =b.user_id;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通常解决方法2比解决方法1效果更好，不但IO少了，而且作业数也少了。解决方法1中log读取两次，job 数为2。解决方法2中 job 数是1。这个优化适合无效 id（比如-99、 ‘’，null 等）产生的倾斜问题。把空值的 key 变成一个字符串加上随机数，就能把倾斜的 数据分到不同的Reduce上，从而解决数据倾斜问题。因为空值不参与关联，即使分到不同 的 Reduce 上，也不会影响最终的结果。附上 Hadoop 通用关联的实现方法是：关联通过二次排序实现的，关联的列为 partion key，关联的列和表的<br>tag 组成排序的 group key，根据 pariton key分配Reduce。同一Reduce内根据group key排序。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="动态分区"><a href="#动态分区" class="headerlink" title="动态分区"></a>动态分区</h4><ul>
+<li><p>动态分区插入（或多分区插入）旨在通过动态确定在扫描输入表时应创建和填充哪些分区来解决此问题。在动态分区插入中，将评估输入列的值，以确定应将此行插入哪个分区。如果尚未创建该分区，它将自动创建该分区。使用此功能，您只需一个插入语句即可创建并填充所有必要的分区。另外，由于只有一个insert语句，因此只有一个对应的MapReduce作业。与多次插入的情况相比，这显著提高了性能并减少了Hadoop集群的工作量。</p>
+</li>
+<li><p>由于动态分区存在一些限制，所以操作之前需要设置为 nostrict</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.dynamic.partition=true;</span><br><span class="line">set hive.exec.dynamic.partition.mode=nonstrict;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><ul>
+<li><p>hive中存在各种内建操作符和对应类型操作的函数，<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF" target="_blank" rel="noopener">参考</a></p>
+</li>
+<li><p>条件函数</p>
+<p>| 返回值  | 方法名                                                     | 描述                                                         |<br>| ——- | ———————————————————- | ———————————————————— |<br>| boolean | isnull( a )                                                | Returns true if a is NULL and false otherwise.               |<br>| boolean | isnotnull ( a )                                            | Returns true if a is not NULL and false otherwise.           |<br>| T       | if(boolean testCondition, T valueTrue, T valueFalseOrNull) | Returns valueTrue when testCondition is true, returns valueFalseOrNull otherwise. |<br>| T       | nvl(T value, T default_value)                              | Returns default value if value is null else returns value    |<br>| T       | COALESCE(T v1, T v2, …)                                  | Returns the first v that is not NULL, or NULL if all v’s are NULL. |<br>| T       | CASE a WHEN b THEN c [WHEN d THEN e]<em> [ELSE f] END         | When a = b, returns c; when a = d, returns e; else returns f. |<br>| T       | CASE WHEN a THEN b [WHEN c THEN d]</em> [ELSE e] END           | When a = true, returns b; when c = true, returns d; else returns e. |<br>| T       | nullif( a, b )                                             | Returns NULL if a=b; otherwise returns a Shorthand for: CASE WHEN a = b then NULL else a |<br>| void    | assert_true(boolean condition)                             | Throw an exception if ‘condition’ is not true, otherwise return null |</p>
+</li>
+<li><p>数据屏蔽函数（创建视图时候防止信息泄露）</p>
+</li>
+<li><p>常用的其它函数</p>
+<p>| 返回值 | 方法名                                              |<br>| —— | ————————————————— |<br>| varies | java_method(class, method[, arg1[, arg2..]])        |<br>| varies | reflect(class, method[, arg1[, arg2..]])            |<br>| int    | hash(a1[, a2…])                                   |<br>| string | current_user()                                      |<br>| string | logged_in_user()                                    |<br>| string | current_database()                                  |<br>| string | md5(string/binary)                                  |<br>| string | sha1(string/binary)sha(string/binary)               |<br>| bigint | crc32(string/binary)                                |<br>| string | sha2(string/binary, int)                            |<br>| binary | aes_encrypt(input string/binary, key string/binary) |<br>| binary | aes_decrypt(input binary, key string/binary)        |<br>| string | version()                                           |<br>| bigint | surrogate_key([write_id_bits, task_id_bits])        |</p>
+</li>
+<li><p>get_json_object，支持四种最基本形式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ : Root object</span><br><span class="line">. : Child operator</span><br><span class="line">[] : Subscript operator for array</span><br><span class="line">* : Wildcard for []</span><br></pre></td></tr></table></figure>
+<p>如：<code>SELECT get_json_object(src_json.json, `</code>‘$.owner’<code></code>) FROM src_json;`</p>
+</li>
+<li><p>聚合函数</p>
+<p>| 返回值                    | 方法名                                                   | 描述                                                         |<br>| ————————- | ——————————————————– | ———————————————————— |<br>| BIGINT                    | count(<em>), count(expr), count(DISTINCT expr[, expr…])   | count(</em>) - Returns the total number of retrieved rows, including rows containing NULL values.count(expr) - Returns the number of rows for which the supplied expression is non-NULL.count(DISTINCT  expr[, expr]) - Returns the number of rows for which the supplied  expression(s) are unique and non-NULL. Execution of this can be  optimized with <a href="https://cwiki.apache.org/confluence/display/Hive/Configuration+Properties#ConfigurationProperties-hive.optimize.distinct.rewrite" target="_blank" rel="noopener">hive.optimize.distinct.rewrite</a>. |<br>| DOUBLE                    | sum(col), sum(DISTINCT col)                              | Returns the sum of the elements in the group or the sum of the distinct values of the column in the group. |<br>| DOUBLE                    | avg(col), avg(DISTINCT col)                              | Returns the average of the elements in the group or the average of the distinct values of the column in the group. |<br>| DOUBLE                    | min(col)                                                 | Returns the minimum of the column in the group.              |<br>| DOUBLE                    | max(col)                                                 | Returns the maximum value of the column in the group.        |<br>| DOUBLE                    | variance(col), var_pop(col)                              | Returns the variance of a numeric column in the group.       |<br>| DOUBLE                    | var_samp(col)                                            | Returns the unbiased sample variance of a numeric column in the group. |<br>| DOUBLE                    | stddev_pop(col)                                          | Returns the standard deviation of a numeric column in the group. |<br>| DOUBLE                    | stddev_samp(col)                                         | Returns the unbiased sample standard deviation of a numeric column in the group. |<br>| DOUBLE                    | covar_pop(col1, col2)                                    | Returns the population covariance of a pair of numeric columns in the group. |<br>| DOUBLE                    | covar_samp(col1, col2)                                   | Returns the sample covariance of a pair of a numeric columns in the group. |<br>| DOUBLE                    | corr(col1, col2)                                         | Returns the Pearson coefficient of correlation of a pair of a numeric columns in the group. |<br>| DOUBLE/百分位数           | percentile(BIGINT col, p)                                | Returns the exact pth  percentile of a column in the group (does not work with floating point  types). p must be between 0 and 1. NOTE: A true percentile can only be  computed for integer values. Use PERCENTILE_APPROX if your input is  non-integral. |<br>| array<double>             | percentile(BIGINT col, array(p1 [, p2]…))              | Returns the exact percentiles p1, p2, … of a column in the group (does not work with floating point types). pi  must be between 0 and 1. NOTE: A true percentile can only be computed  for integer values. Use PERCENTILE_APPROX if your input is non-integral. |<br>| DOUBLE                    | percentile_approx(DOUBLE col, p [, B])                   | Returns an approximate pth  percentile of a numeric column (including floating point types) in the  group. The B parameter controls approximation accuracy at the cost of  memory. Higher values yield better approximations, and the default is  10,000. When the number of distinct values in col is smaller than B,  this gives an exact percentile value. |<br>| array<double>             | percentile_approx(DOUBLE col, array(p1 [, p2]…) [, B]) | Same as above, but accepts and returns an array of percentile values instead of a single one. |<br>| array&lt;struct {<code>&#39;x&#39;,&#39;y&#39;</code>}&gt; | histogram_numeric(col, b)                                | Computes  a histogram of a numeric column in the group using b non-uniformly  spaced bins. The output is an array of size b of double-valued (x,y)  coordinates that represent the bin centers and heights |<br>| array                     | collect_set(col)                                         | Returns a set of objects with duplicate elements eliminated. |<br>| array                     | collect_list(col)                                        | Returns a list of objects with duplicates. (As of Hive <a href="https://issues.apache.org/jira/browse/HIVE-5294" target="_blank" rel="noopener">0.13.0</a>.) |<br>| INTEGER                   | ntile(INTEGER x)                                         | Divides an ordered partition into <code>x</code> groups called buckets and assigns a bucket number to each row in the partition. This allows easy calculation of tertiles, quartiles, deciles, percentiles and other common summary statistics. (As of Hive <a href="https://issues.apache.org/jira/browse/HIVE-896" target="_blank" rel="noopener">0.11.0</a>.) |</double></double></p>
+</li>
+<li><p>表生成函数</p>
+<p>| 返回值               | 方法名                                                 | 描述                                                         |<br>| ——————– | —————————————————— | ———————————————————— |<br>| T                    | explode(ARRAY<t> a)                                    | Explodes an array to multiple rows. Returns a row-set with a single column (<em>col</em>), one row for each element from the array. |<br>| Tkey,Tvalue          | explode(MAP&lt;Tkey,Tvalue&gt; m)                            | Explodes a map to multiple rows. Returns  a row-set with a two columns (<em>key,value)</em> , one row for each key-value pair from the input map. (As of Hive <a href="https://issues.apache.org/jira/browse/HIVE-1735" target="_blank" rel="noopener">0.8.0</a>.). |<br>| int,T                | posexplode(ARRAY<t> a)                                 | Explodes an array to multiple rows with additional positional column of <em>int</em> type (position of items in the original array, starting with 0). Returns a row-set with two columns (<em>pos,val</em>), one row for each element from the array. |<br>| T1,…,Tn            | inline(ARRAY&lt;STRUCT<a href="f1:T1,...,fn:Tn" target="_blank" rel="noopener">f1:T1,...,fn:Tn</a>&gt; a)               | Explodes an array of structs to multiple rows. Returns  a row-set with N columns (N = number of top level elements in the struct), one row per struct from the array. (As of Hive <a href="https://issues.apache.org/jira/browse/HIVE-3238" target="_blank" rel="noopener">0.10</a>.) |<br>| T1,…,Tn/r          | stack(int r,T1  V1,…,Tn/r Vn)                        | Breaks up <em>n</em> values V1,…,Vn into <em>r</em> rows. Each row will have <em>n/r</em> columns. <em>r</em> must be constant. |<br>| string1,…,stringn  | json_tuple(string jsonStr,string k1,…,string kn)     | Takes JSON string and a set of <em>n</em> keys, and returns a tuple of <em>n</em> values. This is a more efficient version of the <code>get_json_object</code> UDF because it can get multiple keys with just one call. |<br>| string 1,…,stringn | parse_url_tuple(string urlStr,string p1,…,string pn) | Takes URL string and a set of <em>n</em> URL parts, and returns a tuple of <em>n</em> values. This is similar to the <code>parse_url()</code>  UDF but can extract multiple parts at once out of a URL. Valid part  names are: HOST, PATH, QUERY, REF, PROTOCOL, AUTHORITY, FILE, USERINFO,  QUERY:<key>. |</key></t></t></p>
+</li>
+</ul>
+
+      
+    </div>
+    <div>
+        
+            <div style="text-align:center;color: #ccc;font-size:14px;">------ 本文结束------</div>
+        
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+            <a href="/tags/hive/" rel="tag"># hive</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/09/hadoop-ssl/" rel="next" title="hadoop-ssl">
+                <i class="fa fa-chevron-left"></i> hadoop-ssl
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/my-icon.jpeg"
+                alt="ilivoo" />
+            
+              <p class="site-author-name" itemprop="name">ilivoo</p>
+              <p class="site-description motion-element" itemprop="description">我，在這裡，享受等你的時光。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive基本使用"><span class="nav-number">1.</span> <span class="nav-text">hive基本使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口和分析函数"><span class="nav-number">2.</span> <span class="nav-text">窗口和分析函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#物化视图"><span class="nav-number">3.</span> <span class="nav-text">物化视图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接"><span class="nav-number">4.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据倾斜"><span class="nav-number">5.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态分区"><span class="nav-number">6.</span> <span class="nav-text">动态分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数"><span class="nav-number">7.</span> <span class="nav-text">函数</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ilivoo</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/lib/clipboard/clipboard.js"></script>
+<script type="text/javascript" src="/js/src/custom.js"></script>
+
+</body>
+</html>

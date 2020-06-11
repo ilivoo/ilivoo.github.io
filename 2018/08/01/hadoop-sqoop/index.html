@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="前置设置 由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限 12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop  由于sqoop需要访问有hive数据库权限，所以通常需要使用ranger指定sqoop访问被写入的hive数据库  建议使用需要访问">
+<meta name="description" content="前置设置 由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限 12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop  建议使用需要访问目录的用户去执行sqoop命令  所有的sqoop import需要指定参数 -Dorg.apache.sqoop.">
 <meta name="keywords" content="hadoop,sqoop">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sqoop使用教程">
 <meta property="og:url" content="http://yoursite.com/2018/08/01/hadoop-sqoop/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="前置设置 由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限 12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop  由于sqoop需要访问有hive数据库权限，所以通常需要使用ranger指定sqoop访问被写入的hive数据库  建议使用需要访问">
+<meta property="og:description" content="前置设置 由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限 12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop  建议使用需要访问目录的用户去执行sqoop命令  所有的sqoop import需要指定参数 -Dorg.apache.sqoop.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:39:49.753Z">
+<meta property="og:updated_time" content="2020-06-11T08:45:11.381Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqoop使用教程">
-<meta name="twitter:description" content="前置设置 由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限 12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop  由于sqoop需要访问有hive数据库权限，所以通常需要使用ranger指定sqoop访问被写入的hive数据库  建议使用需要访问">
+<meta name="twitter:description" content="前置设置 由于sqoop需要执行MapReduce任务，并且通常指定输出为 /user/sqoop 目录，所以需要创建并指定权限 12hdfs dfs -mkdir /user/sqoophdfs dfs -chown sqoop:hdfs /user/sqoop  建议使用需要访问目录的用户去执行sqoop命令  所有的sqoop import需要指定参数 -Dorg.apache.sqoop.">
 
 
 
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,529
+                  2,990
                 </span>
               
 
@@ -422,22 +422,46 @@
 <li><p>由于sqoop需要执行MapReduce任务，并且通常指定输出为 <code>/user/sqoop</code> 目录，所以需要创建并指定权限</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -mkdir /user/sqoop</span><br><span class="line">hdfs dfs -chown sqoop:hdfs /user/sqoop</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>由于sqoop需要访问有hive数据库权限，所以通常需要使用ranger指定sqoop访问被写入的hive数据库</p>
+<li><p>建议使用需要访问目录的用户去执行sqoop命令</p>
 </li>
-<li>建议使用需要访问目录的用户去执行sqoop命令，这样上面两步都可以省略</li>
-<li>所有的sqoop import需要指定参数 <code>-Dorg.apache.sqoop.splitter.allow_text_splitter=true</code></li>
-<li>每次执行MapReduce任务可能需要删除MapReduce任务输出目录</li>
-<li>官网连接：<code>https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html</code></li>
-<li>hortonwork 教程： <code>https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.1.0/migrating-data/content/hive_moving_data_from_hdfs_to_hive.html</code></li>
+<li><p>所有的sqoop import需要指定参数 <code>-Dorg.apache.sqoop.splitter.allow_text_splitter=true</code></p>
+</li>
+<li><p>每次执行MapReduce任务可能需要删除MapReduce任务输出目录</p>
+</li>
+<li><p>一般RDBMS的导出速度控制在60~80MB/s，每个 map 任务的处理速度5~10MB/s 估算，即 -m 参数一般设置4~8，表示启动 4~8 个map 任务并发抽取。</p>
+</li>
+<li><p>官网连接：<code>https://sqoop.apache.org/docs/1.4.7/SqoopUserGuide.html</code></p>
+</li>
+<li><p>hortonwork 教程： <code>https://docs.hortonworks.com/HDPDocuments/HDP3/HDP-3.1.0/migrating-data/content/hive_moving_data_from_hdfs_to_hive.html</code></p>
+</li>
+<li><p>使用 <code>--skip-dist-cache</code> 防止每次需要将sqoop/lib中的jars上传到分布式缓存，所以如果sqoop/lib中的jars没有变化，那么每次都应该携带这个参数。</p>
+</li>
+<li><p>sqoop metastore 用来保存用户元数据信息，如使用sqoop job时候，创建job需要配置相关信息，并且需要保存last value。通常情况下每个用户一个metastore，通过文件的方式存储在 <code>~/.sqoop</code>目录当中。如果我们根据需要希望启动一个或者多个单独的metastore，那么只需要使用配置 <code>sqoop-site.xml</code> 并启动即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sqoop.metastore.server.location=/var/lib/sqoop/metastore.db</span><br><span class="line">sqoop.metastore.server.port=15999</span><br></pre></td></tr></table></figure>
+<p>服务端启动</p>
+<ul>
+<li>创建 <code>/var/lib/sqoop</code> 和 <code>/var/log/sqoop</code> 文件夹，并分配权限</li>
+<li>启动: <code>bin/start-metastore.sh -p /var/log/sqoop/metastore.pid -l /var/log/sqoop</code></li>
+</ul>
+<p>客户端使用</p>
+<ul>
+<li><p>方式一：通过命令行参数 <code>--meta-connect</code></p>
+</li>
+<li><p>方式二：在sqoop-site.xml中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop.metastore.client.autoconnect.url=jdbc:hsqldb:hsql://metaserver:15999/sqoop</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
 </ul>
 <h4 id="sqoop-import-参数说明"><a href="#sqoop-import-参数说明" class="headerlink" title="sqoop import 参数说明"></a>sqoop import 参数说明</h4><ul>
 <li><p>MySQL连接参数</p>
 <ul>
 <li><code>--connect</code> 指定连接地址</li>
 <li><code>--username, -P|--password|--password-file</code> 关系型数据库密码选项</li>
+<li>注意sqoop是分布式方式运行，那么mysql连接需要在各个机器上都能够访问mysql服务器</li>
 </ul>
 </li>
-<li><p>导入控制，默认情况下使用 <code>select min(&lt;split-by&gt;), max(&lt;split-by&gt;) from &lt;table name&gt; where &lt;split-by&gt;</code>  来进行并行度控制，如果没有指定split-by则使用主键作为分区并行键</p>
+<li><p>导入形式</p>
 <ul>
 <li><p>基本形式导入</p>
 <ul>
@@ -446,7 +470,7 @@
 <li><p>此处可以不用指定 <code>--target-dir</code> 是因为模式使用 <code>--table</code> 作为 MapReduce输出目录</p>
 </li>
 <li><p>示例</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table r_cond_info</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --table r_cond_info</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -457,8 +481,9 @@
 <li><p><code>--split-limit</code>  限制分区最大值，防止MapReduce数据发送倾斜</p>
 </li>
 <li><p>示例</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query 'select * from r_cond_info where $CONDITIONS' --split-by stcd --target-dir '/user/sqoop/r_cond_info_dir'</span><br></pre></td></tr></table></figure>
-<p><strong>说明： </strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop import -Dorg.apache.sqoop.splitter.allow_text_splitter=true --connect jdbc:mysql://cmsw1.tepia.com:3306/cmsw --username cmsw --password Cmsw@123 --query &apos;select * from r_cond_info where $CONDITIONS&apos; --split-by stcd --target-dir &apos;/user/sqoop/r_cond_info_dir&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>说明</strong></p>
 <ul>
 <li>此处必须指定 <code>$CONDITIONS</code> ，并且它会在运行的时候进行替换成 <code>--split-by</code> 的条件</li>
 <li>这种形式不能使用 <code>--as-orcfile</code></li>
@@ -466,6 +491,14 @@
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li><p>并行控制</p>
+<ul>
+<li>默认情况下使用 <code>select min(&lt;split-by&gt;), max(&lt;split-by&gt;) from &lt;table name&gt; where &lt;split-by&gt;</code>  来进行并行度控制，如果没有指定split-by则使用主键作为分区并行键，如果主键是分布不均匀的最好用split-by指定一个分区键，如果没有主键也没有指定分区键，那么默认情况下会报错，除非强制指定<code>--num-mappers 1</code> 或 <code>--autoreset-to-one-mapper</code> 使用单个mapper。</li>
+<li>选择好分区键后，就是指定使用多少分区来运行，使用 <code>--num-mapers</code> 指定，如果存在数据倾斜的情况，可以指定 <code>--split-limit</code> 控制单个分区最大的量，从而影响并行度。</li>
+<li><code>--autoreset-to-one-mapper</code> 通常用在import-all-tables工具中全库导入，没有主键使用单个mapper</li>
+<li>基本形式和查询形式都可以进行并行度控制</li>
 </ul>
 </li>
 <li><p>导入hive参数</p>
@@ -487,21 +520,73 @@
 </li>
 </ul>
 </li>
-<li><p>增量迁移</p>
+<li><p>类型转换</p>
 <ul>
-<li><p><code>--incremental</code> 增量模式，append 和 lastmodified</p>
-<ul>
-<li>append 表示添加模式（单调递增主键不断添加数据）</li>
-<li>lastmodified 最后修改模式 （存在一个单调递增值，修改数据后会自动增加，如表中存在最后修改时间字段）</li>
+<li><code>--map-column-java</code> 转换sql类型到java类型，如：<code>id=String,value=Integer</code></li>
+<li><code>--map-column-hive</code> 转换sql类型到hive类型，转换的过程中需要转义，如：<code>DECIMAL(1%2C%201)</code> 代替 <code>DECIMAL(1, 1)</code></li>
 </ul>
 </li>
-<li><p><code>--check-column</code> 指定检查的列，列不能为字符类型</p>
+<li><p>导出类型控制</p>
+<ul>
+<li><code>--as-textfile</code> 默认为text类型</li>
+<li><code>--as-avrodatafile</code>、<code>--as-orcfile</code>、<code>--as-parquetfile</code>、<code>--as-sequencefile</code></li>
+<li>SequenceFile、text和Avro可以进行压缩，通过指定 <code>--compress</code> 或 <code>-z</code> 指定使用gzip进行压缩，或者指定 <code>--compression-codec</code> 设置hadoop的压缩格式</li>
+</ul>
 </li>
-<li><code>--last-value</code> 指定最后增量值，或者最后修改的值</li>
+<li><p>text和sequence文件导出和导入格式（定界符），默认的定界符：字段 <code>,</code> ，行 <code>\n</code> ，无引号，无转码，这可能会导致字段或者行无法准确区分清楚，如某个String字段中存在逗号或者换行符，那么整个的定界就是错误的，所以为了明确的解析，必须指定定界符。</p>
+<ul>
+<li><p>字段含义</p>
+<ul>
+<li><code>--enclosed-by &lt;char&gt;</code> 必填字段包围符，如：通常会使用 <code>&#39;</code> 单引号或者 <code>&quot;</code> 双引号将字符串包围起来</li>
+<li><code>--escaped-by &lt;char&gt;</code> 转义字符，如通常某些字符需要转义，转义字符通常是 <code>\</code></li>
+<li><code>--fields-terminated-by</code> 在一行中，字段和字段之间的分隔符，如cvs文件中使用 <code>|</code> 或 <code>,</code></li>
+<li><code>--lines-terminated-by</code> 行之间的分隔符，通常使用换行符 <code>\n</code> </li>
+<li><code>--optionally-enclosed-by &lt;char&gt;</code> 可选字段包围符</li>
+</ul>
+</li>
+<li><p>转义和包围符，如数据库中存在，如下数据</p>
+<p>| String                       | int  | int  |<br>| —————————- | —- | —- |<br>| Some string, with a comma.   | 1    | 2    |<br>| Another “string with quotes” | 4    | 5    |</p>
+<ul>
+<li><p>明确定义符号 <code>sqoop import --fields-terminated-by , --escaped-by \\ --enclosed-by &#39;\&quot;&#39;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;Some string, with a comma.&quot;,&quot;1&quot;,&quot;2&quot;</span><br><span class="line">&quot;Another \&quot;string with quotes\&quot;&quot;,&quot;4&quot;,&quot;5&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用可选包围符 <code>sqoop import --optionally-enclosed-by &#39;\&quot;&#39;</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;Some string, with a comma.&quot;,1,2</span><br><span class="line">&quot;Another \&quot;string with quotes\&quot;&quot;,4,5</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>hive默认是支持转义的，所以如果直接导入到hive当中，就不需要显示指定转义</p>
+</li>
+<li><code>--mysql-delimiters</code> 使用 <code>mysqldump</code> 默认的定界符，并使用direct模式，指定 <code>--direct</code> ，那么导入会非常快速，mysql默认的定界符 ，字段 <code>,</code> ，行 <code>\n</code> ， 转义 <code>\</code> ，可选包围符 <code>&#39;</code></li>
 </ul>
 </li>
 </ul>
 <h4 id="sqoop增量迁移数据到hive中"><a href="#sqoop增量迁移数据到hive中" class="headerlink" title="sqoop增量迁移数据到hive中"></a>sqoop增量迁移数据到hive中</h4><ul>
+<li>增量导入，数据通常分为事实数据、可变维度数据、缓慢渐变维数据、快照表数据<ul>
+<li>对于事实数据通常不会更改，只是简单递增，那么数据每次将最新的数据添加到已有的数据即可，使用append模式，通常append列为自增列</li>
+<li>对于可变维度数据<ul>
+<li>数据量比较小直接每次全量导出，不需要增量导出</li>
+<li>如果数据量比较大，初始全量导出，以后每次增量导出新增和变化的数据即可，有两种合并方式<ul>
+<li>方法一：直接使用 lastmodified + merge-key 合并新旧数据</li>
+<li>方法而：直接使用hive的merge语句</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>缓慢渐变维度数据（如：数据T+1），首先初始化一次，后面每次导出T-1的数据，再将老的数据进行过期（更新的数据），再直接添加新的数据，所以只需要使用append模式即可，但append的列是时间列。</li>
+</ul>
+</li>
+<li><p>sqoop增量迁移</p>
+<ul>
+<li><code>--incremental</code> 增量模式，append 和 lastmodified<ul>
+<li>append 表示添加模式（单调递增主键不断添加数据），递增键可以是时间</li>
+<li>lastmodified 最后修改模式 （存在一个单调递增值，修改数据后会自动增加，如表中存在最后修改时间字段），不支持hive，主要是hive默认是不支持更新。所以通常情况下先将数据进入hdfs当中，再创建hive external表进行管理。此模式通常需要合并原先的数据和新数据（新添加和修改的数据），所以通常需要指定 <code>--merge-key</code> 来合并新旧数据，如果在这个过程没有合并，那么也可以后面单独调用 <code>sqoop merge</code> 来进行合并操作。 </li>
+</ul>
+</li>
+<li><code>--check-column</code> 指定检查的列，列不能为字符类型</li>
+<li><code>--last-value</code> 指定最后增量值，或者最后修改的值</li>
+</ul>
+</li>
 <li><p>MySQL中的表</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `user` (</span><br><span class="line">  `id` int(11) NOT NULL,</span><br><span class="line">  `name` varchar(20) DEFAULT NULL,</span><br><span class="line">  `last_modify` datetime DEFAULT NULL,</span><br><span class="line">  PRIMARY KEY (`id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8</span><br></pre></td></tr></table></figure>
 </li>
@@ -554,6 +639,19 @@
 </ul>
 </li>
 </ul>
+<h4 id="导入案例"><a href="#导入案例" class="headerlink" title="导入案例"></a>导入案例</h4><ul>
+<li><p>sqoop job 使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --create default_sales_order \</span><br><span class="line">-- \</span><br><span class="line">import \</span><br><span class="line">--connect &quot;jdbc:mysql://hdp1.tepia.com:3306/source?useSSL=false&amp;user=feng&amp;password=feng@123&quot; \</span><br><span class="line">--table sales_order \</span><br><span class="line">--where &quot;entry_date &lt; current_date()&quot; \</span><br><span class="line">--hive-import \</span><br><span class="line">--hive-table default.sales_order \</span><br><span class="line">--incremental append \</span><br><span class="line">--check-column entry_date \</span><br><span class="line">--last-value &apos;1900-01-01&apos;</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong></p>
+<ul>
+<li>日期类型也可以作为一个自增字段</li>
+<li>where添加后面控制，不会导入当前一天的数据，也就是说是通过一天为单位进行递增导入</li>
+</ul>
+</li>
+<li><p>查看job信息，如 <code>last_value</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --show default_sales_order|grep last.value</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 
       
     </div>
@@ -591,8 +689,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/01/hadoop-hive/" rel="next" title="hive的使用与集成">
-                <i class="fa fa-chevron-left"></i> hive的使用与集成
+              <a href="/2018/08/01/hadoop-hive/" rel="next" title="hive集成其它系统">
+                <i class="fa fa-chevron-left"></i> hive集成其它系统
               </a>
             
           </div>
@@ -684,7 +782,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -746,7 +844,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前置设置"><span class="nav-number">1.</span> <span class="nav-text">前置设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sqoop-import-参数说明"><span class="nav-number">2.</span> <span class="nav-text">sqoop import 参数说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sqoop增量迁移数据到hive中"><span class="nav-number">3.</span> <span class="nav-text">sqoop增量迁移数据到hive中</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前置设置"><span class="nav-number">1.</span> <span class="nav-text">前置设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sqoop-import-参数说明"><span class="nav-number">2.</span> <span class="nav-text">sqoop import 参数说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sqoop增量迁移数据到hive中"><span class="nav-number">3.</span> <span class="nav-text">sqoop增量迁移数据到hive中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#导入案例"><span class="nav-number">4.</span> <span class="nav-text">导入案例</span></a></li></ol></div>
             
 
           </div>
