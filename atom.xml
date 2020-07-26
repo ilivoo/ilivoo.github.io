@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-06-09T07:40:23.805Z</updated>
+  <updated>2020-07-22T16:01:23.261Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,114 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>mac效率优化</title>
+    <link href="http://yoursite.com/2020/07/22/mac-install/"/>
+    <id>http://yoursite.com/2020/07/22/mac-install/</id>
+    <published>2020-07-22T15:50:03.000Z</published>
+    <updated>2020-07-22T16:01:23.261Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ul&gt;
+&lt;li&gt;&lt;p&gt;安装brew&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;获取一个http和https代理，如局域网中有电脑有代理工具privoxy，设置本地代理&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gu
+      
+    
+    </summary>
+    
+      <category term="mac" scheme="http://yoursite.com/categories/mac/"/>
+    
+    
+      <category term="mac" scheme="http://yoursite.com/tags/mac/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>window-use</title>
+    <link href="http://yoursite.com/2020/07/17/window-use/"/>
+    <id>http://yoursite.com/2020/07/17/window-use/</id>
+    <published>2020-07-17T08:17:16.000Z</published>
+    <updated>2020-07-17T08:28:55.665Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;ul&gt;
+&lt;li&gt;&lt;p&gt;查看网络连接&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;
+      
+    
+    </summary>
+    
+      <category term="windows" scheme="http://yoursite.com/categories/windows/"/>
+    
+    
+      <category term="windows" scheme="http://yoursite.com/tags/windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 备份</title>
+    <link href="http://yoursite.com/2020/07/15/mysql-backup/"/>
+    <id>http://yoursite.com/2020/07/15/mysql-backup/</id>
+    <published>2020-07-15T06:19:16.000Z</published>
+    <updated>2020-07-15T08:19:25.529Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;mysqldump-与-xtrabackup-的实现原理&quot;&gt;&lt;a href=&quot;#mysqldump-与-xtrabackup-的实现原理&quot; class=&quot;headerlink&quot; title=&quot;mysqldump 与 xtrabackup 的实现原理&quot;&gt;&lt;/a&gt;my
+      
+    
+    </summary>
+    
+      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
+    
+    
+      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hadoop-oozie</title>
+    <link href="http://yoursite.com/2020/06/28/hadoop-oozie/"/>
+    <id>http://yoursite.com/2020/06/28/hadoop-oozie/</id>
+    <published>2020-06-28T09:07:24.000Z</published>
+    <updated>2020-06-29T13:13:08.814Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;oozie-使用技巧&quot;&gt;&lt;a href=&quot;#oozie-使用技巧&quot; class=&quot;headerlink&quot; title=&quot;oozie 使用技巧&quot;&gt;&lt;/a&gt;oozie 使用技巧&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;单步调试，在job.properties中设置 &lt;code
+      
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://yoursite.com/categories/hadoop/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/categories/hadoop/hive/"/>
+    
+    
+      <category term="hadoop" scheme="http://yoursite.com/tags/hadoop/"/>
+    
+      <category term="hive" scheme="http://yoursite.com/tags/hive/"/>
+    
+  </entry>
+  
+  <entry>
     <title>hive基本使用</title>
     <link href="http://yoursite.com/2020/05/29/hadoop-hive-usage/"/>
     <id>http://yoursite.com/2020/05/29/hadoop-hive-usage/</id>
     <published>2020-05-29T02:06:48.000Z</published>
-    <updated>2020-06-09T07:40:23.805Z</updated>
+    <updated>2020-06-23T03:05:31.309Z</updated>
     
     <summary type="html">
     
@@ -108,7 +211,7 @@
     <link href="http://yoursite.com/2020/04/17/linux-aria2/"/>
     <id>http://yoursite.com/2020/04/17/linux-aria2/</id>
     <published>2020-04-17T11:30:42.000Z</published>
-    <updated>2020-04-17T11:47:12.887Z</updated>
+    <updated>2020-07-21T03:42:02.873Z</updated>
     
     <summary type="html">
     
@@ -179,7 +282,7 @@
     <link href="http://yoursite.com/2019/09/26/tools-tmux/"/>
     <id>http://yoursite.com/2019/09/26/tools-tmux/</id>
     <published>2019-09-26T09:36:25.000Z</published>
-    <updated>2019-12-18T07:42:18.862Z</updated>
+    <updated>2020-07-15T08:58:53.691Z</updated>
     
     <summary type="html">
     
@@ -204,7 +307,7 @@
     <link href="http://yoursite.com/2019/09/26/tools-zsh/"/>
     <id>http://yoursite.com/2019/09/26/tools-zsh/</id>
     <published>2019-09-26T09:34:15.000Z</published>
-    <updated>2019-12-18T07:42:39.077Z</updated>
+    <updated>2020-07-23T08:57:42.743Z</updated>
     
     <summary type="html">
     
@@ -225,7 +328,7 @@
     <link href="http://yoursite.com/2019/09/26/tools-vim/"/>
     <id>http://yoursite.com/2019/09/26/tools-vim/</id>
     <published>2019-09-26T09:25:06.000Z</published>
-    <updated>2019-09-26T10:12:23.602Z</updated>
+    <updated>2020-07-23T08:54:48.520Z</updated>
     
     <summary type="html">
     
@@ -430,104 +533,6 @@
     
     
       <category term="kafka" scheme="http://yoursite.com/tags/kafka/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>shell单步调试</title>
-    <link href="http://yoursite.com/2018/07/15/linux-shell-debug/"/>
-    <id>http://yoursite.com/2018/07/15/linux-shell-debug/</id>
-    <published>2018-07-15T12:41:31.000Z</published>
-    <updated>2020-03-26T23:31:15.491Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;bash-x教程&quot;&gt;&lt;a href=&quot;#bash-x教程&quot; class=&quot;headerlink&quot; title=&quot;bash -x教程&quot;&gt;&lt;/a&gt;bash -x教程&lt;/h4&gt;&lt;ol&gt;
-&lt;li&gt;PS4是在调试的时候脚本打印出的信息前缀 &lt;figure class=&quot;hi
-      
-    
-    </summary>
-    
-      <category term="linux" scheme="http://yoursite.com/categories/linux/"/>
-    
-    
-      <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql 常用查询</title>
-    <link href="http://yoursite.com/2018/07/02/mysql-use/"/>
-    <id>http://yoursite.com/2018/07/02/mysql-use/</id>
-    <published>2018-07-02T02:18:31.000Z</published>
-    <updated>2019-12-18T07:41:47.210Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;区间分组统计&lt;/p&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;
-      
-    
-    </summary>
-    
-      <category term="mysql" scheme="http://yoursite.com/categories/mysql/"/>
-    
-    
-      <category term="mysql" scheme="http://yoursite.com/tags/mysql/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>fzf安装与使用</title>
-    <link href="http://yoursite.com/2018/04/28/tools-fzf/"/>
-    <id>http://yoursite.com/2018/04/28/tools-fzf/</id>
-    <published>2018-04-28T09:28:57.000Z</published>
-    <updated>2019-12-18T07:42:53.229Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h4 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot; title=&quot;安装&quot;&gt;&lt;/a&gt;安装&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;参考github &lt;code&gt;https://github.com/junegunn/fzf&lt;/code&gt;&lt;/p&gt;
-&lt;fi
-      
-    
-    </summary>
-    
-      <category term="tools" scheme="http://yoursite.com/categories/tools/"/>
-    
-    
-      <category term="tools" scheme="http://yoursite.com/tags/tools/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>git使用</title>
-    <link href="http://yoursite.com/2018/04/28/tools-git/"/>
-    <id>http://yoursite.com/2018/04/28/tools-git/</id>
-    <published>2018-04-28T09:28:57.000Z</published>
-    <updated>2019-11-18T09:13:19.180Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h5 id=&quot;参考&quot;&gt;&lt;a href=&quot;#参考&quot; class=&quot;headerlink&quot; title=&quot;参考&quot;&gt;&lt;/a&gt;参考&lt;/h5&gt;&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;https://github.com/muwenzi/Program-Blog/labels/1.1%20Git&lt;/
-      
-    
-    </summary>
-    
-      <category term="tools" scheme="http://yoursite.com/categories/tools/"/>
-    
-    
-      <category term="tools" scheme="http://yoursite.com/tags/tools/"/>
     
   </entry>
   

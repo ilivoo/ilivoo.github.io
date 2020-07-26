@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="hive基本使用 hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。  事务表为了CUD必须设置动态分区为 nonstrict  事务每次修改都会导致产生大量小文件，默认hive会自动compact小文件，但是也可以手动进行compact 1ALTER">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-09T07:40:23.805Z">
+<meta property="og:updated_time" content="2020-06-23T03:05:31.309Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="hive基本使用">
 <meta name="twitter:description" content="hive基本使用 hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。  事务表为了CUD必须设置动态分区为 nonstrict  事务每次修改都会导致产生大量小文件，默认hive会自动compact小文件，但是也可以手动进行compact 1ALTER">
@@ -393,7 +393,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  4,980
+                  5,330
                 </span>
               
 
@@ -440,7 +440,7 @@
 </li>
 </ul>
 </li>
-<li><p>with 查询，Hive 可以通过with查询来提高查询性能。先通过with语法将重复使用的数据查询到内存，后面其它查询可以直接使用</p>
+<li><p>with 查询（CTE 公共表表达式，mysql也支持），Hive 可以通过with查询来提高查询性能。先通过with语法将重复使用的数据查询到内存，后面其它查询可以直接使用</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">with tmp as (select * from employee where name=&apos;ted&apos;)</span><br><span class="line">select * from tmp;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>hive存在内部、外部、临时、分区、分桶和倾斜表，倾斜表是通过指定一个或者多个列经常出现的值（严重偏斜），Hive 会自动将涉及到这些值的数据拆分为单独的文件。在查询时，如果涉及到倾斜值，它就直接从独立文件中获取数据，而不是扫描所有文件，这使得性能得到提升。</p>
@@ -462,6 +462,19 @@
 <p>grouping sets ( (a, b), a, ( ) ) = rollup(a, b)</p>
 </li>
 <li><p>cost-based optimizer (CBO)，hive默认开启CBO优化，并且自动生成表级别的统计信息，但是hive并不会使用CBO优化，知道为表生成了列统计信息，hive并没有默认执行列统计信息，因为统计列信息可能需要大量的计算。</p>
+</li>
+<li><p>hive中作业优化</p>
+<ul>
+<li><p>union 和 union all 存在区别，union会去重，是一个全局性的动作，建议对于去重动作使用分组，union all 通常可以减少job数量，但需要设置 <code>hive.exec.parallel=true</code>，如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select name from (select name from a union all select name from b) group by name;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用distinct，但是count(distinct)这种不推荐使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select distinct name from (select name from a union all select name from b)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上面的语句可以通过explain查看job数量，再就是控制MapReduce的运行，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set hive.merge.mapredfiles = true;//MapReduce运行完成合并小文件</span><br><span class="line">set hive.merge.mapfiles = true;//Map only运行完成合并小文件</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 </li>
 </ul>
 <h4 id="窗口和分析函数"><a href="#窗口和分析函数" class="headerlink" title="窗口和分析函数"></a>窗口和分析函数</h4><ul>
@@ -575,6 +588,14 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set hive.exec.dynamic.partition=true;</span><br><span class="line">set hive.exec.dynamic.partition.mode=nonstrict;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<h4 id="特殊数据"><a href="#特殊数据" class="headerlink" title="特殊数据"></a>特殊数据</h4><ul>
+<li>json数据<ul>
+<li>方法一：将json数据存储成text，再使用get_json_object、json_tuple解析json</li>
+<li>方法二：将json数据存储成json序列化方式，这样就是正常的创建hive表，只是需要将json的数据映射成hive中的数据类型。hive的json序列化器就是将json对象就是hive中的row，再对json中的字段解析成row中字段，通常情况json的嵌套也对于hive的嵌套，但json中的对象可以解析成map也可以解析出struct。json序列化器有多中选择，hive自带或者第三方，如<a href="https://github.com/rcongiu/Hive-JSON-Serde" target="_blank" rel="noopener">Hive-JSON-Serde</a>，使用json生成hive schema，可以直接使用<a href="https://github.com/quux00/hive-json-schema" target="_blank" rel="noopener">hive-json-schema</a>。</li>
+</ul>
+</li>
+<li>正则表达式数据，如nginx日志</li>
+</ul>
 <h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><ul>
 <li><p>hive中存在各种内建操作符和对应类型操作的函数，<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF" target="_blank" rel="noopener">参考</a></p>
 </li>
@@ -643,6 +664,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/28/hadoop-oozie/" rel="prev" title="hadoop-oozie">
+                hadoop-oozie <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -723,7 +748,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">50</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -734,7 +759,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -745,7 +770,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -785,7 +810,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive基本使用"><span class="nav-number">1.</span> <span class="nav-text">hive基本使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口和分析函数"><span class="nav-number">2.</span> <span class="nav-text">窗口和分析函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#物化视图"><span class="nav-number">3.</span> <span class="nav-text">物化视图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接"><span class="nav-number">4.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据倾斜"><span class="nav-number">5.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态分区"><span class="nav-number">6.</span> <span class="nav-text">动态分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数"><span class="nav-number">7.</span> <span class="nav-text">函数</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#hive基本使用"><span class="nav-number">1.</span> <span class="nav-text">hive基本使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#窗口和分析函数"><span class="nav-number">2.</span> <span class="nav-text">窗口和分析函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#物化视图"><span class="nav-number">3.</span> <span class="nav-text">物化视图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接"><span class="nav-number">4.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据倾斜"><span class="nav-number">5.</span> <span class="nav-text">数据倾斜</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态分区"><span class="nav-number">6.</span> <span class="nav-text">动态分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特殊数据"><span class="nav-number">7.</span> <span class="nav-text">特殊数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数"><span class="nav-number">8.</span> <span class="nav-text">函数</span></a></li></ol></div>
             
 
           </div>
