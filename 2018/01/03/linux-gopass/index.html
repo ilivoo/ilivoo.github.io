@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="gopass各组件说明 gopass 用于密码管理的工具， 是pass的go语言版本， 提供了多人的密码管理命令行接口 gnupg 用于真正的加密， gnupg用于生成非对称秘钥， 使用公钥进行机密， 私钥进行解密 git 用于将gopass需要管理的密码（被gnupg生产的公钥加密过的密码）上传到git中便于管理 http://www.voidcn.com/article/p-gngvxvlm-">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-18T07:40:11.006Z">
+<meta property="og:updated_time" content="2020-07-28T08:51:10.924Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="gopass安装">
 <meta name="twitter:description" content="gopass各组件说明 gopass 用于密码管理的工具， 是pass的go语言版本， 提供了多人的密码管理命令行接口 gnupg 用于真正的加密， gnupg用于生成非对称秘钥， 使用公钥进行机密， 私钥进行解密 git 用于将gopass需要管理的密码（被gnupg生产的公钥加密过的密码）上传到git中便于管理 http://www.voidcn.com/article/p-gngvxvlm-">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  871
+                  1,094
                 </span>
               
 
@@ -443,6 +443,9 @@
 <li><p>安装passmenu脚本到path中</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">shopt -s nullglob globstar</span><br><span class="line"></span><br><span class="line">typeit=0</span><br><span class="line">if [[ $1 == "--type" ]]; then</span><br><span class="line">	typeit=1</span><br><span class="line">	shift</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">prefix=$&#123;PASSWORD_STORE_DIR-~/.password-store&#125;</span><br><span class="line">password_files=( "$prefix"/**/*.gpg )</span><br><span class="line">password_files=( "$&#123;password_files[@]#"$prefix"/&#125;" )</span><br><span class="line">password_files=( "$&#123;password_files[@]%.gpg&#125;" )</span><br><span class="line"></span><br><span class="line">password=$(printf '%s\n' "$&#123;password_files[@]&#125;" | dmenu "$@")</span><br><span class="line"></span><br><span class="line">[[ -n $password ]] || exit</span><br><span class="line"></span><br><span class="line">if [[ $typeit -eq 0 ]]; then</span><br><span class="line">	pass show -c "$password" 2&gt;/dev/null</span><br><span class="line">else</span><br><span class="line">	pass show "$password" | &#123; IFS= read -r pass; printf %s "$pass"; &#125; |</span><br><span class="line">		xdotool type --clearmodifiers --file -</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>上面还存在另外一种实现方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Simply copy the selected password to the clipboard</span><br><span class="line">gopass ls --flat | dmenu | xargs --no-run-if-empty gopass show -c</span><br><span class="line"># First pipe the selected name to gopass, encrypt it and type the password with xdotool.</span><br><span class="line">gopass ls --flat | dmenu | xargs --no-run-if-empty gopass show -f | head -n 1 | xdotool type --clearmodifiers --file -</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>添加系统快捷键</p>
 <p>路径： <code>System Settings --&gt; keyboard --&gt; Shortcuts --&gt; Custom Shortcuts</code></p>
 <p>添加： 上面脚本的路径</p>
@@ -489,6 +492,19 @@
 <li>从上面的说明可以看出github中的密码和google的密码也是非常重要的， 但是通常情况下绑定了手机可以直接找回， 所以不用担心， 直接使用gopass自动生成的密码即可</li>
 <li>私钥是一定不能忘记的， 所以如果这三个密码如果没有全部丢失那么通常情况下自己的gopass密码管理就是没有问题的。</li>
 <li>但是存在一个问题， 那就是机器丢失的问题</li>
+</ul>
+<h4 id="团队协作"><a href="#团队协作" class="headerlink" title="团队协作"></a>团队协作</h4><ul>
+<li><p>创建gopass git仓库，使用github创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopass --yes setup --remote git@github.com:example/pass.git --alias example --create --name &quot;John Doe&quot; --email &quot;john.doe@example.com&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将团队其它成员的公钥导入到gopass仓库当中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#团队成员导出公钥</span><br><span class="line">gpg -a --export logan@mail.com &gt; logan.pub.asc</span><br><span class="line">#导入公钥到创建gopass仓库的gpg当中</span><br><span class="line">gpg --import &lt; logan.pub.asc</span><br><span class="line">#将用户添加到gopass仓库当中</span><br><span class="line">gopass recipients add logan@mail.me/name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>团队其它成员clone仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopass --yes setup --remote github.com/example/pass.git --alias example --name &quot;logan&quot; --email &quot;logan@mail.com &quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手机端也可以使用pass工具</p>
+</li>
 </ul>
 
       
@@ -618,7 +634,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -629,7 +645,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -640,7 +656,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -680,7 +696,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#gopass各组件说明"><span class="nav-number">1.</span> <span class="nav-text">gopass各组件说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装gopass"><span class="nav-number">2.</span> <span class="nav-text">安装gopass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装passmenu"><span class="nav-number">3.</span> <span class="nav-text">安装passmenu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置git远程仓库"><span class="nav-number">4.</span> <span class="nav-text">配置git远程仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置gpg"><span class="nav-number">5.</span> <span class="nav-text">配置gpg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接查看gopass中密码"><span class="nav-number">6.</span> <span class="nav-text">直接查看gopass中密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复gopass的环境"><span class="nav-number">7.</span> <span class="nav-text">恢复gopass的环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#gopass各组件说明"><span class="nav-number">1.</span> <span class="nav-text">gopass各组件说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装gopass"><span class="nav-number">2.</span> <span class="nav-text">安装gopass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装passmenu"><span class="nav-number">3.</span> <span class="nav-text">安装passmenu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置git远程仓库"><span class="nav-number">4.</span> <span class="nav-text">配置git远程仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置gpg"><span class="nav-number">5.</span> <span class="nav-text">配置gpg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接查看gopass中密码"><span class="nav-number">6.</span> <span class="nav-text">直接查看gopass中密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复gopass的环境"><span class="nav-number">7.</span> <span class="nav-text">恢复gopass的环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#团队协作"><span class="nav-number">9.</span> <span class="nav-text">团队协作</span></a></li></ol></div>
             
 
           </div>
@@ -700,7 +716,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

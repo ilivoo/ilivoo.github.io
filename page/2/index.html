@@ -383,7 +383,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,089
+                  1,416
                 </span>
               
 
@@ -431,20 +431,44 @@
 </ol>
 </li>
 </ol>
-<pre><code>4. tmux 窗口操作
-    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">c 创建新窗口</span><br><span class="line">&amp; 关闭当前窗口</span><br><span class="line">[0-9] 数字键切换到指定窗口</span><br><span class="line">ctrl + h/l 左右切换窗口（安装ctrl， 并快速的按h/l）</span><br><span class="line">w 通过窗口列表切换窗口</span><br><span class="line">, 重命名当前窗口，便于识别</span><br><span class="line">. 修改当前窗口编号，相当于重新排序</span><br><span class="line">f 在所有窗口中查找关键词，便于窗口多了切换</span><br></pre></td></tr></table></figure>
+<pre><code>4. tmux 会话操作
+
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:new        启动新会话</span><br><span class="line">s           列出所有会话</span><br><span class="line">$           重命名当前会话</span><br></pre></td></tr></table></figure>
+
+
+5. tmux 窗口操作
+
+    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">c 创建新窗口</span><br><span class="line">&amp; 关闭当前窗口</span><br><span class="line">[0-9] 数字键切换到指定窗口</span><br><span class="line">ctrl + h/l 左右切换窗口（按住ctrl， 并快速的按h/l）</span><br><span class="line">w 通过窗口列表切换窗口</span><br><span class="line">, 重命名当前窗口，便于识别</span><br><span class="line">. 修改当前窗口编号，相当于重新排序</span><br><span class="line">f 在所有窗口中查找关键词，便于窗口多了切换</span><br><span class="line"></span><br><span class="line">swap-window -s 3 -t 1  交换 3 号和 1 号窗口</span><br><span class="line">swap-window -t 1       交换当前和 1 号窗口</span><br><span class="line">move-window -t 1       移动当前窗口到 1 号</span><br></pre></td></tr></table></figure>
 
 
     <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmux new-window				添加一个window</span><br><span class="line">tmux select-window -t 0		选择第0个窗口</span><br><span class="line">tmux kill-window -t 1		杀死某个窗口</span><br></pre></td></tr></table></figure>
 
 
-5. tmux 面板操作
+6. tmux 面板操作
 
     <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&quot;/- 将当前面板上下分屏</span><br><span class="line">%/_ 将当前面板左右分屏</span><br><span class="line">x 关闭当前分屏</span><br><span class="line">! 将当前面板置于新窗口,即新建一个窗口,其中仅包含当前面板</span><br><span class="line">z 最大化当前所在面板</span><br><span class="line">ctrl+方向键 以1个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">alt+方向键 以5个单元格为单位移动边缘以调整当前面板大小</span><br><span class="line">H/J/K/L 以1个单元格移动边缘以调整当前面板大小</span><br><span class="line">q 显示面板编号</span><br><span class="line">o 选择当前窗口中下一个面板</span><br><span class="line">方向键/h/j/k/l 移动光标选择对应面板</span><br><span class="line">&#123; 向前置换当前面板</span><br><span class="line">&#125; 向后置换当前面板</span><br><span class="line">alt+o 逆时针旋转当前窗口的面板</span><br><span class="line">ctrl+o 顺时针旋转当前窗口的面板</span><br></pre></td></tr></table></figure>
 
 
-6. tmux 滚屏操作，由于tmux接管如果输出大量的数据无法看到上面屏幕的字， 如果此时鼠标操作关闭，那么当使用鼠标滑轮的时候显示的执行过命令的显示， 而不能屏幕翻页， 要想达到这个目的有两个办法：
+7. tmux 滚屏操作，由于tmux接管如果输出大量的数据无法看到上面屏幕的字， 如果此时鼠标操作关闭，那么当使用鼠标滑轮的时候显示的执行过命令的显示， 而不能屏幕翻页， 要想达到这个目的有两个办法：
     <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">打开鼠标操作， 使用滑轮上下翻页 &lt;pre&gt; + m</span><br><span class="line">打开复制模式， 使用vi的翻滚策略来操作， 此时又会碰到一个问题， 如果前缀是ctrl + b那么不好往下整页翻滚， 建议使用半屏翻滚 ctrl + u / d(f)</span><br></pre></td></tr></table></figure>
+
+
+8. 复制模式
+
+   按下 `PREFIX-[` 进入文本复制模式。可以使用方向键在屏幕中移动光标。默认情况下，方向键是启用的。在配置文件中启用 Vim 键盘布局来切换窗口、调整窗格大小。Tmux 也支持 Vi 模式。要是想启用 Vi 模式，只需要把下面这一行添加到 .tmux.conf 中：
+
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setw -g mode-keys vi</span><br></pre></td></tr></table></figure>
+
+
+   启用这条配置后，就可以使用 h、j、k、l 来移动光标了。
+
+   想要退出文本复制模式的话，按下回车键就可以了。
+
+   然后按下 `PREFIX-]` 粘贴刚才复制的文本。
+
+   一次移动一格效率低下，在 Vi 模式启用的情况下，可以辅助一些别的快捷键高效工作。
+
+   例如，可以使用 w 键逐词移动，使用 b 键逐词回退。使用 f 键加上任意字符跳转到当前行第一次出现该字符的位置，使用 F 键达到相反的效果。
 </code></pre>
           
         
@@ -2474,7 +2498,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,285
+                  1,321
                 </span>
               
 
@@ -2501,7 +2525,9 @@
       
         
           
-            <h4 id="kafka-console-producer-sh"><a href="#kafka-console-producer-sh" class="headerlink" title="kafka-console-producer.sh"></a>kafka-console-producer.sh</h4><p>用来往topic中生产消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &quot;parse.key=true&quot; --property &quot;key.separator=:&quot; --topic kafka</span><br></pre></td></tr></table></figure></p>
+            <h4 id="kafka使用kerberos"><a href="#kafka使用kerberos" class="headerlink" title="kafka使用kerberos"></a>kafka使用kerberos</h4><p>连接zookeeper一定要带上zookeeper上kafka的节点，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/hdp/3.0.1.0-187/kafka/bin/kafka-topics.sh --list --zookeeper cmsw1.tepia.com:2181/kafka</span><br></pre></td></tr></table></figure>
+<h4 id="kafka-console-producer-sh"><a href="#kafka-console-producer-sh" class="headerlink" title="kafka-console-producer.sh"></a>kafka-console-producer.sh</h4><p>用来往topic中生产消息<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/kafka-console-producer.sh --broker-list hadoop3.feng.com:9092 --property &quot;parse.key=true&quot; --property &quot;key.separator=:&quot; --topic kafka</span><br></pre></td></tr></table></figure></p>
 <h5 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h5><ol>
 <li>–broker-list –topic 指定broker列表和生产消息的topic</li>
 <li>–property 指定console读取消息的kafka.tools.ConsoleProducer$LineMessageReader的属性， 也可以–line-reader指定默认的行读取器， 可以指定三个参数：<ol>
@@ -2660,7 +2686,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2671,7 +2697,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2682,7 +2708,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2726,7 +2752,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

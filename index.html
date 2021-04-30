@@ -738,7 +738,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,002
+                  1,020
                 </span>
               
 
@@ -817,6 +817,9 @@
 <li>–default-character-set=utf8mb4 指定该数据库连接的字符类型。如果服务器默认未utf8的话，导出的数据可能会丢失四字节的unicode信息（表情之类的）</li>
 <li>-C 客户端和服务器之间启用压缩传递所有信息。</li>
 </ul>
+</li>
+<li><p>添加自增字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tableName add column id int auto_increment primary key first;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
@@ -1199,7 +1202,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  5,330
+                  6,807
                 </span>
               
 
@@ -1227,6 +1230,10 @@
         
           
             <h4 id="hive基本使用"><a href="#hive基本使用" class="headerlink" title="hive基本使用"></a>hive基本使用</h4><ul>
+<li><p>hive的beeline连接到hiveserver2之后，如果使用load data local inpath，此处的路径指的是hiveserver2上的路径地址，所以要么在hiveserver2的服务器上使用beeline，或者将文件上传到hdfs上，再倒入表</p>
+</li>
+<li><p>beeline连接到hiveserver2之后，不管beeline使用的是何种keytabs，load data inpath使用的文件地址都需要hive用户有访问权限，也就是说hiveserver2使用的永远都是hive用户，而不是beeline或者其它客户端的登录用户</p>
+</li>
 <li><p>hive3.0默认开启事务表，对于事务表支持CRUD和merge操作，并且只能是orc数据格式，也可以指定事务表为insert-only，但是支持所有的数据格式都支持，事务表现在不需要必须是分桶的。</p>
 <ul>
 <li><p>事务表为了CUD必须设置动态分区为 <code>nonstrict</code></p>
@@ -1285,10 +1292,81 @@
 </ul>
 </li>
 </ul>
-<h4 id="窗口和分析函数"><a href="#窗口和分析函数" class="headerlink" title="窗口和分析函数"></a>窗口和分析函数</h4><ul>
-<li><p>窗口函数和分组group最大的区别在于，分组只是为当前分区计算出单个值，而窗口函数是对窗口进行分组，并且分析函数计算出窗口中每一行的一个值，这个值通常是一个累加的结果。</p>
+<h4 id="hive使用案例"><a href="#hive使用案例" class="headerlink" title="hive使用案例"></a>hive使用案例</h4><ul>
+<li><p>hive生成自增id，如：有一个维度表需要往其中添加新的数据维度（不是缓慢渐变维）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dim_goods (sid, id, name)</span><br><span class="line">tmp_dim_goods 新加入的表(id, name)</span><br><span class="line"></span><br><span class="line">select t.*, (row_number() over(order by id) + g.max_sid) as sid </span><br><span class="line">from tmp_dim_goods t</span><br><span class="line">cross join</span><br><span class="line">(select coalesce(max(sid), 0) as max_sid from dim_goods) g</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>窗口函数over是为了对数据划分窗口，over(partition by 列名 order by 列名 rows between 开始位置 and 结束位置)</p>
+<li><p>hive缓慢渐变维，生成自增id</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hive事实表装载代理主键维度表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"> </span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="维度建模"><a href="#维度建模" class="headerlink" title="维度建模"></a>维度建模</h4><ul>
+<li><p>维度保存方案（代理键和拉链表使用代价非常大，一般不建议使用）</p>
+<ul>
+<li>稳定的维度，如：时间、地区（地区也不一定，县市的变化）</li>
+<li><p>缓慢变化的维度</p>
+<ol>
+<li>每天保存一份全量快照，适合数据量非常小的场景</li>
+<li>在维度表中存放历史字段，仅保存一个值，如：current_address、old_address</li>
+<li>拉链表实现缓慢渐变维，注意拉链表的备份，其次拉链表会使用到代理键，需要注意代理件的生成，以及事实表装载代理键</li>
+</ol>
+</li>
+<li><p>用户画像类，使用elestacsearch等保存</p>
+</li>
+</ul>
+</li>
+<li><p>维度表的拆分与合并，如：整合整个公司的人员信息，建议使用大宽表，允许存在空值字段</p>
+</li>
+<li><p>维度的类型，如：用户基本信息、时间、地区等，还存在另外一种维度数据，用户画像的标签数据，如：用户所属渠道、用户注册时间、用户注册手机号、用户首次下单时间、用户累计订单数、用户累计充值金额等</p>
+</li>
+<li><p>事实表（也存在拉链表），事实表分为单事实表（单个大表），流程事实表（整个订单流程，每个流程都是一个事实）</p>
+<ul>
+<li><p>明细事实表（DWD) ，包括整个事实，不存在任何的汇总操作，尽量把整个维度都展示出来（完全的星座模型）</p>
+</li>
+<li><p>聚合事实表（DWS），按日，按周期性的，或者上次下单时间，区域，历史累计（sum、count、首次注册、上次下单、上次登录），如果有需求尽量去做一些维度退化，形成大宽表</p>
+<ul>
+<li><p>通用汇总层（需要花费大量力气去做），汇总力度不能太大，需要满足80%以上的功能，可以进行一些维度退化的动作，通常存在两种，如：</p>
+<ol>
+<li>完全明细汇总（流程性订单），但是对整个订单过程进行汇总，订单完成时长（从下单到支付）等</li>
+<li>聚合明细（针对单用户当天的操作，如：司机、乘客），登录次数、下单次数、下单总完成时间、整个浏览时长、优惠金额等</li>
+</ol>
+</li>
+<li><p>维度汇总层（在通用汇总层之上，相当于一个日报（周期汇总），实际上就是指标BI），如：</p>
+<ol>
+<li>针对订单主题汇总，按照时间、地区两个维度，如：时间ID，地区ID，下单量，支付金额、优惠金额等</li>
+<li>针对用户主题汇总，按照日期、渠道、地区三个维度，如：日期ID，渠道ID，地区ID，pv，uv, 新增，活跃，拉新等</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="数仓建模"><a href="#数仓建模" class="headerlink" title="数仓建模"></a>数仓建模</h4><ol>
+<li>梳理业务流程，画出整个业务流程</li>
+<li>梳理数据流程，知道每个数据字段等</li>
+<li><p>数据命名规范（层次_数据域_修饰符/描述_范围/周期）</p>
+<ol>
+<li>数据域：订单(ord)，用户(user)，财务(finc)</li>
+<li>数仓层次：事实表(fact)，共用维度(dim)，数据集市(dm)，ods(o)，dwd(d)，edw(e，也称作dws(s))</li>
+<li>周期/范围数据：日快照(d)，周快照(w)，增量(d)，拉链表(l)，非分区全量表(a)</li>
+<li>ods表需要能通过表名知道数据源，如o_业务系统编号_业务系统表名_范围/周期</li>
+<li>实现命名汉字与中文的映射元数据，如用户_ID =&gt; user_id，订单_金额 =&gt; ord_amt</li>
+<li>ETL脚本名称尽可能和产出表同名，ETL脚本通常使用python、shell、sql或者mapreduce jar包，调度任务的任务名称也和脚本名字一样</li>
+</ol>
+</li>
+<li><p>常见的数仓项目，用户画像、运营、BI、广告投放、推荐系统、反欺诈、风控、大数据杀熟</p>
+</li>
+</ol>
+<h4 id="窗口和分析函数"><a href="#窗口和分析函数" class="headerlink" title="窗口和分析函数"></a>窗口和分析函数</h4><ul>
+<li><p>Hive的分析函数又叫窗口函数，在oracle中就有这样的分析函数，主要用来做数据统计分析的。<br>Lag和Lead分析函数可以在同一次查询中取出同一字段的前N行的数据(Lag)和后N行的数据(Lead)作为独立的列。<br>这种操作可以代替表的自联接，并且LAG和LEAD有更高的效率，其中over()表示当前查询的结果集对象，括号里面的语句则表示对这个结果集进行处理。</p>
+</li>
+<li><p>窗口函数over()和group by 的最大区别，在于group by之后其余列也必须按照此分区进行计算，而over()函数使得单个特征可以进行分区。</p>
+</li>
+<li><p>窗口函数over是为了对数据划分窗口（本质上也是分组），over(partition by 列名 order by 列名 rows between 开始位置 and 结束位置)</p>
 <ul>
 <li><p>over()函数中的分区、排序、指定窗口范围可组合使用也可以不指定，根据不同的业务需求结合使用</p>
 </li>
@@ -1310,9 +1388,19 @@
 </li>
 <li><p>常用的分析函数</p>
 <ul>
-<li>聚合类<br> avg()、sum()、max()、min()</li>
-<li>排名类<br> row_number()  按照值排序时产生一个自增编号，不会重复<br> rank() 按照值排序时产生一个自增编号，值相等时会重复，会产生空位<br> dense_rank() 按照值排序时产生一个自增编号，值相等时会重复，不会产生空位</li>
-<li>其他类<br> lag(列名,往前的行数,[行数为null时的默认值，不指定为null])<br> lead(列名,往后的行数,[行数为null时的默认值，不指定为null])<br> ntile(n) 把有序分区中的行分发到指定数据的组中，各个组有编号，编号从1开始，对于每一行，ntile返  回此行所属的组的编号</li>
+<li><p>窗口函数</p>
+<p> LAG 获取窗口中从当前行往前数，第N行数据</p>
+<p> LEAD 获取窗口中从当前行往后数，第N行数据</p>
+<p> FIRST_VALUE 获取窗口中的第一行</p>
+<p> LAST_VALUE 获取窗口中的最后一行</p>
+</li>
+<li><p>聚合类<br> count()、avg()、sum()、max()、min()</p>
+</li>
+<li><p>分析函数<br> ROW_NUMBER  按照值排序时产生一个自增编号，不会重复，如：1、2、3、4<br> RANK 按照值排序时产生一个自增编号，值相等时会重复，会产生空位，如：1、2、2、4<br> DENSE_RANK 按照值排序时产生一个自增编号，值相等时会重复，不会产生空位，如：1、2、2、3</p>
+<p> PERCENT_RANK 分组内当前行的RANK值-1/分组内总行数-1</p>
+<p> CUME_DIST 小于等于当前值的行数/分组内总行数</p>
+<p> NTILE 将窗口中的数据进行分片，如窗口中有10个数据，划分成3片，则值为（1，1，1，1，2，2，2，3，3，3）</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -1344,9 +1432,17 @@
 </li>
 </ul>
 <h4 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h4><ul>
+<li><p>hive、spark join和关系型数据库join</p>
+<ul>
+<li>Spark join，shuffle join，shuffle sort merge join，broadcast join</li>
+<li>Hive join, shuffle sort merge join，broadcast join，bucket map join，sort-merge-bucket map join</li>
+<li>关系型 join，nested-loop join、hash join、sort-merge join（先排序再merge join）</li>
+<li>可以看到spark为了充分利用内存提供了shuffle join，不会对map结果进行排序，而hive尽量节约内存所以只有shuffle sort merge join。又由于hive提供分桶表的支持，所以添加了两种map端jion，bucket map join和sort-merge-bucket map join。</li>
+</ul>
+</li>
 <li><p>hive支持隐式连接，也就是在from后面添加多张表进行连接操作，并且从hive2.2开始已经支持不等值连接。</p>
 </li>
-<li><p>hive目前存在三种join实现方式，shuffle join、broadcast join、sort-merge-bucket join，分别对于关系型数据库中的三种join，hash join、nested-loop join、sort-merge join（先排序再merge join），当然hive中的sort-merge-bucket join稍微有些扩展，因为hive中支持bucket（每个bucket就可以看做是一个小表），所以如果两个表相同的cluster列的bucket成倍数，那么就可以完全将两个表的bucket对应上，这样就想到于各个小表进行sort-merge排序，当然必须保证bucket上已经进行了排序，设置如下：</p>
+<li><p>hive目前存在三种join实现方式，shuffle sort merge join、broadcast join、bucket map join，sort-merge-bucket map join，分别对于关系型数据库中的三种join，hash join、nested-loop join、sort-merge join（先排序再merge join），当然hive中的sort-merge-bucket join稍微有些扩展，因为hive中支持bucket（每个bucket就可以看做是一个小表），所以如果两个表相同的cluster列的bucket成倍数，那么就可以完全将两个表的bucket对应上，这样就想到于各个小表进行sort-merge排序，当然必须保证bucket上已经进行了排序，设置如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set hive.auto.convert.sortmerge.join=true;</span><br><span class="line">set hive.optimize.bucketmapjoin = true;</span><br><span class="line">set hive.optimize.bucketmapjoin.sortedmerge = true;</span><br><span class="line">set hive.auto.convert.sortmerge.join.bigtable.selection.policy </span><br><span class="line">    = org.apache.hadoop.hive.ql.optimizer.TableSizeBasedBigTableSelectorForAutoSMJ(d);</span><br><span class="line">    = org.apache.hadoop.hive.ql.optimizer.LeftmostBigTableSelectorForAutoSMJ</span><br><span class="line">    = org.apache.hadoop.hive.ql.optimizer.TableSizeBasedBigTableSelectorForAutoSMJ</span><br></pre></td></tr></table></figure>
 <p>当然每种属性都可以独立设置，可以只进行bucketmapjoin等等</p>
 </li>
@@ -1573,7 +1669,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  473
+                  616
                 </span>
               
 
@@ -1611,7 +1707,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -genkey -alias feng  -keyalg RSA -keysize 2048 -validity 10950  -keystore keystore.jks -dname &quot;CN=feng, OU=software, O=tepia.com, L=wuhan, ST=hubei, C=CN&quot; -keypass 123456 -storepass 123456</span><br></pre></td></tr></table></figure>
 <ul>
 <li>OU表示组织内的单元，也就是组织的部门</li>
-<li>keypass表示秘钥的密码，可以和storepass相同</li>
+<li>keypass表示秘钥的密码</li>
 <li>storepass表示keystone容器的密码</li>
 </ul>
 </li>
@@ -1632,6 +1728,25 @@
 </li>
 <li><p>删除证书或这私钥</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -delete -alias xiang -keystore keystore.jks</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改证书类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform DER -in certificate.cer -out certificate.crt</span><br><span class="line">openssl x509 -inform PEM -in certificate.cer -out certificate.crt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="三方签名证书"><a href="#三方签名证书" class="headerlink" title="三方签名证书"></a>三方签名证书</h4><ul>
+<li><p>由于三方签名证书都存在中间证书，单keytool工具无法导出整个证书链，所以需要先转换为<code>pkcs12</code>，再导出</p>
+</li>
+<li><p>更改格式为pkcs12</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore -srckeystore iot.eblssmart.com.jks -destkeystore iot.eblssmart.com.pfx -deststoretype pkcs12</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>更改格式为pem</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -in  iot.eblssmart.com.pfx -nodes -out iot.eblssmart.com.pem</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导出私钥</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl  rsa -in iot.eblssmart.com.pem -out iot.eblssmart.com.key</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导出证书</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -in  iot.eblssmart.com.pem -out iot.eblssmart.com.crt</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
@@ -2532,7 +2647,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2543,7 +2658,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2554,7 +2669,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2598,7 +2713,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

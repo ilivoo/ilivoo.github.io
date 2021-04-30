@@ -383,7 +383,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  871
+                  1,094
                 </span>
               
 
@@ -446,6 +446,9 @@
 <li><p>安装passmenu脚本到path中</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/usr/bin/env bash</span><br><span class="line"></span><br><span class="line">shopt -s nullglob globstar</span><br><span class="line"></span><br><span class="line">typeit=0</span><br><span class="line">if [[ $1 == "--type" ]]; then</span><br><span class="line">	typeit=1</span><br><span class="line">	shift</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">prefix=$&#123;PASSWORD_STORE_DIR-~/.password-store&#125;</span><br><span class="line">password_files=( "$prefix"/**/*.gpg )</span><br><span class="line">password_files=( "$&#123;password_files[@]#"$prefix"/&#125;" )</span><br><span class="line">password_files=( "$&#123;password_files[@]%.gpg&#125;" )</span><br><span class="line"></span><br><span class="line">password=$(printf '%s\n' "$&#123;password_files[@]&#125;" | dmenu "$@")</span><br><span class="line"></span><br><span class="line">[[ -n $password ]] || exit</span><br><span class="line"></span><br><span class="line">if [[ $typeit -eq 0 ]]; then</span><br><span class="line">	pass show -c "$password" 2&gt;/dev/null</span><br><span class="line">else</span><br><span class="line">	pass show "$password" | &#123; IFS= read -r pass; printf %s "$pass"; &#125; |</span><br><span class="line">		xdotool type --clearmodifiers --file -</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>上面还存在另外一种实现方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Simply copy the selected password to the clipboard</span><br><span class="line">gopass ls --flat | dmenu | xargs --no-run-if-empty gopass show -c</span><br><span class="line"># First pipe the selected name to gopass, encrypt it and type the password with xdotool.</span><br><span class="line">gopass ls --flat | dmenu | xargs --no-run-if-empty gopass show -f | head -n 1 | xdotool type --clearmodifiers --file -</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>添加系统快捷键</p>
 <p>路径： <code>System Settings --&gt; keyboard --&gt; Shortcuts --&gt; Custom Shortcuts</code></p>
 <p>添加： 上面脚本的路径</p>
@@ -492,6 +495,19 @@
 <li>从上面的说明可以看出github中的密码和google的密码也是非常重要的， 但是通常情况下绑定了手机可以直接找回， 所以不用担心， 直接使用gopass自动生成的密码即可</li>
 <li>私钥是一定不能忘记的， 所以如果这三个密码如果没有全部丢失那么通常情况下自己的gopass密码管理就是没有问题的。</li>
 <li>但是存在一个问题， 那就是机器丢失的问题</li>
+</ul>
+<h4 id="团队协作"><a href="#团队协作" class="headerlink" title="团队协作"></a>团队协作</h4><ul>
+<li><p>创建gopass git仓库，使用github创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopass --yes setup --remote git@github.com:example/pass.git --alias example --create --name &quot;John Doe&quot; --email &quot;john.doe@example.com&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将团队其它成员的公钥导入到gopass仓库当中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#团队成员导出公钥</span><br><span class="line">gpg -a --export logan@mail.com &gt; logan.pub.asc</span><br><span class="line">#导入公钥到创建gopass仓库的gpg当中</span><br><span class="line">gpg --import &lt; logan.pub.asc</span><br><span class="line">#将用户添加到gopass仓库当中</span><br><span class="line">gopass recipients add logan@mail.me/name</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>团队其它成员clone仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gopass --yes setup --remote github.com/example/pass.git --alias example --name &quot;logan&quot; --email &quot;logan@mail.com &quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手机端也可以使用pass工具</p>
+</li>
 </ul>
 
           
@@ -1075,7 +1091,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  4,159
+                  6,050
                 </span>
               
 
@@ -1103,13 +1119,23 @@
         
           
             <ol>
+<li><p>配置本地源出错时</p>
+<ol>
+<li>方法一：需要选择Use RedHat Satellite/Spacewalk， 并且配置源的名字，注意修改每一个repo的name字段</li>
+<li>方法二：如果实在不行就直接在管理员中(version)，配置本地源即可</li>
+</ol>
+</li>
+<li><p>Hostname 必须不能配置出错，<code>hostname</code> 和 <code>hostname -f</code> 必须有相同的输出，<code>/etc/hosts</code> 配置ip必须相同</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">172.19.36.14    iot0.dhls.com   iot0</span><br><span class="line">172.19.36.11    iot1.dhls.com   iot1</span><br><span class="line">172.19.36.18    iot2.dhls.com   iot2</span><br></pre></td></tr></table></figure>
+<p>注意：完整域名必须在前面</p>
+</li>
 <li><p>浏览器配置kerberos访问</p>
 <ul>
 <li><p>firefox中输入 <code>about:config</code>，搜索并设置</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">network.negotiate-auth.trusted-uris = .domain.com</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>chrome 直接添加命令行参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">google-chrome --auth-server-whitelist=&quot;*.domain.com&quot; --auth-negotiate-delegate-whitelist=&quot;*.domain.com</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">google-chrome --auth-server-whitelist=&quot;*.domain.com&quot; --auth-negotiate-delegate-whitelist=&quot;*.domain.com&quot;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
@@ -1120,13 +1146,12 @@
 <p><code>spark.history.ui.acls.enable</code></p>
 <p>因为日志通常记录在hdfs中， 所以还必须拥有hdfs的文件访问权限</p>
 </li>
-<li><p>ranger 页面无法登录， 如果显示无法访问DB这是因为使用Mysql的时候必须明确指定是否使用SSL， 所以必须在配置连接的时候使用</p>
-<p><code>jdbc:mysql://hdp1.ilivoo.com:3306?useSSL=false</code></p>
-<p>curl -H “X-Requested-By:ambari” -u “admin:tepia@2018” -X GET <a href="http://hdp1:8080/api/v1/clusters/c1/credentials/kdc.admin.credential注意：" target="_blank" rel="noopener">http://hdp1:8080/api/v1/clusters/c1/credentials/kdc.admin.credential注意：</a> 任何的报错都应该去查看日志才能精确定位错误，不用假想和凭经验断定。</p>
+<li><p>ranger 页面无法登录， 如果显示无法访问DB这是因为使用Mysql的时候必须明确指定是否使用SSL， 所以必须在配置连接的时候使用<code>jdbc:mysql://hdp1.ilivoo.com:3306?useSSL=false</code>， 其它的组建都可以加上，包括ambari</p>
+<p>注意： 任何的报错都应该去查看日志才能精确定位错误，不用假想和凭经验断定。</p>
 </li>
 <li><p>ambari-server 开启security，删除或添加服务的时候需要</p>
 <ul>
-<li><p>更改<a href="mailto:admin/admin@TEPIA.COM" target="_blank" rel="noopener">admin/admin@TEPIA.COM</a> 的密码</p>
+<li><p>更改<a href="mailto:admin/admin@TEPIA.COM" target="_blank" rel="noopener">admin/admin@TEPIA.COM</a>的密码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local</span><br><span class="line">change_password admin/admin</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>开启ambari-server的security</p>
@@ -1137,14 +1162,13 @@
 </li>
 </ul>
 </li>
-<li><p>ambari 可以运行在非root用户下， 通常来说这样会更安全些，但是需要一些配置，参考 <code>https://docs.cloudera.com/HDPDocuments/HDP3/HDP-3.1.4/securing-credentials/content/secure_credentials_management_overview.html</code>，但是建议还是运行在root用户下，这样更加简单，所有的安全问题也可以参考上面。</p>
+<li><p>ambari 可以运行在非root用户下， 通常来说这样会更安全些，但是需要一些配置，<a href="https://docs.cloudera.com/HDPDocuments/HDP3/HDP-3.1.4/securing-credentials/content/secure_credentials_management_overview.html" target="_blank" rel="noopener">参考</a>，但是建议还是运行在root用户下，这样更加简单，所有的安全问题也可以参考上面。</p>
 <ul>
 <li>更改权限 <code>chown -R ambari /var/run/ambari-server</code></li>
-<li></li>
 </ul>
 </li>
 <li><p>NameNode UI不能访问, 这是因为服务器存在多个网卡,  默认NameNode默认只是绑定到集群指定的网卡, 并没有绑定到所有的网卡, 所以如果使用了openvpn后, 实际上50070并没有绑定到openvpn指定的网卡, 所以就会导致无法openvpn的网卡无法访问了, 通过指定 <code>hdfs-site.xml</code> 绑定所有网卡</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dfs.namenode.http-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.https-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.rpc-bind-host=0.0.0.0 </span><br><span class="line">dfs.namenode.servicerpc-bind-host=0.0.0.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dfs.namenode.http-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.https-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.rpc-bind-host=0.0.0.0</span><br><span class="line">dfs.namenode.servicerpc-bind-host=0.0.0.0</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>kafka日志目录必须为空, 对于单独挂载的目录来说通常下来存在 <code>lost+found</code> , 所以必须再加一层目录. </p>
 <p>kafka的 <code>zookeeper.connect</code>  应该添加根目录, 这样更加便于管理, 如:</p>
@@ -1160,26 +1184,43 @@
 </li>
 <li><p>yarn timeline 两种配置后端存储模式，第一种嵌入式的hbase运行，第二种集群的hbase（推荐），配置如下</p>
 <ul>
-<li><p>配置基本信息</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use_external_hbase = true</span><br><span class="line">      hbase.zookeeper.quorum = hdp1.tepia.com,hdp2.tepia.com,hdp3.tepia.com</span><br><span class="line">    hbase.zookeeper.property.clientPort = 2181</span><br><span class="line">      zookeeper.znode.parent = /hbase-secure</span><br><span class="line">      yarn.timeline-service.hbase.configuration.file=</span><br><span class="line">      file:///etc/hbase/conf/hbase-site.xml</span><br></pre></td></tr></table></figure>
+<li><p>配置并重启yarn</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">use_external_hbase = true</span><br><span class="line">  hbase.zookeeper.quorum = hdp1.tepia.com,hdp2.tepia.com,hdp3.tepia.com</span><br><span class="line">  hbase.zookeeper.property.clientPort = 2181</span><br><span class="line">  zookeeper.znode.parent = /hbase-secure</span><br><span class="line">  yarn.timeline-service.hbase.configuration.file=</span><br><span class="line">  file:///etc/hbase/conf/hbase-site.xml</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong>最后的一个配置 <code>yarn.timeline-service.hbase.configuration.file</code> ，hdp的官网并没有说明，如果没有指定配置hbase配置文件，TimelineReader无法连接到hbase。但是yarn官网有提及，从这里也充分的可以感觉到很多答案还得到项目的官网中寻求答案。</p>
+</li>
+<li><p>使用hbase用户创建yarn需要的schema</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_CLASSPATH_PREFIX=/usr/hdp/3.1.0.0-78/hadoop-yarn/timelineservice/*</span><br><span class="line">/usr/hdp/3.1.0.0-78/hbase/bin/hbase org.apache.hadoop.yarn.server.timelineservice.storage.TimelineSchemaCreator -Dhbase.client.retries.number=35 -create -s</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为新添加的表(prod.*)增加权限, 使用基本方式或者ranger </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant &apos;yarn&apos;, &apos;RWXCA&apos;</span><br><span class="line">grant &apos;yarn-ats&apos;, &apos;RWXCA&apos;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关闭yarn-ats本身开启的hbase</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">su - yarn-ats</span><br><span class="line">jps</span><br><span class="line">kill master regionserver</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
-</ol>
-<pre><code>  **说明：**最后的一个配置 ` yarn.timeline-service.hbase.configuration.file ` ，hdp的官网并没有说明，如果没有指定配置hbase配置文件，TimelineReader无法连接到hbase。但是yarn官网有提及，从这里也充分的可以感觉到很多答案还得到项目的官网中寻求答案。
-
-- 使用hbase用户创建yarn需要的schema
-
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_CLASSPATH_PREFIX=/usr/hdp/3.1.0.0-78/hadoop-yarn/timelineservice/*</span><br><span class="line">  /usr/hdp/3.1.0.0-78/hbase/bin/hbase org.apache.hadoop.yarn.server.timelineservice.storage.TimelineSchemaCreator -Dhbase.client.retries.number=35 -create -s</span><br></pre></td></tr></table></figure>
-
-
-- 为新添加的表(prod.*)增加权限, 使用基本方式或者ranger     
-
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grant &apos;yarn&apos;, &apos;RWXCA&apos;</span><br><span class="line">grant &apos;yarn-ats&apos;, &apos;RWXCA&apos;</span><br></pre></td></tr></table></figure>
-</code></pre><ol start="12">
 <li><p>尝试使用 yarn 的service服务，可以参考 ats-hbase 这个服务。</p>
 </li>
-<li><p>ams collector 后端写入模式，如果改为分布式的，只是将hbase的存储放到hdfs当中，而本地还是开启了hbase应用，所以通常情况下不建议更改。如需修改，参考 <code>https://docs.cloudera.com/HDPDocuments/Ambari-2.7.4.0/using-ambari-core-services/content/amb_customize_the_ams_collector_mode.html</code></p>
+<li><p>ams collector 后端写入模式，如果改为分布式的，只是将hbase的存储放到hdfs当中，而本地还是开启了hbase应用。<a href="https://docs.cloudera.com/HDPDocuments/Ambari-2.7.4.0/using-ambari-core-services/content/amb_customize_the_ams_collector_mode.html" target="_blank" rel="noopener">参考</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://docs.cloudera.com/HDPDocuments/Ambari-2.7.4.0/using-ambari-core-services/content/amb_customize_the_ams_collector_mode.html</span><br><span class="line">timeline.metrics.service.operation.mode = distributed</span><br><span class="line">hbase.rootdir = /apps/ams/metrics</span><br><span class="line">hdfs dfs -mkdir -p /apps/ams/metrics</span><br><span class="line">hdfs dfs -chown -R ams:hadoop /apps/ams/metrics</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：设置为distributed，默认会有很多配置发送变化</p>
+</li>
+<li><p>ams 开启hbase tables metrics 收集</p>
+<ul>
+<li><p>进入目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd var/lib/ambari-server/resources/stacks/HDP/#version/services/HBASE/package/templates</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编辑下列文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hadoop-metrics2-hbase.properties-GANGLIA-MASTER.j2</span><br><span class="line">hadoop-metrics2-hbase.properties-GANGLIA-RS.j2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除或注释下列类容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*.source.filter.class=org.apache.hadoop.metrics2.filter.RegexFilter</span><br><span class="line">hbase.*.source.filter.exclude=.*(Regions|Users|Tables).*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启 amber-server，再重启hbase</p>
+</li>
+</ul>
+</li>
+<li><p>设置grafana https 连接，<a href="https://docs.cloudera.com/HDPDocuments/Ambari-2.7.4.0/using-ambari-core-services/content/amb_set_up_https_for_grafana.html" target="_blank" rel="noopener">参考</a></p>
 </li>
 <li><p>phoenix 包冲突问题， 由于项目中现在基本上使用logback，但是phoenix中使用log4j并且使用slf4j进行进行桥接，所以解决phoenix包冲突前先应该去掉slf4j和log4j，再更具具体情形进行对比。</p>
 </li>
@@ -1223,6 +1264,8 @@
 <li><p>错误 <code>Loading ISA-L failed: Failed to load libisal.so.2</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc make autoconf automake libtool yasm git</span><br><span class="line">git clone https://github.com/01org/isa-l/</span><br><span class="line">cd isa-l/</span><br><span class="line">./autogen.sh</span><br><span class="line">./configure --prefix=/usr --libdir=/usr/lib64</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>错误 <code>zstd: false ?</code></p>
+</li>
 </ol>
 </li>
 <li><p>在配置ambari的时候， 如果使用ambari用户作为ambari的服务启动者， 那么在使用ambari配置的过程中可能经常会出现ambari用户权限不足的情况，所以可能需要如下操作，可以参考hdp官网：</p>
@@ -1239,6 +1282,9 @@
 </li>
 <li><p>kerberos在登录的时候可以直接指定 <code>krb5.conf</code> 文件的位置</p>
 <ol>
+<li><p>kerberos 命令行调试</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">env KRB5_TRACE=/dev/stdout</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>java 程序直接指定环境变量</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Djava.security.krb5.conf=/etc/krb5.conf.prod</span><br></pre></td></tr></table></figure>
 </li>
@@ -1295,6 +1341,9 @@
 </li>
 <li><p>nifi开启SSL并使用ranger进行权限管理</p>
 <ul>
+<li><p>首先说明，如果在配置更改的过程中出现无法启动或无法访问等问题，可以直接删除nifi相关文件，不影响配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf /var/lib/nifi/* /var/log/nifi/*</span><br></pre></td></tr></table></figure>
+</li>
 <li><p>首先按照正常方式添加nifi服务，不需要添加NiFi Certificate Authority 授权程序</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nifi.allow.explicit.keytab = false</span><br></pre></td></tr></table></figure>
 </li>
@@ -1315,33 +1364,33 @@
 <li><p>修改 <code>Advanced ranger-nifi-plugin-properties</code> 中的配置如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Authentication = SSL</span><br><span class="line">Keystore for Ranger Service Accessing NiFi = /usr/hdf/current/nifi-toolkit/nifi/keystore.jks</span><br><span class="line">Keystore Type = jks</span><br><span class="line">Truststore for Ranger Service Accessing NiFi = /usr/hdf/current/nifi-toolkit/nifi/truststore.jks</span><br><span class="line">Truststore Type = jks</span><br><span class="line">Owner for Certificate = CN=feng, OU=TEPIA.COM</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>修改ranger web配置页面中的 <code>tepia_nifi</code> ，让其能够连接到nifi中，并对nifi进行权限控制，配置如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">NiFi URL = https://hdp2.tepia.com:9091/nifi-api/resources</span><br><span class="line">Authentication Type = SSL</span><br><span class="line">Keystore = /home/ranger/keystore.jks</span><br><span class="line">Keystore Type = jks</span><br><span class="line">Keystore Password = keypass</span><br><span class="line">Truststore = /home/ranger/truststore.jks</span><br><span class="line">Truststore Password = trustpass</span><br><span class="line">commonNameForCertificate = CN=feng, OU=TEPIA.COM</span><br><span class="line">tag.download.auth.users = nifi</span><br><span class="line">policy.download.auth.users = nifi</span><br><span class="line">ambari.service.check.user = nifi</span><br></pre></td></tr></table></figure>
-<p><strong>说明：</strong></p>
-<ul>
-<li><p>需要测试直至连接成功，连接的过程中可能需要先添加权限，并且此时可以看ranger的access访问</p>
-</li>
-<li><p>此处的keystore 和 truststore是通过 <code>tls-toolkit.sh</code> 生成的客户端秘钥和证书，但生成的是 <code>CN=feng_OU=TEPIA.COM.p12</code> 文件，需要转换成jks文件，并加入服务端证书到客户端truststore中。</p>
-<ul>
-<li><p>转换p12证书为jks的keystone</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore -srckeystore CN\=feng_OU\=TEPIA.COM.p12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
+<li><p>修改mapping信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nifi.security.identity.mapping.pattern.dn=^CN=(.*?), OU=(.*?), O=(.*?), L=(.*?), ST=(.*?), C=(.*?)$</span><br><span class="line">nifi.security.identity.mapping.value.dn=$1@$2</span><br><span class="line">nifi.security.identity.mapping.transform.dn=NONE</span><br><span class="line">nifi.security.identity.mapping.pattern.kerb=^(.*?)/(.*?)@(.*?)$</span><br><span class="line">nifi.security.identity.mapping.value.kerb=$1@$2</span><br><span class="line">nifi.security.identity.mapping.transform.kerb=NONE</span><br><span class="line">nifi.security.group.mapping.pattern.anygroup=^(.*)$</span><br><span class="line">nifi.security.group.mapping.value.anygroup=$1</span><br><span class="line">nifi.security.group.mapping.transform.anygroup=LOWER</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 </li>
 </ol>
-<pre><code>    - 导出 `hdp1.tepia.com, hdp2.tepia.com, hdp3.tepia.com` 的证书
+<pre><code>- 修改ranger web配置页面中的 `tepia_nifi` ，让其能够连接到nifi中，并对nifi进行权限控制，配置如下
+
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">NiFi URL = https://hdp2.tepia.com:9091/nifi-api/resources</span><br><span class="line">Authentication Type = SSL</span><br><span class="line">Keystore = /home/ranger/keystore.jks</span><br><span class="line">Keystore Type = jks</span><br><span class="line">Keystore Password = keypass</span><br><span class="line">Truststore = /home/ranger/truststore.jks</span><br><span class="line">Truststore Password = trustpass</span><br><span class="line">commonNameForCertificate = CN=feng, OU=TEPIA.COM</span><br><span class="line">tag.download.auth.users = nifi</span><br><span class="line">policy.download.auth.users = nifi</span><br><span class="line">ambari.service.check.user = nifi</span><br></pre></td></tr></table></figure>
+
+  **说明：**
+
+  - 需要测试直至连接成功，连接的过程中可能需要先添加权限，并且此时可以看ranger的access访问
+
+  - 此处的keystore 和 truststore是通过 `tls-toolkit.sh` 生成的客户端秘钥和证书，但生成的是 `CN=feng_OU=TEPIA.COM.p12` 文件，需要转换成jks文件，并加入服务端证书到客户端truststore中。
+
+    - 转换p12证书为jks的keystone
+
+      <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore -srckeystore CN\=feng_OU\=TEPIA.COM.p12 -srcstoretype pkcs12 -destkeystore keystore.jks -deststoretype jks</span><br></pre></td></tr></table></figure>
+
+    - 导出 `hdp1.tepia.com, hdp2.tepia.com, hdp3.tepia.com` 的证书
 
       <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -export -alias  nifi-key -keystore hdp1.tepia.com/keystore.jks -rfc -file hdp1.cer</span><br><span class="line">keytool -export -alias  nifi-key -keystore hdp2.tepia.com/keystore.jks -rfc -file hdp2.cer</span><br><span class="line">keytool -export -alias  nifi-key -keystore hdp3.tepia.com/keystore.jks -rfc -file hdp3.cer</span><br></pre></td></tr></table></figure>
 
-
     - 将三个证书导入到truststore中
 
-      <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -import -alias feng  -file hdp1.cer  -keystore truststore.jks</span><br><span class="line">keytool -import -alias feng  -file hdp2.cer  -keystore truststore.jks</span><br><span class="line">keytool -import -alias feng  -file hdp3.cer  -keystore truststore.jks</span><br></pre></td></tr></table></figure>
-
+      <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">keytool -import -alias hdp1  -file hdp1.cer  -keystore truststore.jks</span><br><span class="line">keytool -import -alias hdp2  -file hdp2.cer  -keystore truststore.jks</span><br><span class="line">keytool -import -alias hdp3  -file hdp3.cer  -keystore truststore.jks</span><br></pre></td></tr></table></figure>
 
     - 注意我们这里ranger连接nifi直接使用了，自动生产的客户端的证书，所以我们并不需要将客户端证书导入到nifi中，这是因为 `tls-toolkit.sh` 已经自动导入过了，所以如果我们需要使用不同的用户名，需要自行证书导入即可。
 
@@ -1351,11 +1400,132 @@
 
     <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/flow /system /controller /counters /provenance /policies /tenants /proxy /resources /site-to-site /restricted-components / /*</span><br></pre></td></tr></table></figure>
 
-
   - 添加proxy权限到 `hdp1.tepia.com,hep2.tepia.com,hdp3.tepia.com` 当中
 
     <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/proxy /data/* /*</span><br></pre></td></tr></table></figure>
-</code></pre>
+</code></pre><ol start="34">
+<li><p>Knox 安装配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">开启Knox SSO单点登录</span><br><span class="line">https://docs.cloudera.com/HDPDocuments/HDP3/HDP-3.1.5/configuring-knox-sso/content/sso_set_up_knox_sso.html</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">配置相关属性</span><br><span class="line">knoxsso.token.ttl</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ranger 插件连接knox</span><br><span class="line">echo | openssl s_client -connect cmsw1.tepia.com:8443 2&gt;&amp;1 | sed --quiet &apos;/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p&apos; &gt; knox.crt</span><br><span class="line">keytool -import -file knox.crt -keystore &lt;ranger config property ranger.truststore.file&gt; -alias knox</span><br><span class="line">ranger.truststore.password = trustsotre password</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">knox存在默认密码，knox配置页面可以查看</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">配置knox proxy，即</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ranger插件配置，ranger插件配置是需要连接到对应的服务当中，这样在ranger配置权限的时候就有提示功能，如果没有在ranger页面配置连接到对应的服务，不影响ranger授权，只是页面没有提示功能而已。常见的配置错误如下：</p>
+<ul>
+<li>hbase、hive需要配置rangerlookup用户访问对应的表或者服务的权限（现在对于权限中配置，再配置连接）</li>
+<li>hbase需要配置Kerberos，并配置master的principal，如：<a href="mailto:`hbase/cmsw2.tepia.com@TEPIA.COM" target="_blank" rel="noopener">`hbase/cmsw2.tepia.com@TEPIA.COM</a>`</li>
+<li>Knox需要配置admin用户的用户名和密码</li>
+</ul>
+</li>
+<li><p>安装opentsdb</p>
+<ol>
+<li><p>开启lzo压缩，<a href="https://docs.cloudera.com/HDPDocuments/Ambari-2.7.3.0/administering-ambari/content/amb_enable_lzo_compression.html" target="_blank" rel="noopener">教程</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install hadooplzo* -y</span><br><span class="line">io.compression.codecs = com.hadoop.compression.lzo.LzoCodec</span><br><span class="line">io.compression.codec.lzo.class = com.hadoop.compression.lzo.LzoCodec</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装opentsdb，直接从 github 上下载 OpenTSDB 的 release 版本的 RPM 包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum localinstall opentsdb-2.4.0.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>说明：如果需要更改opentsdb执行用户，可以更改为hbase，需要修改如下配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">chown -R hbase:hbase /tmp/opentsdb/</span><br><span class="line">chown -R hbase:hbase /var/cache/opentsdb/</span><br><span class="line">chown -R hbase:hbase /var/log/opentsdb/</span><br><span class="line">ln -s /usr/share/opentsdb/bin/tsdb /usr/bin/tsdb</span><br></pre></td></tr></table></figure>
+<p>可以通过命令查看有哪些opentsdb文件，<code>rpm -ql opentsdb</code>  和 <code>find / -name *opentsdb*</code></p>
+</li>
+<li><p>创建opentsdb需要的表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_HOME=/usr/hdp/3.0.1.0-187/hbase</span><br><span class="line">tools/create_table.sh</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>logback.xml</code>的两个日志的绝对地址，如果通过systemctl启动 <code>opentsdb@.service</code> ，那么可以不用更改</p>
+</li>
+<li><p>配置<code>opentsdb.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tsd.storage.hbase.zk_basedir = /hbase-secure</span><br><span class="line">tsd.storage.hbase.zk_quorum = cmsw1.tepia.com,cmsw2.tepia.com,cmsw3.tepia.com</span><br><span class="line">hbase.security.auth.enable=true</span><br><span class="line">hbase.security.authentication=kerberos</span><br><span class="line">hbase.kerberos.regionserver.principal=hbase/_HOST@TEPIA.COM</span><br><span class="line">hbase.sasl.clientconfig=Hbase</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加 <code>/etc/opentsdb/opentsdb-jass.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hbase &#123;</span><br><span class="line">  com.sun.security.auth.module.Krb5LoginModule required</span><br><span class="line">  useKeyTab=true</span><br><span class="line">  keyTab=&quot;/etc/security/keytabs/hbase.headless.keytab&quot;</span><br><span class="line">  storeKey=true</span><br><span class="line">  useTicketCache=false</span><br><span class="line">  serviceName=&quot;opentsdb&quot;</span><br><span class="line">  principal=&quot;hbase-cmsw@TEPIA.COM&quot;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Zookeeper &#123;</span><br><span class="line">  com.sun.security.auth.module.Krb5LoginModule required</span><br><span class="line">  useKeyTab=true</span><br><span class="line">  keyTab=&quot;/etc/security/keytabs/hbase.headless.keytab&quot;</span><br><span class="line">  storeKey=true</span><br><span class="line">  useTicketCache=false</span><br><span class="line">  serviceName=&quot;zookeeper&quot;</span><br><span class="line">  principal=&quot;hbase-cmsw@TEPIA.COM&quot;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改<code>tsdb</code>启动文件，添加jvm启动参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JVMARGS=&quot;$JVMARGS -Djava.security.krb5.conf=/etc/krb5.conf -Dhbase.security.authentication=kerberos -Dhbase.kerberos.regionserver.principal=hbase/_HOST@TEPIA.COM -Dhbase.rpc.protection=authentication -Dhbase.sasl.clientconfig=Hbase -Dzookeeper.sasl.clientconfig=Zookeeper -Djava.security.auth.login.config=/etc/opentsdb/opentsdb-jaas.conf&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改自动启动脚本，不建议使用这种方式启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">User=hbase</span><br><span class="line">Group=hbase</span><br><span class="line">LimitNOFILE=65535</span><br><span class="line">Environment=JAVA_HOME=/usr/java/jdk1.8.0_261-amd64</span><br><span class="line">Environment=&apos;JVMARGS=-Xmx6000m -DLOG_FILE=/var/log/opentsdb/%p_%i.log -DQUERY_LOG=/var/log/opentsdb/%p_%i_queries.log -XX:+ExitOnOutOfMemoryError -enableassertions -enablesystemassertions&apos;</span><br><span class="line">ExecStart=/usr/bin/tsdb tsd --config /etc/opentsdb/opentsdb.conf --port %i</span><br><span class="line">Restart=always</span><br><span class="line">StandardOutput=journal</span><br></pre></td></tr></table></figure>
+<p>直接启动方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nothup bin/tsdb tsd --config /etc/opentsdb/opentsdb.conf &amp;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>安装freeipa</p>
+<ul>
+<li><p>服务端安装（freeipa服务端不能作为amber agent）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install bind bind-utils bind bind-dyndb-ldap ipa-server ipa-server-dns</span><br><span class="line">ipa-server-install --setup-dns --allow-zone-overlap</span><br></pre></td></tr></table></figure>
+<p>注意：所有的选择yes，注意配置forward dns</p>
+<p>配置DNS，<code>/etc/resolv.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">search dhls.com</span><br><span class="line">nameserver 127.0.0.1</span><br><span class="line">nameserver 100.100.2.136</span><br><span class="line">nameserver 100.100.2.138</span><br></pre></td></tr></table></figure>
+<p>添加每一台客户端的DNS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kadmin admin</span><br><span class="line">ipa dnsrecord-add dhls.com iot0 --a-rec 172.19.36.14</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ipa-client</span><br><span class="line">ipa-client-install</span><br></pre></td></tr></table></figure>
+<p>配置DNS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nameserver 172.19.36.14 #ipa 服务端地址</span><br><span class="line">nameserver 100.100.2.136</span><br><span class="line">nameserver 100.100.2.138</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ambari 安装 kerberos 之前</p>
+<p>配置 <code>/etc/krb5.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">default_ccache_name = FILE:/tmp/krb5cc_%&#123;uid&#125;</span><br></pre></td></tr></table></figure>
+<p>设置ipa密码不过期</p>
+<p>设置java jce</p>
+</li>
+<li><p>安装的过程中，不要使用ambari 管理 <code>krb5.conf</code> 文件</p>
+</li>
+</ul>
+</li>
+<li><p>Amber 配置 ldap</p>
+<ul>
+<li><p>使用<code>ambari-server setup-ldap</code> 启动配置，ldap是内外直接使用389端口，不需要使用ssl，外网需要使用636（需要设置证书），bind的用户可以指定具有查看ldap权限的用户即可，如果没有创建直接使用admin用户，可以查看用户信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kinit admin</span><br><span class="line">ipa user-show admin --raw --all</span><br><span class="line">ipa group-show admins --raw --all</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入指定groups的用户</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ambari-server sync-ldap --groups=ambari.txt</span><br></pre></td></tr></table></figure>
+<p><code>ambari.txt</code> 内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dev</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写脚本自动导入<code>/etc/ambari-server/script/ambari_sync_ldap.sh</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/expect</span><br><span class="line">spawn /usr/sbin/ambari-server sync-ldap --groups=/etc/ambari-server/script/ambari.txt</span><br><span class="line">expect &quot;Enter Ambari Admin login:&quot;</span><br><span class="line">send &quot;admin\r&quot;</span><br><span class="line">expect &quot;Enter Ambari Admin password:&quot;</span><br><span class="line">send &quot;password\r&quot;</span><br><span class="line">expect eo</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>添加cron</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*/5 * * * * /etc/ambari-server/script/ambari_sync_ldap.sh &gt; /var/log/ambari-server/ambari_sync_ldap.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>Knox 配置 ldap</p>
+<ul>
+<li><p>修改 admin、knox、advanced topology</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;param&gt;</span><br><span class="line">	&lt;name&gt;main.ldapRealm.userDnTemplate&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;uid=&#123;0&#125;,cn=users,cn=accounts,dc=dhls,dc=com&lt;/value&gt;</span><br><span class="line">&lt;/param&gt;</span><br><span class="line">&lt;param&gt;</span><br><span class="line">	&lt;name&gt;main.ldapRealm.contextFactory.url&lt;/name&gt;</span><br><span class="line">	&lt;value&gt;ldap://iot0.dhls.com:389&lt;/value&gt;</span><br><span class="line">&lt;/param&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置knox proxy</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;service&gt;</span><br><span class="line">	&lt;role&gt;SPARKHISTORYUI&lt;/role&gt;</span><br><span class="line">	&lt;url&gt;http://bd0.dhls.com:18081&lt;/url&gt;</span><br><span class="line">&lt;/service&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置knox单点登录</p>
+<p><code>https://docs.cloudera.com/HDPDocuments/HDP3/HDP-3.1.5/configuring-knox-sso/content/sso_set_up_knox_sso.html</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ambari-server setup-sso</span><br></pre></td></tr></table></figure>
+<p>注意：由于ambari的admin账户无法通过ldap导入进来，所以如果ambari也使用knox单点登录的话，admin账户是无法登录的，所以最好提前建立一个ambari账户，使其有admin管理功能。也可以使用命令关闭knox单点登录。</p>
+</li>
+</ul>
+</li>
+<li><p>Ranger 配置ldap</p>
+<ul>
+<li><p>common configs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LDAP/AD URL = ldap://iot0.dhls.com:389</span><br><span class="line">Bind User = uid=admin,cn=users,cn=accounts,dc=dhls,dc=com</span><br><span class="line">Incremental Sync = true （先不开启，后面再开启）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>user configs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Username Attribute = uid</span><br><span class="line">User Object Class = posixaccount</span><br><span class="line">User Search Base = cn=accounts,dc=dhls,dc=com</span><br><span class="line">User Search Scope = sub</span><br><span class="line">User Group Name Attribute = memberof</span><br><span class="line">Group User Map Sync = true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>group configs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Group Member Attribute = member</span><br><span class="line">Group Name Attribute = cn</span><br><span class="line">Group Object Class = posixGroup</span><br><span class="line">Group Search Base = cn=groups,cn=accounts,dc=dhls,dc=com</span><br><span class="line">Group Search Filter = (cn=dev)</span><br><span class="line">Enable Group Search First = true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>advance config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Ldap Base DN = dc=dhls,dc=com</span><br><span class="line">Ldap User DN Pattern = uid=&#123;0&#125;,cn=users,cn=accounts,dc=dhls,dc=com</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+
           
         
       
@@ -1491,7 +1661,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  745
+                  899
                 </span>
               
 
@@ -1596,10 +1766,9 @@
 </li>
 </ol>
 <ol start="9">
-<li>设置开机启动 <code>/etc/init.d/</code>中添加可执行脚本, 开头可以参考这个目录下其它的脚本, 如： 添加 <code>sslocal</code></li>
-</ol>
+<li><p>设置开机启动 <code>/etc/init.d/</code>中添加可执行脚本, 开头可以参考这个目录下其它的脚本, 如： 添加 <code>sslocal</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">#</span><br><span class="line"># sshd          Start up the OpenSSH server daemon</span><br><span class="line">#</span><br><span class="line"># chkconfig: 2345 55 25</span><br><span class="line"># description: sslcal shadowsocks</span><br><span class="line">/usr/bin/sslocal -c /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
-<ol start="10">
+</li>
 <li><p>添加到启动服务当中 </p>
 <p><code>chkconfig sslocal on</code></p>
 </li>
@@ -1618,6 +1787,15 @@
 </li>
 <li><p>挂载ntfs磁盘</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install epel-release</span><br><span class="line">yum -y install ntfs-3g fuse</span><br><span class="line">yum -y install ntfsprogs</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>防止敏感信息泄漏</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s /dev/null .bash_history</span><br><span class="line">ln -s /dev/null .mysql_history</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>时间同步</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 安装ntp</span><br><span class="line">yum install ntp -y &amp;&amp; \</span><br><span class="line">systemctl enable ntpd.service &amp;&amp; \</span><br><span class="line">systemctl start ntpd.service</span><br><span class="line"></span><br><span class="line">#设置时区</span><br><span class="line">timedatectl set-timezone Asia/Shanghai &amp;&amp; \</span><br><span class="line">timedatectl set-ntp yes &amp;&amp; \</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>yum自动更新</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">yum -y update  # 首先更新一次</span><br><span class="line">yum -y install yum-cron</span><br><span class="line"># /etc/cron.daily/0yum-daily.cron   </span><br><span class="line"># anacron 每天执行0yum-daily.cron一次</span><br><span class="line"># 它根据 /etc/yum/yum-cron.conf 来更新软件</span><br><span class="line">vim /etc/yum/yum-cron.conf</span><br><span class="line">update_messages = yes,</span><br><span class="line">download_updates = yes,</span><br><span class="line">apply_updates = yes  # 自动安装</span><br><span class="line"></span><br><span class="line"># 最后重启  crond   yum-cron</span><br><span class="line">systemctl start crond</span><br><span class="line">systemctl start yum-cron</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 
@@ -2678,7 +2856,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2689,7 +2867,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2700,7 +2878,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2744,7 +2922,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

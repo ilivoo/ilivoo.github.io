@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="Ilivoo`s blog">
 <meta property="og:description" content="mysqldump 与 xtrabackup 的实现原理 mysqldump 属于逻辑备份。加入–single-transaction 选项可以进行一致性备份。后台进程会先设置 session的事务隔离级别为 RR(SET SESSION TRANSACTION ISOLATION LEVELREPEATABLE READ)，之后显式开启一个事务(START TRANSACTION /!40100">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-07-15T08:19:25.529Z">
+<meta property="og:updated_time" content="2021-03-09T11:43:56.801Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql 备份">
 <meta name="twitter:description" content="mysqldump 与 xtrabackup 的实现原理 mysqldump 属于逻辑备份。加入–single-transaction 选项可以进行一致性备份。后台进程会先设置 session的事务隔离级别为 RR(SET SESSION TRANSACTION ISOLATION LEVELREPEATABLE READ)，之后显式开启一个事务(START TRANSACTION /!40100">
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,002
+                  1,020
                 </span>
               
 
@@ -459,6 +459,9 @@
 <li>–default-character-set=utf8mb4 指定该数据库连接的字符类型。如果服务器默认未utf8的话，导出的数据可能会丢失四字节的unicode信息（表情之类的）</li>
 <li>-C 客户端和服务器之间启用压缩传递所有信息。</li>
 </ul>
+</li>
+<li><p>添加自增字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table tableName add column id int auto_increment primary key first;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 
@@ -589,7 +592,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -600,7 +603,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -611,7 +614,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -671,7 +674,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

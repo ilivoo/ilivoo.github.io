@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="系统​    uname -a   / cat /proc/version                # 查看内核/操作系统/CPU信息 ​    head -n 1 /etc/issue       # 查看操作系统版本 ​    cat /etc/redhat-release  # 查看操作系统版本 ​    cat /proc/cpuinfo          # 查看CPU信息 ​">
+<meta name="description" content="系统​    uname -a   或者  cat /proc/version                # 查看内核/操作系统/CPU信息 ​    head -n 1 /etc/issue       # 查看操作系统版本 ​    cat /etc/redhat-release  # 查看操作系统版本 ​    cat /etc/os-release         #查看操作系统发行版">
 <meta name="keywords" content="linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux基本信息查看">
 <meta property="og:url" content="http://yoursite.com/2018/01/03/linux-info/index.html">
 <meta property="og:site_name" content="Ilivoo`s blog">
-<meta property="og:description" content="系统​    uname -a   / cat /proc/version                # 查看内核/操作系统/CPU信息 ​    head -n 1 /etc/issue       # 查看操作系统版本 ​    cat /etc/redhat-release  # 查看操作系统版本 ​    cat /proc/cpuinfo          # 查看CPU信息 ​">
+<meta property="og:description" content="系统​    uname -a   或者  cat /proc/version                # 查看内核/操作系统/CPU信息 ​    head -n 1 /etc/issue       # 查看操作系统版本 ​    cat /etc/redhat-release  # 查看操作系统版本 ​    cat /etc/os-release         #查看操作系统发行版">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-18T01:22:21.992Z">
+<meta property="og:updated_time" content="2020-11-19T08:49:23.379Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux基本信息查看">
-<meta name="twitter:description" content="系统​    uname -a   / cat /proc/version                # 查看内核/操作系统/CPU信息 ​    head -n 1 /etc/issue       # 查看操作系统版本 ​    cat /etc/redhat-release  # 查看操作系统版本 ​    cat /proc/cpuinfo          # 查看CPU信息 ​">
+<meta name="twitter:description" content="系统​    uname -a   或者  cat /proc/version                # 查看内核/操作系统/CPU信息 ​    head -n 1 /etc/issue       # 查看操作系统版本 ​    cat /etc/redhat-release  # 查看操作系统版本 ​    cat /etc/os-release         #查看操作系统发行版">
 
 
 
@@ -382,7 +382,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  484
+                  568
                 </span>
               
 
@@ -407,9 +407,10 @@
       
 
       
-        <h4 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h4><p>​    uname -a   / cat /proc/version                # 查看内核/操作系统/CPU信息</p>
+        <h4 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h4><p>​    uname -a   或者  cat /proc/version                # 查看内核/操作系统/CPU信息</p>
 <p>​    head -n 1 /etc/issue       # 查看操作系统版本</p>
 <p>​    cat /etc/redhat-release  # 查看操作系统版本</p>
+<p>​    cat /etc/os-release         #查看操作系统发行版本</p>
 <p>​    cat /proc/cpuinfo          # 查看CPU信息</p>
 <p>​    cat /proc/cpuinfo | grep ‘physical id’        #查看cpu个数</p>
 <p>​    cat /proc/cpuinfo | grep ‘core id’             #查看cpu核心个数</p>
@@ -419,8 +420,9 @@
 <p>​    lsusb -tv                      # 列出所有USB设备</p>
 <p>​    lsmod                          # 列出加载的内核模块</p>
 <p>​    env                            # 查看环境变量</p>
-<h4 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h4><p>​    free -m                        # 查看内存使用量和交换区使用量</p>
-<p>​    df -h                          # 查看各分区使用情况</p>
+<h4 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h4><p>​    lscpu                        # 查看cpu信息</p>
+<p>​    free -m                        # 查看内存使用量和交换区使用量</p>
+<p>​    df -h/TH                          # 查看各分区使用情况</p>
 <p>​    du -sh &lt;目录名&gt;            # 查看指定目录的大小</p>
 <p>​    grep MemTotal /proc/meminfo       # 查看内存总量</p>
 <p>​    grep MemFree /proc/meminfo        # 查看空闲内存量</p>
@@ -431,6 +433,8 @@
 <p>​    swapon -s                      # 查看所有交换分区</p>
 <p>​    hdparm -i /dev/hda         # 查看磁盘参数(仅适用于IDE设备)</p>
 <p>​    dmesg | grep IDE               # 查看启动时IDE设备检测状况</p>
+<p>​    lsblk</p>
+<p>​    blkid                                 #查看磁盘uuid</p>
 <h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>​    ifconfig                       # 查看所有网络接口的属性</p>
 <p>​    iptables -L                    # 查看防火墙设置</p>
 <p>​    route -n                       # 查看路由表</p>
@@ -439,15 +443,20 @@
 <p>​    netstat -s                     # 查看网络统计信息</p>
 <p>​    rfkill list                        # 查看无线网卡和蓝牙情况</p>
 <p>​    nethogs                        # 查看网络使用情况</p>
+<p>​    Iftop</p>
+<h4 id="测试网络带宽"><a href="#测试网络带宽" class="headerlink" title="测试网络带宽"></a>测试网络带宽</h4><p>​    iperf -s                          #开启服务端</p>
+<p>​    iperf -c 192.168.0.11  #客户端连接服务端，并进行网络测试</p>
 <h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>​    ps -ef                         # 查看所有进程</p>
 <p>​    top                            # 实时显示进程状态</p>
 <p>​    jobs、 fg、 bg、 ctrl+z/c、 启动 &amp;</p>
 <h4 id="用户"><a href="#用户" class="headerlink" title="用户"></a>用户</h4><p>​    w                      # 查看活动用户</p>
 <p>​    id &lt;用户名&gt;            # 查看指定用户信息</p>
 <p>​    last                   # 查看用户登录日志</p>
+<p>​    tty                    # 查看所在终端</p>
 <p>​    cut -d: -f1 /etc/passwd   # 查看系统所有用户</p>
 <p>​    cut -d: -f1 /etc/group    # 查看系统所有组</p>
 <p>​    crontab -l             # 查看当前用户的计划任务</p>
+<p>​    whoami 或者 who am i # 查看登陆信息</p>
 <h4 id="清空访问痕迹"><a href="#清空访问痕迹" class="headerlink" title="清空访问痕迹"></a>清空访问痕迹</h4><p>​    history -c</p>
 <p>​    echo &gt; /var/spool/mail/root<br>​    echo &gt; /var/log/wtmp<br>​    echo &gt; /var/log/secure<br>​    echo &gt; /root/.bash_history</p>
 
@@ -578,7 +587,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">54</span>
+                  <span class="site-state-item-count">56</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -589,7 +598,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -600,7 +609,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -640,7 +649,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#系统"><span class="nav-number">1.</span> <span class="nav-text">系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源"><span class="nav-number">2.</span> <span class="nav-text">资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#磁盘"><span class="nav-number">3.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网络"><span class="nav-number">4.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程"><span class="nav-number">5.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用户"><span class="nav-number">6.</span> <span class="nav-text">用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#清空访问痕迹"><span class="nav-number">7.</span> <span class="nav-text">清空访问痕迹</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#系统"><span class="nav-number">1.</span> <span class="nav-text">系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#资源"><span class="nav-number">2.</span> <span class="nav-text">资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#磁盘"><span class="nav-number">3.</span> <span class="nav-text">磁盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网络"><span class="nav-number">4.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测试网络带宽"><span class="nav-number">5.</span> <span class="nav-text">测试网络带宽</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程"><span class="nav-number">6.</span> <span class="nav-text">进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#用户"><span class="nav-number">7.</span> <span class="nav-text">用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#清空访问痕迹"><span class="nav-number">8.</span> <span class="nav-text">清空访问痕迹</span></a></li></ol></div>
             
 
           </div>
@@ -660,7 +669,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
